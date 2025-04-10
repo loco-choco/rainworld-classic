@@ -14,3 +14,7 @@ mvn package
 # Runs the project
 java -cp target/rainworld-classic-1.0-SNAPSHOT.jar com.locochoco.app.App
 ```
+
+## References
+
+- UML Diagram template from https://inkscape.org/~mikapyon/%E2%98%85uml-class-diagram
