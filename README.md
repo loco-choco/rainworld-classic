@@ -4,7 +4,7 @@
 ## How to build and run the project
 
 ```bash
-# If you have nix and don't have jdk nor maven
+# If you have nix and don't have neither jdk nor maven
 nix develop -c
 
 # Builds the project
