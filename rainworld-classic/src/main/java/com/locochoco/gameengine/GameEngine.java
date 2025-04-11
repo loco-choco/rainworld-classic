@@ -32,8 +32,36 @@ public class GameEngine {
     swing_graphics.SetPixelToTransformScale(5);
     graphics.SetGraphicsAPI(swing_graphics);
 
-    // TODO REMOVE
-    // TEST
+    CreateTestLevel();// TODO REMOVE
+  }
+
+  public Level getLevel() {
+    return level;
+  }
+
+  public boolean LoadLevel(String name) {
+    return false;
+  }
+
+  public void Run() {
+    long current_time = System.currentTimeMillis(); // ms
+    double physics_delta_time = (current_time - last_physics_time) / 1000.0; // seconds
+    level.PhysicsUpdate(physics_delta_time);
+    physics.Update(physics_delta_time);
+
+    // Graphics and Physics update happen at different times
+    level.Update(physics_delta_time);
+    if (current_time - last_graphics_time >= frame_rate) {
+      level.GraphicsUpdate(current_time - last_graphics_time);
+      graphics.Update();
+      last_graphics_time = current_time;
+    }
+
+    level.LateUpdate(physics_delta_time);
+    last_physics_time = current_time;
+  }
+
+  private void CreateTestLevel() {
     level = new Level(); // TODO Set to Null
 
     GameObject go_test = new GameObject();
@@ -105,31 +133,5 @@ public class GameEngine {
       System.err.println(e.getMessage());
     }
     level.AddGameObject(go_test4);
-  }
-
-  public Level getLevel() {
-    return level;
-  }
-
-  public boolean LoadLevel(String name) {
-    return false;
-  }
-
-  public void Run() {
-    long current_time = System.currentTimeMillis(); // ms
-    double physics_delta_time = (current_time - last_physics_time) / 1000.0; // seconds
-    level.PhysicsUpdate(physics_delta_time);
-    physics.Update(physics_delta_time);
-
-    // Graphics and Physics update happen at different times
-    level.Update(physics_delta_time);
-    if (current_time - last_graphics_time >= frame_rate) {
-      level.GraphicsUpdate(current_time - last_graphics_time);
-      graphics.Update();
-      last_graphics_time = current_time;
-    }
-
-    level.LateUpdate(physics_delta_time);
-    last_physics_time = current_time;
   }
 }
