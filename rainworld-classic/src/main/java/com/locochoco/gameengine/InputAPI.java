@@ -11,5 +11,7 @@ public interface InputAPI {
 
   public boolean GetMouseRightClick();
 
+  public boolean GetMouseLeftClick();
+
   public boolean GetKeyPressed(int key_code);
 }

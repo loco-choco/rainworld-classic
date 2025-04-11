@@ -9,6 +9,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.JFrame;
@@ -29,13 +31,22 @@ public class SwingGraphics
   private int window_height;
   private BufferStrategy buffer;
   private Graphics current_frame;
+
   // InputAPI
+  private Map<Integer, Boolean> keyboard_map;
+  private Point2d mouse_position;
+  private boolean mouse_left_click;
+  private boolean mouse_right_click;
 
   // GraphicsAPI
   public SwingGraphics(String window_name) {
     InitializeWindow(window_name);
     addMouseListener(this);
     addKeyListener(this);
+    keyboard_map = new HashMap<>();
+    mouse_position = new Point2d(0, 0);
+    mouse_left_click = false;
+    mouse_right_click = false;
   }
 
   public void SetWindowSize(int width, int height) {
@@ -104,26 +115,43 @@ public class SwingGraphics
   }
 
   // InputAPI
-  // TODO IMPLEMENT
   public Point2d GetMousePos() {
-    return new Point2d(0.0, 0.0);
+    return mouse_position;
   }
 
   public boolean GetMouseRightClick() {
-    return false;
+    return mouse_right_click;
+  }
+
+  public boolean GetMouseLeftClick() {
+    return mouse_left_click;
   }
 
   public boolean GetKeyPressed(int key_code) {
-    return false;
+    if (!keyboard_map.containsKey(key_code))
+      return false;
+    return keyboard_map.get(key_code);
   }
 
   public void mouseMoved(MouseEvent e) {
+    mouse_position.setX(e.getX() / pixel_to_transform_scale);
+    mouse_position.setY(e.getY() / pixel_to_transform_scale);
   }
 
   public void mouseClicked(MouseEvent e) {
   }
 
   public void mouseReleased(MouseEvent e) {
+    switch (e.getButton()) {
+      case MouseEvent.BUTTON1:
+        mouse_right_click = false;
+        break;
+      case MouseEvent.BUTTON2:
+        mouse_left_click = false;
+        break;
+      default:
+        break;
+    }
   }
 
   public void mouseEntered(MouseEvent e) {
@@ -133,14 +161,26 @@ public class SwingGraphics
   }
 
   public void mousePressed(MouseEvent e) {
+    switch (e.getButton()) {
+      case MouseEvent.BUTTON1:
+        mouse_right_click = true;
+        break;
+      case MouseEvent.BUTTON2:
+        mouse_left_click = true;
+        break;
+      default:
+        break;
+    }
   }
 
   public void keyPressed(KeyEvent e) {
+    keyboard_map.put(e.getKeyCode(), true);
   }
 
   public void keyTyped(KeyEvent e) {
   }
 
   public void keyReleased(KeyEvent e) {
+    keyboard_map.put(e.getKeyCode(), false);
   }
 }
