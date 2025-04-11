@@ -65,7 +65,7 @@ public class Physics {
             continue;
           Vector2d ga_velocity = ga_rigidbody.GetVelocity();
           collision_vector.normalize();
-          double velocity_being_lost = ga_velocity.dot(collision_vector);
+          double velocity_being_lost = Math.min(ga_velocity.dot(collision_vector), 0.0);
           collision_vector.scale(velocity_being_lost * (1 + collider_gb.getElasticity()));
           ga_velocity.sub(collision_vector);
         }
