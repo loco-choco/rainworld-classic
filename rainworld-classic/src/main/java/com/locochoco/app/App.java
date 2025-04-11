@@ -1,6 +1,7 @@
 package com.locochoco.app;
 
-import java.util.concurrent.TimeUnit;
+import javax.swing.SwingUtilities;
+
 import com.locochoco.gameengine.GameEngine;
 
 /**

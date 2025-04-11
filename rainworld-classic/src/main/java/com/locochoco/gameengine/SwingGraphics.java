@@ -3,6 +3,7 @@ package com.locochoco.gameengine;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -23,10 +24,11 @@ public class SwingGraphics
     extends JFrame implements MouseListener, KeyListener, GraphicsAPI, InputAPI {
 
   // GraphicsAPI
+  private double pixel_to_transform_scale;
   private int window_width;
   private int window_height;
-  BufferStrategy buffer;
-  Graphics current_frame;
+  private BufferStrategy buffer;
+  private Graphics current_frame;
   // InputAPI
 
   // GraphicsAPI
@@ -42,19 +44,39 @@ public class SwingGraphics
     setSize(width, height);
   }
 
+  public int GetWindowWidth() {
+    return window_width;
+  }
+
+  public int GetWindowHeight() {
+    return window_height;
+  }
+
+  public void SetPixelToTransformScale(double scale) {
+    pixel_to_transform_scale = scale;
+  }
+
+  public double GetPixelToTransformScale() {
+    return pixel_to_transform_scale;
+  }
+
   public void CreateBuffer() {
     current_frame = buffer.getDrawGraphics();
     current_frame.setColor(Color.BLACK);
     current_frame.fillRect(0, 0, window_width, window_height);
   }
 
-  public void DrawRect(Point2i position, int width, int height, Color color) {
+  public void DrawRect(Point2d position, int width, int height, Color color) {
     current_frame.setColor(color);
-    current_frame.fillRect(position.getX(), position.getY(), width, height);
+    current_frame.fillRect((int) Math.round(position.getX() * pixel_to_transform_scale),
+        (int) Math.round(position.getY() * pixel_to_transform_scale),
+        (int) Math.round(width * pixel_to_transform_scale),
+        (int) Math.round(height * pixel_to_transform_scale));
   }
 
-  public void DrawSprite(Image image, Point2i position) {
-    current_frame.drawImage(image, position.getX(), position.getY(), null);
+  public void DrawSprite(Image image, Point2d position) {
+    current_frame.drawImage(image, (int) Math.round(position.getX() * pixel_to_transform_scale),
+        (int) Math.round(position.getY() * pixel_to_transform_scale), null);
   }
 
   public void FlushBuffer() {
@@ -62,6 +84,11 @@ public class SwingGraphics
     if (!getBufferStrategy().contentsLost()) {
       getBufferStrategy().show();
     }
+    Toolkit.getDefaultToolkit().sync();
+  }
+
+  @Override
+  public void paint(Graphics g) {
   }
 
   private void InitializeWindow(String window_name) {

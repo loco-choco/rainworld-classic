@@ -15,15 +15,17 @@ public final class Rigidbody extends Component {
     super(owner);
     velocity = new Vector2d(0.0, 0.0);
     force = new Vector2d(0.0, 0.0);
+    mass = 1;
   }
 
-  public void SetMass(double mass) {
+  public Rigidbody SetMass(double mass) {
     this.mass = mass;
+    return this;
   }
 
   public void PhysicsUpdate(double delta_time) {
     Vector2d deltaVel = new Vector2d(force);
-    deltaVel.scale(mass * delta_time);
+    deltaVel.scale(delta_time / mass);
     velocity.add(deltaVel);
     force = new Vector2d(0.0, 0.0);
   }

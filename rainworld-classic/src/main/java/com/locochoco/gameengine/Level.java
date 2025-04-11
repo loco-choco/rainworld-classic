@@ -17,6 +17,10 @@ public class Level implements Serializable {
     return game_objects;
   }
 
+  public void AddGameObject(GameObject gameObject) {
+    game_objects.add(gameObject);
+  }
+
   public void PhysicsUpdate(double delta_time) {
     for (GameObject g : game_objects)
       g.PhysicsUpdate(delta_time);

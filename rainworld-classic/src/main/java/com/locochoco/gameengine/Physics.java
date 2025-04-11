@@ -15,28 +15,29 @@ public class Physics {
   }
 
   public void Update(double delta_time) {
-    HandleCollision();
     for (GameObject g : game.getLevel().getGameObjects()) {
-      if (g == null)
+      Rigidbody r = g.getRigidbody();
+      if (r == null)
         continue;
-      Vector2d deltaPos = new Vector2d(g.getRigidbody().GetVelocity());
+      Vector2d deltaPos = new Vector2d(r.GetVelocity());
       deltaPos.scale(delta_time);
       g.getTransform().getPosition().add(deltaPos);
     }
+    HandleCollision();
   }
 
   private void HandleCollision() {
     ArrayList<GameObject> game_objects = game.getLevel().getGameObjects();
     for (GameObject ga : game_objects) {
-      if (ga == null)
+      Collider collider_ga = ga.getCollider();
+      if (collider_ga == null)
         continue;
       for (GameObject gb : game_objects) {
-        if (gb == null || ga == gb)
-          continue;
-        Collider collider_ga = ga.getCollider();
         Collider collider_gb = gb.getCollider();
+        if (collider_gb == null || collider_ga == collider_gb)
+          continue;
         CollisionData data = collider_ga.CheckCollision(collider_gb);
-        if (!collider_ga.getPhysical())
+        if (ga.getRigidbody() == null)
           continue;
         if (data.getCollision()) {
           // TODO Implement and raise an OnCollision() event on ga
@@ -44,7 +45,7 @@ public class Physics {
           // If collider_gb is physical, we only want to move ga by half the lenght, as
           // when the gameobject of gb is ga, it will also get moved, but to the other
           // direction
-          if (collider_gb.getPhysical())
+          if (gb.getRigidbody() == null)
             collision_vector.scale(0.5);
           ga.getTransform().getPosition().add(collision_vector);
         }

@@ -11,6 +11,7 @@ public class GameObject {
   private Transform transform;
   private Collider collider;
   private Rigidbody rigidbody;
+  private Renderer renderer;
 
   public GameObject() {
     components = new ArrayList<>();
@@ -18,21 +19,28 @@ public class GameObject {
     components.add(transform);
   }
 
-  public void addCollider(Point2d center, Point2d corner_a, Point2d corner_b, boolean physical) throws Exception {
+  public Collider addCollider() throws Exception {
     if (collider != null)
       throw new Exception("There is already a collider in this GameObject");
     collider = new Collider(this);
-    collider.setShape(corner_a, corner_b);
-    collider.setCenter(center);
-    collider.setPhysical(physical);
     components.add(collider);
+    return collider;
   }
 
-  public void addRigidbody() throws Exception {
+  public Rigidbody addRigidbody() throws Exception {
     if (rigidbody != null)
       throw new Exception("There is already a rigidbody in this GameObject");
     rigidbody = new Rigidbody(this);
     components.add(rigidbody);
+    return rigidbody;
+  }
+
+  public Renderer addRenderer(Renderer renderer) throws Exception {
+    if (this.renderer != null)
+      throw new Exception("There is already a renderer in this GameObject");
+    this.renderer = renderer;
+    components.add(renderer);
+    return renderer;
   }
 
   public Transform getTransform() {
@@ -45,6 +53,10 @@ public class GameObject {
 
   public Rigidbody getRigidbody() {
     return rigidbody;
+  }
+
+  public Renderer getRenderer() {
+    return renderer;
   }
 
   public void PhysicsUpdate(double delta_time) {

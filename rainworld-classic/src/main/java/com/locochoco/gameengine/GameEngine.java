@@ -1,5 +1,11 @@
 package com.locochoco.gameengine;
 
+import java.util.concurrent.TimeUnit;
+import java.awt.Color;
+
+import javax.vecmath.Point2d;
+import javax.vecmath.Vector2d;
+
 /**
  * Unifies all the loops and logic in here
  */
@@ -16,14 +22,50 @@ public class GameEngine {
   public GameEngine() {
     physics = new Physics(this);
     graphics = new Graphics(this);
-    level = new Level(); // TODO Set to Null
-    frame_rate = 33;
-    last_physics_time = 0;
-    last_graphics_time = 0;
+    level = null;
+    frame_rate = 33 / 2;
+    last_physics_time = System.currentTimeMillis();
+    last_graphics_time = last_physics_time;
 
     SwingGraphics swing_graphics = new SwingGraphics("Rain World Classic");
     swing_graphics.SetWindowSize(480, 272);
+    swing_graphics.SetPixelToTransformScale(5);
     graphics.SetGraphicsAPI(swing_graphics);
+
+    // TODO REMOVE
+    // TEST
+    level = new Level(); // TODO Set to Null
+
+    GameObject go_test = new GameObject();
+    BoxRenderer box_renderer = new BoxRenderer(go_test);
+    box_renderer.SetWidth(5)
+        .SetHeight(10)
+        .SetColor(Color.ORANGE);
+    try {
+      go_test.addRenderer(box_renderer);
+      go_test.addRigidbody().SetVelocity(new Vector2d(8, 10));
+      go_test.addCollider().setShape(new Point2d(0, 0), new Point2d(5, 10))
+          .setCenter(new Point2d(2.5, 5));
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+    }
+    level.AddGameObject(go_test);
+
+    GameObject go_test2 = new GameObject();
+    BoxRenderer box_renderer2 = new BoxRenderer(go_test2);
+    box_renderer2.SetWidth(75)
+        .SetHeight(5)
+        .SetColor(Color.CYAN)
+        .SetCenter(new Point2d(75 / 2.0, 2.5));
+    try {
+      go_test2.addRenderer(box_renderer2);
+      go_test2.getTransform().setPosition(new Point2d(50, 45));
+      go_test2.addCollider().setShape(new Point2d(0, 0), new Point2d(75, 5))
+          .setCenter(new Point2d(75 / 2.0, 2.5));
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+    }
+    level.AddGameObject(go_test2);
   }
 
   public Level getLevel() {
@@ -36,7 +78,7 @@ public class GameEngine {
 
   public void Run() {
     long current_time = System.currentTimeMillis(); // ms
-    double physics_delta_time = (last_physics_time - current_time) / 1000.0; // seconds
+    double physics_delta_time = (current_time - last_physics_time) / 1000.0; // seconds
     level.PhysicsUpdate(physics_delta_time);
     physics.Update(physics_delta_time);
 
@@ -49,6 +91,6 @@ public class GameEngine {
     }
 
     level.LateUpdate(physics_delta_time);
-    physics_delta_time = current_time;
+    last_physics_time = current_time;
   }
 }
