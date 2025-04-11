@@ -14,6 +14,8 @@ public final class Collider extends Component {
   private Point2d corner_a;
   private Point2d corner_b;
 
+  private double elasticity;
+
   private Transform transform;
 
   public Collider(GameObject owner) throws Exception {
@@ -23,6 +25,7 @@ public final class Collider extends Component {
     corner_a = new Point2d(0, 0);
     corner_b = new Point2d(0, 0);
     physical = true;
+    elasticity = 0;
   }
 
   public void PhysicsUpdate(double delta_time) {
@@ -55,6 +58,11 @@ public final class Collider extends Component {
     return this;
   }
 
+  public Collider setElasticity(double elasticity) {
+    this.elasticity = elasticity;
+    return this;
+  }
+
   public Point2d getCenter() {
     return center;
   }
@@ -69,6 +77,10 @@ public final class Collider extends Component {
 
   public boolean getPhysical() {
     return physical;
+  }
+
+  public double getElasticity() {
+    return elasticity;
   }
 
   public CollisionData CheckCollision(Collider other) {
@@ -91,25 +103,39 @@ public final class Collider extends Component {
     Point2d other_corner_b_world = new Point2d(other_center_world);
     other_corner_b_world.add(other.getCornerB());
 
-    // See https://aalopes.com/blog/ for Box collision
-    // This shows the direction/magnitude to move the OTHER box to avoid collision,
-    // so we will negate when passing the collision vector
-    double x_overlap = Math.min(our_corner_b_world.getX(), other_corner_b_world.getX())
-        - Math.max(our_corner_a_world.getX(), other_corner_a_world.getX());
-    double y_overlap = Math.min(our_corner_b_world.getY(), other_corner_b_world.getY())
-        - Math.max(our_corner_a_world.getY(), other_corner_a_world.getY());
-    // If they are at both at 0, means the two boxes are touching, but there is no
-    // actual need to move (rare case but makes floor detection always work)
-    System.out.println(x_overlap + " " + y_overlap);
-    System.out.println(our_corner_a_world + " " + our_corner_b_world + " " + our_pos);
-    if (x_overlap >= 0 && y_overlap >= 0)
+    Vector2d overlap_vector_our_a_other_b = new Vector2d(other_corner_b_world);
+    overlap_vector_our_a_other_b.sub(our_corner_a_world);
+
+    Vector2d overlap_vector_our_b_other_a = new Vector2d(other_corner_a_world);
+    overlap_vector_our_b_other_a.sub(our_corner_b_world);
+
+    if (overlap_vector_our_a_other_b.getX() >= 0 && overlap_vector_our_a_other_b.getY() >= 0
+        && overlap_vector_our_b_other_a.getX() <= 0 && overlap_vector_our_b_other_a.getY() <= 0)
       data.setCollision(true);
     else
       data.setCollision(false);
-    if (x_overlap >= y_overlap)
-      data.setCollisionVector(new Vector2d(x_overlap, 0));
+
+    Vector2d collision_vector = new Vector2d(0, 0);
+    // Getting the smalled step to handle the collision from the 2 vectors
+    Vector2d collision_handling_vector = new Vector2d();
+    if (Math.abs(overlap_vector_our_a_other_b.getX()) <= Math.abs(overlap_vector_our_b_other_a.getX()))
+      collision_handling_vector.setX(overlap_vector_our_a_other_b.getX());
     else
-      data.setCollisionVector(new Vector2d(0, y_overlap)); // TODO FIX
+      collision_handling_vector.setX(overlap_vector_our_b_other_a.getX());
+
+    if (Math.abs(overlap_vector_our_a_other_b.getY()) <= Math.abs(overlap_vector_our_b_other_a.getY()))
+      collision_handling_vector.setY(overlap_vector_our_a_other_b.getY());
+    else
+      collision_handling_vector.setY(overlap_vector_our_b_other_a.getY());
+
+    // Get the smallest X,Y or XY change to handle the collision
+    if (Math.abs(collision_handling_vector.getX()) <= Math.abs(collision_handling_vector.getY()))
+      collision_vector.setX(collision_handling_vector.getX());
+    if (Math.abs(collision_handling_vector.getY()) <= Math.abs(collision_handling_vector.getX()))
+      collision_vector.setY(collision_handling_vector.getY());
+
+    data.setCollisionVector(collision_vector);
+
     return data;
   }
 

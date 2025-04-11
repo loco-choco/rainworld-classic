@@ -37,7 +37,8 @@ public class Physics {
         if (collider_gb == null || collider_ga == collider_gb)
           continue;
         CollisionData data = collider_ga.CheckCollision(collider_gb);
-        if (ga.getRigidbody() == null)
+        Rigidbody ga_rigidbody = ga.getRigidbody();
+        if (ga_rigidbody == null)
           continue;
         if (data.getCollision()) {
           // TODO Implement and raise an OnCollision() event on ga
@@ -48,6 +49,15 @@ public class Physics {
           if (gb.getRigidbody() == null)
             collision_vector.scale(0.5);
           ga.getTransform().getPosition().add(collision_vector);
+          // Rigidbody elatic collision calculations
+          if (collision_vector.length() == 0)
+            continue;
+          Vector2d ga_velocity = ga_rigidbody.GetVelocity();
+          collision_vector.normalize();
+          double velocity_being_lost = ga_velocity.dot(collision_vector);
+          collision_vector.scale(velocity_being_lost * (1 + collider_gb.getElasticity()));
+          ga_velocity.sub(collision_vector);
+          ga_rigidbody.SetVelocity(ga_velocity);
         }
 
       }

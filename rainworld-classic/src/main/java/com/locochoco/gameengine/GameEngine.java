@@ -40,7 +40,8 @@ public class GameEngine {
     BoxRenderer box_renderer = new BoxRenderer(go_test);
     box_renderer.SetWidth(5)
         .SetHeight(10)
-        .SetColor(Color.ORANGE);
+        .SetColor(Color.ORANGE)
+        .SetCenter(new Point2d(2.5, 5));
     try {
       go_test.addRenderer(box_renderer);
       go_test.addRigidbody().SetVelocity(new Vector2d(8, 10));
@@ -60,12 +61,50 @@ public class GameEngine {
     try {
       go_test2.addRenderer(box_renderer2);
       go_test2.getTransform().setPosition(new Point2d(50, 45));
-      go_test2.addCollider().setShape(new Point2d(0, 0), new Point2d(75, 5))
-          .setCenter(new Point2d(75 / 2.0, 2.5));
+      go_test2.addCollider()
+          .setShape(new Point2d(0, 0), new Point2d(75, 5))
+          .setCenter(new Point2d(75 / 2.0, 2.5))
+          .setElasticity(1);
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
     level.AddGameObject(go_test2);
+
+    GameObject go_test3 = new GameObject();
+    BoxRenderer box_renderer3 = new BoxRenderer(go_test3);
+    box_renderer3.SetWidth(75)
+        .SetHeight(5)
+        .SetColor(Color.CYAN)
+        .SetCenter(new Point2d(75 / 2.0, 2.5));
+    try {
+      go_test3.addRenderer(box_renderer3);
+      go_test3.getTransform().setPosition(new Point2d(55, 10));
+      go_test3.addCollider()
+          .setShape(new Point2d(0, 0), new Point2d(75, 5))
+          .setCenter(new Point2d(75 / 2.0, 2.5))
+          .setElasticity(1);
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+    }
+    level.AddGameObject(go_test3);
+
+    GameObject go_test4 = new GameObject();
+    BoxRenderer box_renderer4 = new BoxRenderer(go_test4);
+    box_renderer4.SetWidth(5)
+        .SetHeight(75)
+        .SetColor(Color.CYAN)
+        .SetCenter(new Point2d(2.5, 75 / 2.0));
+    try {
+      go_test4.addRenderer(box_renderer4);
+      go_test4.getTransform().setPosition(new Point2d(55 + 75 / 2.0, (45 + 10) / 2.0));
+      go_test4.addCollider()
+          .setShape(new Point2d(0, 0), new Point2d(5, 75))
+          .setCenter(new Point2d(2.5, 75 / 2.0))
+          .setElasticity(1);
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+    }
+    level.AddGameObject(go_test4);
   }
 
   public Level getLevel() {
