@@ -11,9 +11,11 @@ import javax.vecmath.Vector2d;
  */
 public class GameEngine {
   // Update speed parameters
-  private long frame_rate; // ms
+  private double frame_rate; // seconds
+  private double physics_rate; // seconds
   private long last_physics_time; // ms
   private long last_graphics_time; // ms
+  private long last_logic_time; // ms
   // Logic
   private Physics physics;
   private Graphics graphics;
@@ -23,9 +25,11 @@ public class GameEngine {
     physics = new Physics(this);
     graphics = new Graphics(this);
     level = null;
-    frame_rate = 33 / 2;
+    frame_rate = 0.033;
+    physics_rate = frame_rate / 4;
     last_physics_time = System.currentTimeMillis();
     last_graphics_time = last_physics_time;
+    last_logic_time = last_physics_time;
 
     SwingGraphics swing_graphics = new SwingGraphics("Rain World Classic");
     swing_graphics.SetWindowSize(480, 272);
@@ -45,24 +49,34 @@ public class GameEngine {
 
   public void Run() {
     long current_time = System.currentTimeMillis(); // ms
+    double logic_delta_time = (current_time - last_logic_time) / 1000.0; // seconds
+    double graphics_delta_time = (current_time - last_graphics_time) / 1000.0; // seconds
     double physics_delta_time = (current_time - last_physics_time) / 1000.0; // seconds
-    level.PhysicsUpdate(physics_delta_time);
-    physics.Update(physics_delta_time);
+
+    if (physics_delta_time >= physics_rate) {
+      level.PhysicsUpdate(physics_delta_time);
+      physics.Update(physics_delta_time);
+      last_physics_time = current_time;
+    }
 
     // Graphics and Physics update happen at different times
-    level.Update(physics_delta_time);
-    if (current_time - last_graphics_time >= frame_rate) {
-      level.GraphicsUpdate(current_time - last_graphics_time);
+    level.Update(logic_delta_time);
+    if (graphics_delta_time >= frame_rate) {
+      level.GraphicsUpdate(graphics_delta_time);
       graphics.Update();
       last_graphics_time = current_time;
     }
 
-    level.LateUpdate(physics_delta_time);
-    last_physics_time = current_time;
+    level.LateUpdate(logic_delta_time);
+    last_logic_time = current_time;
   }
 
   private void CreateTestLevel() {
-    level = new Level(); // TODO Set to Null
+    // Physics Settings
+    physics.setGravity(new Vector2d(0, 10));
+    // Level
+
+    level = new Level();
 
     GameObject go_test = new GameObject();
     BoxRenderer box_renderer = new BoxRenderer(go_test);
@@ -92,7 +106,7 @@ public class GameEngine {
       go_test2.addCollider()
           .setShape(new Point2d(0, 0), new Point2d(75, 5))
           .setCenter(new Point2d(75 / 2.0, 2.5))
-          .setElasticity(1);
+          .setElasticity(0.9);
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
@@ -100,7 +114,7 @@ public class GameEngine {
 
     GameObject go_test3 = new GameObject();
     BoxRenderer box_renderer3 = new BoxRenderer(go_test3);
-    box_renderer3.SetWidth(75)
+    box_renderer3.SetWidth(5)
         .SetHeight(5)
         .SetColor(Color.CYAN)
         .SetCenter(new Point2d(75 / 2.0, 2.5));
@@ -110,7 +124,7 @@ public class GameEngine {
       go_test3.addCollider()
           .setShape(new Point2d(0, 0), new Point2d(75, 5))
           .setCenter(new Point2d(75 / 2.0, 2.5))
-          .setElasticity(1);
+          .setElasticity(0.8);
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
@@ -128,7 +142,7 @@ public class GameEngine {
       go_test4.addCollider()
           .setShape(new Point2d(0, 0), new Point2d(5, 75))
           .setCenter(new Point2d(2.5, 75 / 2.0))
-          .setElasticity(1);
+          .setElasticity(0.7);
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }

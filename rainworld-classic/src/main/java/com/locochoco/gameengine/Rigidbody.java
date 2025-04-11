@@ -18,6 +18,10 @@ public final class Rigidbody extends Component {
     mass = 1;
   }
 
+  public double getMass() {
+    return mass;
+  }
+
   public Rigidbody SetMass(double mass) {
     this.mass = mass;
     return this;

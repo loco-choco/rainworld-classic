@@ -8,22 +8,33 @@ import javax.vecmath.Vector2d;
  * Hanldes all the physics logics and calculations
  */
 public class Physics {
+
+  private Vector2d gravity;
+
   private GameEngine game;
 
   public Physics(GameEngine game) {
     this.game = game;
+    gravity = new Vector2d(0, 0);
+  }
+
+  public void setGravity(Vector2d gravity) {
+    this.gravity = gravity;
   }
 
   public void Update(double delta_time) {
+    HandleCollision();
     for (GameObject g : game.getLevel().getGameObjects()) {
       Rigidbody r = g.getRigidbody();
       if (r == null)
         continue;
+      Vector2d gravity_force = new Vector2d(gravity);
+      gravity_force.scale(r.getMass());
+      r.AddForce(gravity_force);
       Vector2d deltaPos = new Vector2d(r.GetVelocity());
       deltaPos.scale(delta_time);
       g.getTransform().getPosition().add(deltaPos);
     }
-    HandleCollision();
   }
 
   private void HandleCollision() {
@@ -57,7 +68,6 @@ public class Physics {
           double velocity_being_lost = ga_velocity.dot(collision_vector);
           collision_vector.scale(velocity_being_lost * (1 + collider_gb.getElasticity()));
           ga_velocity.sub(collision_vector);
-          ga_rigidbody.SetVelocity(ga_velocity);
         }
 
       }
