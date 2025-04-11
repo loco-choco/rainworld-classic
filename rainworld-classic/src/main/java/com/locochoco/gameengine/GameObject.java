@@ -43,6 +43,11 @@ public class GameObject {
     return renderer;
   }
 
+  public Component addComponent(Component component) {
+    components.add(component);
+    return component;
+  }
+
   public Transform getTransform() {
     return transform;
   }

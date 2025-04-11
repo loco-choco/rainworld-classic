@@ -19,6 +19,7 @@ public class GameEngine {
   // Logic
   private Physics physics;
   private Graphics graphics;
+  private InputAPI inputs;
   private Level level;
 
   public GameEngine() {
@@ -32,11 +33,17 @@ public class GameEngine {
     last_logic_time = last_physics_time;
 
     SwingGraphics swing_graphics = new SwingGraphics("Rain World Classic");
+    graphics.SetGraphicsAPI(swing_graphics);
+    inputs = swing_graphics;
+
+    // Game Specific Settings
     swing_graphics.SetWindowSize(480, 272);
     swing_graphics.SetPixelToTransformScale(5);
-    graphics.SetGraphicsAPI(swing_graphics);
-
     CreateTestLevel();// TODO REMOVE
+  }
+
+  public InputAPI getInputs() {
+    return inputs;
   }
 
   public Level getLevel() {
@@ -73,7 +80,7 @@ public class GameEngine {
 
   private void CreateTestLevel() {
     // Physics Settings
-    physics.setGravity(new Vector2d(0, 10));
+    physics.setGravity(new Vector2d(0, 100));
     // Level
 
     level = new Level();
@@ -92,43 +99,47 @@ public class GameEngine {
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
+    CharacterController controller = new CharacterController(go_test, inputs);
+    controller.setMaxSpeed(20).setAcceleration(80).setJumpVelocity(40);
+    go_test.addComponent(controller);
     level.AddGameObject(go_test);
 
     GameObject go_test2 = new GameObject();
     BoxRenderer box_renderer2 = new BoxRenderer(go_test2);
-    box_renderer2.SetWidth(75)
+    box_renderer2.SetWidth(100)
         .SetHeight(5)
         .SetColor(Color.CYAN)
-        .SetCenter(new Point2d(75 / 2.0, 2.5));
+        .SetCenter(new Point2d(50, 2.5));
     try {
       go_test2.addRenderer(box_renderer2);
       go_test2.getTransform().setPosition(new Point2d(50, 45));
       go_test2.addCollider()
-          .setShape(new Point2d(0, 0), new Point2d(75, 5))
-          .setCenter(new Point2d(75 / 2.0, 2.5))
-          .setElasticity(0.9);
+          .setShape(new Point2d(0, 0), new Point2d(100, 5))
+          .setCenter(new Point2d(50, 2.5))
+          .setElasticity(0);
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
     level.AddGameObject(go_test2);
-
-    GameObject go_test3 = new GameObject();
-    BoxRenderer box_renderer3 = new BoxRenderer(go_test3);
-    box_renderer3.SetWidth(5)
-        .SetHeight(5)
-        .SetColor(Color.CYAN)
-        .SetCenter(new Point2d(75 / 2.0, 2.5));
-    try {
-      go_test3.addRenderer(box_renderer3);
-      go_test3.getTransform().setPosition(new Point2d(55, 10));
-      go_test3.addCollider()
-          .setShape(new Point2d(0, 0), new Point2d(75, 5))
-          .setCenter(new Point2d(75 / 2.0, 2.5))
-          .setElasticity(0.8);
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-    }
-    level.AddGameObject(go_test3);
+    /*
+     * GameObject go_test3 = new GameObject();
+     * BoxRenderer box_renderer3 = new BoxRenderer(go_test3);
+     * box_renderer3.SetWidth(5)
+     * .SetHeight(5)
+     * .SetColor(Color.CYAN)
+     * .SetCenter(new Point2d(75 / 2.0, 2.5));
+     * try {
+     * go_test3.addRenderer(box_renderer3);
+     * go_test3.getTransform().setPosition(new Point2d(55, 10));
+     * go_test3.addCollider()
+     * .setShape(new Point2d(0, 0), new Point2d(75, 5))
+     * .setCenter(new Point2d(75 / 2.0, 2.5))
+     * .setElasticity(0.8);
+     * } catch (Exception e) {
+     * System.err.println(e.getMessage());
+     * }
+     * level.AddGameObject(go_test3);
+     */
 
     GameObject go_test4 = new GameObject();
     BoxRenderer box_renderer4 = new BoxRenderer(go_test4);
@@ -142,7 +153,7 @@ public class GameEngine {
       go_test4.addCollider()
           .setShape(new Point2d(0, 0), new Point2d(5, 75))
           .setCenter(new Point2d(2.5, 75 / 2.0))
-          .setElasticity(0.7);
+          .setElasticity(0);
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
