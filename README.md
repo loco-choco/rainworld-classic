@@ -9,10 +9,9 @@ nix develop -c
 
 # Builds the project
 cd rainworld-classic
-mvn package
-
+mvn clean compile assembly:single
 # Runs the project
-java -cp target/rainworld-classic-1.0-SNAPSHOT.jar com.locochoco.app.App
+java -jar target/rainworld-classic-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
 ## References

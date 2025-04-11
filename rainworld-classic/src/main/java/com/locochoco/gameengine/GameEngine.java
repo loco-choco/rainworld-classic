@@ -51,5 +51,4 @@ public class GameEngine {
     level.LateUpdate(physics_delta_time);
     physics_delta_time = current_time;
   }
-
 }

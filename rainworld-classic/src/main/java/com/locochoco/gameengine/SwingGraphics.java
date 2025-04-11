@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferStrategy;
 
 import javax.swing.GroupLayout;
 import javax.swing.JFrame;
@@ -24,6 +25,7 @@ public class SwingGraphics
   // GraphicsAPI
   private int window_width;
   private int window_height;
+  BufferStrategy buffer;
   Graphics current_frame;
   // InputAPI
 
@@ -41,7 +43,9 @@ public class SwingGraphics
   }
 
   public void CreateBuffer() {
-    current_frame = getBufferStrategy().getDrawGraphics();
+    current_frame = buffer.getDrawGraphics();
+    current_frame.setColor(Color.BLACK);
+    current_frame.fillRect(0, 0, window_width, window_height);
   }
 
   public void DrawRect(Point2i position, int width, int height, Color color) {
@@ -69,6 +73,7 @@ public class SwingGraphics
     setVisible(true);
 
     createBufferStrategy(2);
+    buffer = getBufferStrategy();
   }
 
   // InputAPI
