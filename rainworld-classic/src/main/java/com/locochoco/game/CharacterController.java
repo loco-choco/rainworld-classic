@@ -1,12 +1,11 @@
-package com.locochoco.gameengine;
+package com.locochoco.game;
 
 import java.awt.event.KeyEvent;
 
 import javax.vecmath.Vector2d;
 
-/**
- * Representation of a Object in game
- */
+import com.locochoco.gameengine.*;
+
 public class CharacterController extends Component {
 
   private InputAPI inputs;

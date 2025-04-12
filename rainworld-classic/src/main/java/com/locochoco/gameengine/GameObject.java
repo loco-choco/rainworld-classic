@@ -19,31 +19,20 @@ public class GameObject {
     components.add(transform);
   }
 
-  public Collider addCollider() throws Exception {
-    if (collider != null)
-      throw new Exception("There is already a collider in this GameObject");
-    collider = new Collider(this);
-    components.add(collider);
-    return collider;
-  }
-
-  public Rigidbody addRigidbody() throws Exception {
-    if (rigidbody != null)
-      throw new Exception("There is already a rigidbody in this GameObject");
-    rigidbody = new Rigidbody(this);
-    components.add(rigidbody);
-    return rigidbody;
-  }
-
-  public Renderer addRenderer(Renderer renderer) throws Exception {
-    if (this.renderer != null)
-      throw new Exception("There is already a renderer in this GameObject");
-    this.renderer = renderer;
-    components.add(renderer);
-    return renderer;
-  }
-
-  public Component addComponent(Component component) {
+  public <Comp extends Component> Comp addComponent(Comp component) throws Exception {
+    if (component instanceof Rigidbody rigid) {
+      if (rigidbody != null)
+        throw new Exception("There is already a rigidbody in this GameObject");
+      rigidbody = rigid;
+    } else if (component instanceof Collider col) {
+      if (collider != null)
+        throw new Exception("There is already a collider in this GameObject");
+      collider = col;
+    } else if (component instanceof Renderer rend) {
+      if (renderer != null)
+        throw new Exception("There is already a renderer in this GameObject");
+      renderer = rend;
+    }
     components.add(component);
     return component;
   }
