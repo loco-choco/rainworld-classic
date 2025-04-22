@@ -8,9 +8,139 @@
             {
               "name": "position",
               "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          ]
+        },
+        {
+          "type": "com.locochoco.gameengine.Rigidbody",
+          "fields": [
+            {
+              "name": "velocity",
+              "value": {
+                "x": 8,
+                "y": 10
+              }
+            }
+          ]
+        },
+        {
+          "type": "com.locochoco.game.CharacterController",
+          "fields": [
+            {
+              "name": "max_speed",
+              "value": 20
+            },
+            {
+              "name": "acceleration",
+              "value": 80
+            },
+            {
+              "name": "jump_velocity",
+              "value": 40
+            }
+          ]
+        },
+        {
+          "type": "com.locochoco.gameengine.Collider",
+          "fields": [
+            {
+              "name": "corner_a",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            {
+              "name": "corner_b",
+              "value": {
+                "x": 5,
+                "y": 10
+              }
+            },
+            {
+              "name": "center",
+              "value": {
+                "x": 2.5,
+                "y": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "com.locochoco.gameengine.BoxRenderer",
+          "fields": [
+            {
+              "name": "width",
+              "value": 5
+            },
+            {
+              "name": "height",
+              "value": 10
+            },
+            {
+              "name": "center",
+              "value": {
+                "x": 2.5,
+                "y": 5
+              }
+            },
+            {
+              "name": "color",
+              "value": {
+                "red": 255,
+                "green": 255,
+                "blue": 0,
+                "alpha": 255
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "components": [
+        {
+          "type": "com.locochoco.gameengine.Transform",
+          "fields": [
+            {
+              "name": "position",
+              "value": {
                 "x": 50,
                 "y": 45
               }
+            }
+          ]
+        },
+        {
+          "type": "com.locochoco.gameengine.Collider",
+          "fields": [
+            {
+              "name": "corner_a",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            {
+              "name": "corner_b",
+              "value": {
+                "x": 100,
+                "y": 5
+              }
+            },
+            {
+              "name": "center",
+              "value": {
+                "x": 50,
+                "y": 2.5
+              }
+            },
+            {
+              "name": "elasticity",
+              "value": 0
             }
           ]
         },
@@ -30,6 +160,81 @@
               "value": {
                 "x": 50,
                 "y": 2.5
+              }
+            },
+            {
+              "name": "color",
+              "value": {
+                "red": 0,
+                "green": 255,
+                "blue": 255,
+                "alpha": 255
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "components": [
+        {
+          "type": "com.locochoco.gameengine.Transform",
+          "fields": [
+            {
+              "name": "position",
+              "value": {
+                "x": 92.5,
+                "y": 27.5
+              }
+            }
+          ]
+        },
+        {
+          "type": "com.locochoco.gameengine.Collider",
+          "fields": [
+            {
+              "name": "corner_a",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            {
+              "name": "corner_b",
+              "value": {
+                "x": 5,
+                "y": 75
+              }
+            },
+            {
+              "name": "center",
+              "value": {
+                "x": 2.5,
+                "y": 37.5
+              }
+            },
+            {
+              "name": "elasticity",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "type": "com.locochoco.gameengine.BoxRenderer",
+          "fields": [
+            {
+              "name": "width",
+              "value": 5
+            },
+            {
+              "name": "height",
+              "value": 75
+            },
+            {
+              "name": "center",
+              "value": {
+                "x": 2.5,
+                "y": 37.5
               }
             },
             {

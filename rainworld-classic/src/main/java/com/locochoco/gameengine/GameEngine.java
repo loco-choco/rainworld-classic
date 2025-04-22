@@ -42,11 +42,16 @@ public class GameEngine {
     swing_graphics.SetWindowSize(480, 272);
     swing_graphics.SetPixelToTransformScale(5);
     instance = this;
+    // TODO MOVE THIS TO APP
     try {
       level = Level.ReadLevelFromJson("levels/level0.json");
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
+    // TODO ADD THIS TO A GAME.json config or smth
+    // Physics Settings
+    physics.setGravity(new Vector2d(0, 100));
+
     // CreateTestLevel();// TODO REMOVE
   }
 
@@ -93,8 +98,6 @@ public class GameEngine {
   }
 
   private void CreateTestLevel() {
-    // Physics Settings
-    physics.setGravity(new Vector2d(0, 100));
     // Level
 
     level = new Level();
