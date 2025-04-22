@@ -11,11 +11,13 @@ public final class Rigidbody extends Component {
   private Vector2d velocity;
   private double mass;
 
-  public Rigidbody(GameObject owner) {
-    super(owner);
+  public void OnCreated() {
     velocity = new Vector2d(0.0, 0.0);
     force = new Vector2d(0.0, 0.0);
     mass = 1;
+  }
+
+  public void Start() {
   }
 
   public double getMass() {

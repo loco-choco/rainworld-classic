@@ -5,8 +5,10 @@ package com.locochoco.gameengine;
  */
 public abstract class Renderer extends Component {
 
-  public Renderer(GameObject owner) {
-    super(owner);
+  public void OnCreated() {
+  }
+
+  public void Start() {
   }
 
   public void PhysicsUpdate(double delta_time) {

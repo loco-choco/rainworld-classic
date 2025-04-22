@@ -14,9 +14,9 @@ public class BoxRenderer extends Renderer {
   private int height;
   private Color color;
 
-  public BoxRenderer(GameObject owner) {
-    super(owner);
-    transform = owner.getTransform();
+  public void OnCreated() {
+    super.OnCreated();
+    transform = getGameObject().getTransform();
     center = new Point2d(0, 0);
     width = 0;
     height = 0;

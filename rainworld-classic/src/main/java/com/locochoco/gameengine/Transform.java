@@ -1,6 +1,5 @@
 package com.locochoco.gameengine;
 
-import java.util.ArrayList;
 import javax.vecmath.Point2d;
 
 /**
@@ -9,9 +8,11 @@ import javax.vecmath.Point2d;
 public final class Transform extends Component {
   private Point2d position;
 
-  public Transform(GameObject owner) {
-    super(owner);
+  public void OnCreated() {
     position = new Point2d(0.0, 0.0);
+  }
+
+  public void Start() {
   }
 
   public void setPosition(Point2d position) {

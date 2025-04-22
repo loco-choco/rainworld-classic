@@ -18,14 +18,16 @@ public final class Collider extends Component {
 
   private Transform transform;
 
-  public Collider(GameObject owner) throws Exception {
-    super(owner);
-    transform = owner.getTransform();
+  public void OnCreated() {
+    transform = getGameObject().getTransform();
     center = new Point2d(0, 0);
     corner_a = new Point2d(0, 0);
     corner_b = new Point2d(0, 0);
     physical = true;
     elasticity = 0;
+  }
+
+  public void Start() {
   }
 
   public void PhysicsUpdate(double delta_time) {

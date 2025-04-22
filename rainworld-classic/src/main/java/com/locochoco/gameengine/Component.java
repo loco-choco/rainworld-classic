@@ -7,9 +7,13 @@ public abstract class Component {
 
   private GameObject owner;
 
-  public Component(GameObject owner) {
+  public void setGameObject(GameObject owner) {
     this.owner = owner;
   }
+
+  public abstract void OnCreated();
+
+  public abstract void Start();
 
   public abstract void PhysicsUpdate(double delta_time);
 
@@ -19,5 +23,7 @@ public abstract class Component {
 
   public abstract void LateUpdate(double delta_time);
 
-  public GameObject getGameObject() {return owner; }
+  public GameObject getGameObject() {
+    return owner;
+  }
 }
