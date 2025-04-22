@@ -7,9 +7,9 @@ import javax.vecmath.Vector2d;
  * Representation of a Object in game
  */
 public final class Rigidbody extends Component {
-  private Vector2d force;
-  private Vector2d velocity;
-  private double mass;
+  public Vector2d force;
+  public Vector2d velocity;
+  public double mass;
 
   public void OnCreated() {
     velocity = new Vector2d(0.0, 0.0);

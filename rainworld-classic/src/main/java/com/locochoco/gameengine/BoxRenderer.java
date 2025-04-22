@@ -9,10 +9,10 @@ import javax.vecmath.Point2d;
  */
 public class BoxRenderer extends Renderer {
   private Transform transform;
-  private Point2d center;
-  private int width;
-  private int height;
-  private Color color;
+  public Point2d center;
+  public int width;
+  public int height;
+  public Color color;
 
   public void OnCreated() {
     super.OnCreated();

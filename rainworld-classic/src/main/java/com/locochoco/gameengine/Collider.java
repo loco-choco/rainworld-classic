@@ -9,12 +9,12 @@ import java.lang.Exception;
  * Representation of a Object in game
  */
 public final class Collider extends Component {
-  private boolean physical;
-  private Point2d center;
-  private Point2d corner_a;
-  private Point2d corner_b;
+  public boolean physical;
+  public Point2d center;
+  public Point2d corner_a;
+  public Point2d corner_b;
 
-  private double elasticity;
+  public double elasticity;
 
   private Transform transform;
 

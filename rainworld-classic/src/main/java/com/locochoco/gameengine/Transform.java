@@ -6,7 +6,7 @@ import javax.vecmath.Point2d;
  * Representation of a Object in game
  */
 public final class Transform extends Component {
-  private Point2d position;
+  public Point2d position;
 
   public void OnCreated() {
     position = new Point2d(0.0, 0.0);
