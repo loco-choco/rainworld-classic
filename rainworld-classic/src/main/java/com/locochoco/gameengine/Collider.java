@@ -103,8 +103,8 @@ public class Collider extends Component {
 
   public CollisionData CheckCollision(Collider other) {
     CollisionData data = new CollisionData();
-    Point2d our_pos = transform.getPosition();
-    Point2d other_pos = other.getGameObject().getTransform().getPosition();
+    Point2d our_pos = transform.getGlobalPosition();
+    Point2d other_pos = other.getGameObject().getTransform().getGlobalPosition();
 
     // Calculating our center and corners relative to the world
     Point2d our_center_world = new Point2d(our_pos);
