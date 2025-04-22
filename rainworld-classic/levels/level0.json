@@ -15,7 +15,7 @@
           ]
         },
         {
-          "type": "com.locochoco.gameengine.Rigidbody",
+          "type": "com.locochoco.gameengine.RigidBody",
           "fields": [
             {
               "name": "velocity",

@@ -6,7 +6,7 @@ import javax.vecmath.Vector2d;
 /**
  * Representation of a Object in game
  */
-public final class Rigidbody extends Component {
+public final class RigidBody extends Component {
   public Vector2d force;
   public Vector2d velocity;
   public double mass;
@@ -24,7 +24,7 @@ public final class Rigidbody extends Component {
     return mass;
   }
 
-  public Rigidbody SetMass(double mass) {
+  public RigidBody SetMass(double mass) {
     this.mass = mass;
     return this;
   }

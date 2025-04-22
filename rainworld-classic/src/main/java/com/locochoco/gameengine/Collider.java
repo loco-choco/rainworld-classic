@@ -4,17 +4,20 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
 import java.lang.Exception;
+import java.lang.String;
 
 /**
  * Representation of a Object in game
  */
-public final class Collider extends Component {
+public class Collider extends Component {
   public boolean physical;
   public Point2d center;
   public Point2d corner_a;
   public Point2d corner_b;
 
   public double elasticity;
+
+  public String layer;
 
   private Transform transform;
 
@@ -25,6 +28,7 @@ public final class Collider extends Component {
     corner_b = new Point2d(0, 0);
     physical = true;
     elasticity = 0;
+    layer = "";
   }
 
   public void Start() {
@@ -40,6 +44,9 @@ public final class Collider extends Component {
   }
 
   public void LateUpdate(double delta_time) {
+  }
+
+  public void OnCollision(Collider collidee) {
   }
 
   public Collider setCenter(Point2d center) {
@@ -65,6 +72,11 @@ public final class Collider extends Component {
     return this;
   }
 
+  public Collider setLayer(String layer) {
+    this.layer = layer;
+    return this;
+  }
+
   public Point2d getCenter() {
     return center;
   }
@@ -83,6 +95,10 @@ public final class Collider extends Component {
 
   public double getElasticity() {
     return elasticity;
+  }
+
+  public String getLayer() {
+    return layer;
   }
 
   public CollisionData CheckCollision(Collider other) {

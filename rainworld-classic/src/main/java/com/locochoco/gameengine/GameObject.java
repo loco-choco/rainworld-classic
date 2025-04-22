@@ -10,7 +10,7 @@ public class GameObject {
   private ArrayList<Component> components;
   private Transform transform;
   private Collider collider;
-  private Rigidbody rigidbody;
+  private RigidBody rigidbody;
   private Renderer renderer;
 
   public GameObject() {
@@ -26,7 +26,7 @@ public class GameObject {
       if (transform != null)
         throw new Exception("There is already a transform in this GameObject");
       transform = trans;
-    } else if (component instanceof Rigidbody rigid) {
+    } else if (component instanceof RigidBody rigid) {
       if (rigidbody != null)
         throw new Exception("There is already a rigidbody in this GameObject");
       rigidbody = rigid;
@@ -53,7 +53,7 @@ public class GameObject {
     return collider;
   }
 
-  public Rigidbody getRigidbody() {
+  public RigidBody getRigidBody() {
     return rigidbody;
   }
 

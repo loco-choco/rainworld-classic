@@ -9,7 +9,7 @@ import com.locochoco.gameengine.*;
 public class CharacterController extends Component {
 
   private InputAPI inputs;
-  private Rigidbody rigidbody;
+  private RigidBody rigidbody;
   public double max_speed;
   public double acceleration;
   public double jump_velocity;
@@ -22,7 +22,7 @@ public class CharacterController extends Component {
   }
 
   public void Start() {
-    rigidbody = getGameObject().getRigidbody();
+    rigidbody = getGameObject().getRigidBody();
   }
 
   public CharacterController setMaxSpeed(double max_speed) {
