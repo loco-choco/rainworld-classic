@@ -10,17 +10,19 @@ public class CharacterController extends Component {
 
   private InputAPI inputs;
   private Rigidbody rigidbody;
-  private double max_speed;
-  private double acceleration;
-  private double jump_velocity;
+  public double max_speed;
+  public double acceleration;
+  public double jump_velocity;
 
   private boolean jumped_was_pressed;
 
-  public CharacterController(GameObject owner, InputAPI inputs) {
-    super(owner);
-    this.inputs = inputs;
-    rigidbody = owner.getRigidbody();
+  public void OnCreated() {
+    inputs = GameEngine.getGameEngine().getInputs();
     jumped_was_pressed = false;
+  }
+
+  public void Start() {
+    rigidbody = getGameObject().getRigidbody();
   }
 
   public CharacterController setMaxSpeed(double max_speed) {

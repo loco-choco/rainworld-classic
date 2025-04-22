@@ -1,0 +1,49 @@
+{
+  "game_objects": [
+    {
+      "components": [
+        {
+          "type": "com.locochoco.gameengine.Transform",
+          "fields": [
+            {
+              "name": "position",
+              "value": {
+                "x": 50,
+                "y": 45
+              }
+            }
+          ]
+        },
+        {
+          "type": "com.locochoco.gameengine.BoxRenderer",
+          "fields": [
+            {
+              "name": "width",
+              "value": 100
+            },
+            {
+              "name": "height",
+              "value": 5
+            },
+            {
+              "name": "center",
+              "value": {
+                "x": 50,
+                "y": 2.5
+              }
+            },
+            {
+              "name": "color",
+              "value": {
+                "red": 0,
+                "green": 255,
+                "blue": 255,
+                "alpha": 255
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

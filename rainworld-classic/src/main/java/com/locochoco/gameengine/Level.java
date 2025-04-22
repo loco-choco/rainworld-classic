@@ -64,11 +64,14 @@ public class Level {
     JsonNode root = mapper.readTree(json_file);
     JsonNode game_objects = root.get("game_objects");
     for (JsonNode game_object : game_objects) { // Builds the gameobjects in the level
+
+      System.out.println("New Game Object!");
       GameObject go = new GameObject();
       new_level.AddGameObject(go);
       JsonNode components = game_object.get("components");
       for (JsonNode component : components) { // Builds the components for each gameobject
         String component_type = component.get("type").asText();
+        System.out.printf("\tNew Component %s!\n", component_type);
         Class<?> component_class;
         try {
           component_class = Class.forName(component_type);
@@ -129,6 +132,7 @@ public class Level {
         }
       }
     }
+    System.out.printf("Finished building level %s\n", filename);
 
     return new_level;
   }
