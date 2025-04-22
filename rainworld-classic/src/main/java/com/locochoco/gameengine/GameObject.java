@@ -15,12 +15,18 @@ public class GameObject {
 
   public GameObject() {
     components = new ArrayList<>();
-    transform = new Transform(this);
+    transform = new Transform();
     components.add(transform);
+    transform.setGameObject(this);
+    transform.OnCreated();
   }
 
   public <Comp extends Component> Comp addComponent(Comp component) throws Exception {
-    if (component instanceof Rigidbody rigid) {
+    if (component instanceof Transform trans) {
+      if (transform != null)
+        throw new Exception("There is already a transform in this GameObject");
+      transform = trans;
+    } else if (component instanceof Rigidbody rigid) {
       if (rigidbody != null)
         throw new Exception("There is already a rigidbody in this GameObject");
       rigidbody = rigid;
@@ -34,6 +40,8 @@ public class GameObject {
       renderer = rend;
     }
     components.add(component);
+    component.setGameObject(this);
+    component.OnCreated();
     return component;
   }
 
@@ -51,6 +59,11 @@ public class GameObject {
 
   public Renderer getRenderer() {
     return renderer;
+  }
+
+  public void Start() {
+    for (Component c : components)
+      if(!c.getHasStarted()){ c.Start(); c.setHasStarted(true);}
   }
 
   public void PhysicsUpdate(double delta_time) {

@@ -6,10 +6,7 @@ package com.locochoco.gameengine;
 public abstract class Component {
 
   private GameObject owner;
-
-  public void setGameObject(GameObject owner) {
-    this.owner = owner;
-  }
+  private boolean has_started = false;
 
   public abstract void OnCreated();
 
@@ -22,6 +19,18 @@ public abstract class Component {
   public abstract void Update(double delta_time);
 
   public abstract void LateUpdate(double delta_time);
+
+  public void setHasStarted(boolean has_started) {
+    this.has_started = has_started;
+  }
+
+  public boolean getHasStarted() {
+    return has_started;
+  }
+
+  public void setGameObject(GameObject owner) {
+    this.owner = owner;
+  }
 
   public GameObject getGameObject() {
     return owner;

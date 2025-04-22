@@ -60,6 +60,8 @@ public class GameEngine {
     double graphics_delta_time = (current_time - last_graphics_time) / 1000.0; // seconds
     double physics_delta_time = (current_time - last_physics_time) / 1000.0; // seconds
 
+    level.StartObjects();
+
     if (physics_delta_time >= physics_rate) {
       level.PhysicsUpdate(physics_delta_time);
       physics.Update(physics_delta_time);

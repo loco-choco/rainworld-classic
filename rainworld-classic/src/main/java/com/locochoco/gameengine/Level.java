@@ -29,6 +29,11 @@ public class Level {
     game_objects.add(gameObject);
   }
 
+  public void StartObjects() {
+    for (GameObject g : game_objects)
+      g.Start();
+  }
+
   public void PhysicsUpdate(double delta_time) {
     for (GameObject g : game_objects)
       g.PhysicsUpdate(delta_time);
