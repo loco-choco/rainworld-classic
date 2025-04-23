@@ -66,74 +66,9 @@ public class Level {
     for (JsonNode game_object : game_objects) { // Builds the gameobjects in the level
 
       System.out.println("New Game Object!");
-      GameObject go = new GameObject();
-      new_level.AddGameObject(go);
-      JsonNode components = game_object.get("components");
-      for (JsonNode component : components) { // Builds the components for each gameobject
-        String component_type = component.get("type").asText();
-        System.out.printf("\tNew Component %s!\n", component_type);
-        Class<?> component_class;
-        try {
-          component_class = Class.forName(component_type);
-          if (!Component.class.isAssignableFrom(component_class)) {
-            System.err.printf("Class of type %s is not from Component superclass!\n", component_type);
-            continue;
-          }
-        } catch (ClassNotFoundException exception) {
-          System.err.printf("Component of type %s not found!\n", component_type);
-          continue;
-        }
-        Constructor<?> component_constructor;
-        try {
-          component_constructor = component_class.getConstructor(new Class[] {});
-        } catch (NoSuchMethodException exception) {
-          System.err.printf("Could not find empty constructor for component of type %s!\n", component_type);
-          continue;
-        }
-        Component component_instance;
-        if (component_class != Transform.class) { // Transform is created when the GameObject is created
-          try {
-            component_instance = (Component) component_constructor.newInstance(new Object[] {});
-          } catch (Exception exception) {
-            System.err.printf("Issue instantiating component of type %s!\n", component_type);
-            continue;
-          }
-          try {
-            go.addComponent(component_instance);
-          } catch (Exception exception) {
-            System.err.printf("Component of type %s already exists!\n", component_type);
-            continue;
-          }
-        } else
-          component_instance = go.getTransform();
-        JsonNode component_fields = component.get("fields");
-        for (JsonNode field : component_fields) { // Fills the fields of each component
-          String field_name = field.get("name").asText();
-          Field component_field;
-          try {
-            component_field = component_class.getField(field_name);
-          } catch (NoSuchFieldException exception) {
-            System.err.printf("Public field %s not found on component of type %s!\n",
-                field_name, component_type);
-            continue;
-          }
-          Object new_field_val = mapper.convertValue(field.get("value"), component_field.getType());
-          try {
-            component_field.set(component_instance, new_field_val);
-          } catch (IllegalArgumentException exception) {
-            System.err.printf("Field %s on component of type %s with wrong value type!\n",
-                field_name, component_type);
-            continue;
-          } catch (IllegalAccessException exception) {
-            System.err.printf("Field %s on component of type %s isn't public (what?)!\n",
-                field_name, component_type);
-            continue;
-          }
-        }
-      }
+      new_level.AddGameObject(GameObject.CreateGameObjectFromJson(game_object, mapper));
+      System.out.printf("Finished building level %s\n", filename);
     }
-    System.out.printf("Finished building level %s\n", filename);
-
     return new_level;
   }
 }

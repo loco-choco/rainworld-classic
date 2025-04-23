@@ -23,6 +23,12 @@ public class BoxRenderer extends Renderer {
     color = Color.BLACK;
   }
 
+  public void Start() {
+    if (center == null) {
+      center = new Point2d(width / 2.0, height / 2.0);
+    }
+  }
+
   public BoxRenderer SetCenter(Point2d center) {
     this.center = center;
     return this;

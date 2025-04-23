@@ -18,6 +18,7 @@
           buildInputs = with pkgs; [
             maven
             jdk23
+            yj
           ];
         };
       }

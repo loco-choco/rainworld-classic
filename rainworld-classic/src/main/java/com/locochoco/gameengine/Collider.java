@@ -40,6 +40,11 @@ public class Collider extends Component {
   }
 
   public void Start() {
+    if (center == null) { // Null is a way to show we want the collider to be centered
+      center = new Point2d(corner_a);
+      center.add(corner_b);
+      center.scale(0.5);
+    }
   }
 
   public void PhysicsUpdate(double delta_time) {

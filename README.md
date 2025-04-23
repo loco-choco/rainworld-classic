@@ -12,6 +12,8 @@ cd rainworld-classic
 mvn clean compile assembly:single
 # Runs the project
 java -jar target/rainworld-classic-1.0-SNAPSHOT-jar-with-dependencies.jar
+# Convert the levels from yaml to json
+(yj -yt < level0.yaml) > level0.json
 ```
 ## Current TO-DOs
 
