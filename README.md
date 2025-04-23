@@ -13,6 +13,17 @@ mvn clean compile assembly:single
 # Runs the project
 java -jar target/rainworld-classic-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
+## Current TO-DOs
+
+- [ ] Add Game Configs and load them via json
+    - [ ] Load Collision Matrix
+    - [ ] Load Other Physics settings
+- [x] Make Jump Reset when grounded
+- [x] Get collision event
+- [x] Physics Layer System
+- [x] GameObject Hierarchy
+
+
 
 ## References
 
