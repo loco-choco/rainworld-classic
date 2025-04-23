@@ -5,6 +5,7 @@ import javax.vecmath.Vector2d;
 
 import java.lang.Exception;
 import java.lang.String;
+import java.util.ArrayList;
 
 /**
  * Representation of a Object in game
@@ -21,6 +22,10 @@ public class Collider extends Component {
 
   private Transform transform;
 
+  private ArrayList<CollisionListener> collision_listeners;
+  private boolean entered_collision_this_frame;
+  private boolean was_colliding_last_frame;
+
   public void OnCreated() {
     transform = getGameObject().getTransform();
     center = new Point2d(0, 0);
@@ -29,12 +34,27 @@ public class Collider extends Component {
     physical = true;
     elasticity = 0;
     layer = "";
+    collision_listeners = new ArrayList<>();
+    entered_collision_this_frame = false;
+    was_colliding_last_frame = false;
   }
 
   public void Start() {
   }
 
   public void PhysicsUpdate(double delta_time) {
+    if (!was_colliding_last_frame && entered_collision_this_frame) // OnEnterCollision
+    {
+      for (CollisionListener listener : collision_listeners)
+        listener.OnEnterCollision();
+    }
+    if (was_colliding_last_frame && !entered_collision_this_frame) // OnExitCollision
+    {
+      for (CollisionListener listener : collision_listeners)
+        listener.OnExitCollision();
+    }
+    was_colliding_last_frame = entered_collision_this_frame;
+    entered_collision_this_frame = false;
   }
 
   public void GraphicsUpdate(double delta_time) {
@@ -46,7 +66,11 @@ public class Collider extends Component {
   public void LateUpdate(double delta_time) {
   }
 
-  public void OnCollision(Collider collidee) {
+  public void OnCollision(CollisionData data, Collider collidee) {
+    // Tell listeners about the collision, if there is one
+    for (CollisionListener listener : collision_listeners)
+      listener.OnCollision(data, collidee);
+    entered_collision_this_frame |= true;
   }
 
   public Collider setCenter(Point2d center) {
@@ -99,6 +123,18 @@ public class Collider extends Component {
 
   public String getLayer() {
     return layer;
+  }
+
+  public void addCollisionListener(CollisionListener listener) {
+    collision_listeners.add(listener);
+  }
+
+  public void removeCollisionListener(CollisionListener listener) {
+    collision_listeners.remove(listener);
+  }
+
+  public void clearCollisionListeners() {
+    collision_listeners.clear();
   }
 
   public CollisionData CheckCollision(Collider other) {

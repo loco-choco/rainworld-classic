@@ -78,8 +78,8 @@ public class GameEngine {
     level.StartObjects();
 
     if (physics_delta_time >= physics_rate) {
-      level.PhysicsUpdate(physics_delta_time);
       physics.Update(physics_delta_time);
+      level.PhysicsUpdate(physics_delta_time);
       last_physics_time = current_time;
     }
 

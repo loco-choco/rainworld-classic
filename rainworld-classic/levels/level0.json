@@ -38,8 +38,20 @@
               "value": 80
             },
             {
+              "name": "jump_coyote_time",
+              "value": 0.15
+            },
+            {
               "name": "jump_velocity",
               "value": 40
+            },
+            {
+              "name": "wall_jump_height_contribution",
+              "value": 0.9
+            },
+            {
+              "name": "wall_jump_horizontal_contribution",
+              "value": 0.5
             }
           ]
         },

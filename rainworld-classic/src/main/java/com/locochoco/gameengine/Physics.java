@@ -92,7 +92,7 @@ public class Physics {
         if (ga_rigidbody == null)
           continue;
         if (data.getCollision()) {
-          collider_ga.OnCollision(collider_gb);
+          collider_ga.OnCollision(data, collider_gb);
           Vector2d collision_vector = data.getCollisionVector();
           // If collider_gb is physical, we only want to move ga by half the lenght, as
           // when the gameobject of gb is ga, it will also get moved, but to the other
