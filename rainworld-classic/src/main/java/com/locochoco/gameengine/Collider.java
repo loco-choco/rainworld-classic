@@ -16,8 +16,6 @@ public class Collider extends Component {
   public Point2d corner_a;
   public Point2d corner_b;
 
-  public double elasticity;
-
   public String layer;
 
   private Transform transform;
@@ -32,7 +30,6 @@ public class Collider extends Component {
     corner_a = new Point2d(0, 0);
     corner_b = new Point2d(0, 0);
     physical = true;
-    elasticity = 0;
     layer = "";
     collision_listeners = new ArrayList<>();
     entered_collision_this_frame = false;
@@ -96,11 +93,6 @@ public class Collider extends Component {
     return this;
   }
 
-  public Collider setElasticity(double elasticity) {
-    this.elasticity = elasticity;
-    return this;
-  }
-
   public Collider setLayer(String layer) {
     this.layer = layer;
     return this;
@@ -120,10 +112,6 @@ public class Collider extends Component {
 
   public boolean getPhysical() {
     return physical;
-  }
-
-  public double getElasticity() {
-    return elasticity;
   }
 
   public String getLayer() {

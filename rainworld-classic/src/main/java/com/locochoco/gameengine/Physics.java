@@ -89,28 +89,73 @@ public class Physics {
 
         CollisionData data = collider_ga.CheckCollision(collider_gb);
         RigidBody ga_rigidbody = ga.getRigidBody();
-        if (ga_rigidbody == null)
+        RigidBody gb_rigidbody = gb.getRigidBody();
+        if (ga_rigidbody == null || gb_rigidbody == null)
           continue;
         if (data.getCollision()) {
           collider_ga.OnCollision(data, collider_gb);
           Vector2d collision_vector = data.getCollisionVector();
-          // If collider_gb is physical, we only want to move ga by half the lenght, as
-          // when the gameobject of gb is ga, it will also get moved, but to the other
-          // direction
-          if (gb.getRigidBody() == null)
-            collision_vector.scale(0.5);
-          ga.getTransform().getPosition().add(collision_vector);
-          // RigidBody elastic collision calculations
+
           if (collision_vector.length() == 0)
             continue;
-          Vector2d ga_velocity = ga_rigidbody.GetVelocity();
-          collision_vector.normalize();
-          double velocity_being_lost = Math.min(ga_velocity.dot(collision_vector), 0.0);
-          collision_vector.scale(velocity_being_lost * (1 + collider_gb.getElasticity()));
-          ga_velocity.sub(collision_vector);
+
+          // Position Correction Handler
+          double total_mass = 1 / ga_rigidbody.getMass() + 1 / gb_rigidbody.getMass();
+          if (total_mass != 0) {
+            double porcentage_to_move_by = total_mass / ga_rigidbody.getMass();
+            Vector2d correction = new Vector2d(collision_vector);
+            correction.scale(porcentage_to_move_by);
+            ga.getTransform().getPosition().add(correction);
+          }
+
+          ApplyCollisionImpulse(ga_rigidbody, gb_rigidbody, collision_vector);
+          ApplyFriction(ga_rigidbody, gb_rigidbody, collision_vector);
         }
 
       }
     }
+  }
+
+  // Reference: https://youtu.be/1L2g4ZqmFLQ
+  private void ApplyCollisionImpulse(RigidBody ra, RigidBody rb, Vector2d collision_direction) {
+    Vector2d normal = new Vector2d(collision_direction);
+    normal.normalize();
+    // RigidBody elastic collision calculations
+    Vector2d ra_velocity = ra.GetVelocity();
+    Vector2d rb_velocity = new Vector2d(0, 0);
+    Vector2d rel_velocity = new Vector2d(ra_velocity);
+    rel_velocity.sub(rb_velocity);
+    // Vel change from collision
+    double velocity_being_lost = Math.min(rel_velocity.dot(normal), 0.0);
+    Vector2d vel_diff_from_collision = new Vector2d(normal);
+    // The collision vector goes from gb to ga, so we dont need to times by -1
+    vel_diff_from_collision.scale(velocity_being_lost);
+    Vector2d collision_impulse = new Vector2d(vel_diff_from_collision);
+    double sum_of_inverse_mass = 1 / ra.getMass() + 1 / rb.getMass();
+    double elastic_influence = 1 + Math.min(ra.getElasticity(), rb.getElasticity());
+    collision_impulse.scale(elastic_influence / sum_of_inverse_mass);
+    // Add Impulse
+    ra.AddForce(collision_impulse);
+  }
+
+  private void ApplyFriction(RigidBody ra, RigidBody rb, Vector2d collision_direction) {
+    Vector2d normal = new Vector2d(collision_direction);
+    Vector2d ra_velocity = ra.GetVelocity();
+    Vector2d rb_velocity = new Vector2d(0, 0);
+    Vector2d rel_velocity = new Vector2d(ra_velocity);
+    rel_velocity.sub(rb_velocity);
+    // Rel Vel normal to the collsion
+    double velocity_on_the_collision_scale = Math.min(rel_velocity.dot(normal), 0.0);
+    Vector2d velocity_on_the_collision_dir = new Vector2d(normal);
+    velocity_on_the_collision_dir.scale(velocity_on_the_collision_scale);
+    Vector2d vel_normal_to_collision = new Vector2d(rel_velocity);
+    vel_normal_to_collision.sub(velocity_on_the_collision_dir);
+
+    Vector2d collision_impulse = new Vector2d(vel_diff_from_collision);
+    double sum_of_inverse_mass = 1 / ra.getMass() + 1 / rb.getMass();
+    double elastic_influence = 1 + Math.min(ra.getElasticity(), rb.getElasticity());
+    collision_impulse.scale(elastic_influence / sum_of_inverse_mass);
+    // Add Impulse
+    ra.AddForce(collision_impulse);
   }
 }

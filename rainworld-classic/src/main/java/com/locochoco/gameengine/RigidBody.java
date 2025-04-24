@@ -7,14 +7,18 @@ import javax.vecmath.Vector2d;
  * Representation of a Object in game
  */
 public final class RigidBody extends Component {
-  public Vector2d force;
+  private Vector2d force;
   public Vector2d velocity;
   public double mass;
+  public double elasticity;
+  public double friction;
 
   public void OnCreated() {
     velocity = new Vector2d(0.0, 0.0);
     force = new Vector2d(0.0, 0.0);
     mass = 1;
+    elasticity = 0;
+    friction = 0;
   }
 
   public void Start() {
@@ -24,8 +28,26 @@ public final class RigidBody extends Component {
     return mass;
   }
 
+  public double getElasticity() {
+    return elasticity;
+  }
+
+  public double getFriction() {
+    return friction;
+  }
+
   public RigidBody SetMass(double mass) {
     this.mass = mass;
+    return this;
+  }
+
+  public RigidBody setElasticity(double elasticity) {
+    this.elasticity = elasticity;
+    return this;
+  }
+
+  public RigidBody setFriction(double friction) {
+    this.friction = friction;
     return this;
   }
 
