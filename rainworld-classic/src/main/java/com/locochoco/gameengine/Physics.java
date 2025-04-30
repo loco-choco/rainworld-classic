@@ -108,8 +108,7 @@ public class Physics {
             ga.getTransform().getPosition().add(correction);
           }
 
-          ApplyCollisionImpulse(ga_rigidbody, gb_rigidbody, collision_vector);
-          ApplyFriction(ga_rigidbody, gb_rigidbody, collision_vector);
+          ApplyCollisionImpulses(ga_rigidbody, gb_rigidbody, collision_vector);
         }
 
       }
@@ -117,7 +116,7 @@ public class Physics {
   }
 
   // Reference: https://youtu.be/1L2g4ZqmFLQ
-  private void ApplyCollisionImpulse(RigidBody ra, RigidBody rb, Vector2d collision_direction) {
+  private void ApplyCollisionImpulses(RigidBody ra, RigidBody rb, Vector2d collision_direction) {
     Vector2d normal = new Vector2d(collision_direction);
     normal.normalize();
     // RigidBody elastic collision calculations
@@ -130,32 +129,24 @@ public class Physics {
     Vector2d vel_diff_from_collision = new Vector2d(normal);
     // The collision vector goes from gb to ga, so we dont need to times by -1
     vel_diff_from_collision.scale(velocity_being_lost);
-    Vector2d collision_impulse = new Vector2d(vel_diff_from_collision);
+    Vector2d normal_force = new Vector2d(vel_diff_from_collision);
     double sum_of_inverse_mass = 1 / ra.getMass() + 1 / rb.getMass();
     double elastic_influence = 1 + Math.min(ra.getElasticity(), rb.getElasticity());
-    collision_impulse.scale(elastic_influence / sum_of_inverse_mass);
-    // Add Impulse
-    ra.AddForce(collision_impulse);
-  }
+    normal_force.scale(elastic_influence / sum_of_inverse_mass);
+    // Add Normal Force
+    ra.AddForce(normal_force);
 
-  private void ApplyFriction(RigidBody ra, RigidBody rb, Vector2d collision_direction) {
-    Vector2d normal = new Vector2d(collision_direction);
-    Vector2d ra_velocity = ra.GetVelocity();
-    Vector2d rb_velocity = new Vector2d(0, 0);
-    Vector2d rel_velocity = new Vector2d(ra_velocity);
-    rel_velocity.sub(rb_velocity);
-    // Rel Vel normal to the collsion
-    double velocity_on_the_collision_scale = Math.min(rel_velocity.dot(normal), 0.0);
-    Vector2d velocity_on_the_collision_dir = new Vector2d(normal);
-    velocity_on_the_collision_dir.scale(velocity_on_the_collision_scale);
-    Vector2d vel_normal_to_collision = new Vector2d(rel_velocity);
-    vel_normal_to_collision.sub(velocity_on_the_collision_dir);
-
-    Vector2d collision_impulse = new Vector2d(vel_diff_from_collision);
-    double sum_of_inverse_mass = 1 / ra.getMass() + 1 / rb.getMass();
-    double elastic_influence = 1 + Math.min(ra.getElasticity(), rb.getElasticity());
-    collision_impulse.scale(elastic_influence / sum_of_inverse_mass);
-    // Add Impulse
-    ra.AddForce(collision_impulse);
+    // Calculate Friction Force
+    double vel_normal_to_collision = rel_velocity.dot(normal);
+    Vector2d rel_vel_ortogonal = new Vector2d(normal);
+    rel_velocity.scale(-vel_normal_to_collision);
+    rel_velocity.add(rel_velocity);
+    Vector2d ortogonal = new Vector2d(rel_vel_ortogonal);
+    ortogonal.normalize();
+    // Add Friction Force
+    Vector2d friction_force = new Vector2d(ortogonal);
+    double friction_coeficient = Math.min(ra.getFriction(), rb.getFriction());
+    friction_force.scale(-normal_force.length() * friction_coeficient);
+    ra.AddForce(friction_force);
   }
 }
