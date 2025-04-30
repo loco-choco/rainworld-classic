@@ -1,6 +1,5 @@
 package com.locochoco.gameengine;
 
-import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 /**
@@ -9,6 +8,7 @@ import javax.vecmath.Vector2d;
 public final class RigidBody extends Component {
   private Vector2d force;
   public Vector2d velocity;
+  public boolean immovable;
   public double mass;
   public double elasticity;
   public double friction;
@@ -17,6 +17,7 @@ public final class RigidBody extends Component {
     velocity = new Vector2d(0.0, 0.0);
     force = new Vector2d(0.0, 0.0);
     mass = 1;
+    immovable = false;
     elasticity = 0;
     friction = 0;
   }
@@ -25,6 +26,8 @@ public final class RigidBody extends Component {
   }
 
   public double getMass() {
+    if (immovable)
+      return Double.POSITIVE_INFINITY;
     return mass;
   }
 
@@ -52,6 +55,8 @@ public final class RigidBody extends Component {
   }
 
   public void PhysicsUpdate(double delta_time) {
+    if (immovable)
+      return;
     Vector2d deltaVel = new Vector2d(force);
     deltaVel.scale(delta_time / mass);
     velocity.add(deltaVel);
