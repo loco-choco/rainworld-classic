@@ -127,9 +127,10 @@ public class GameObject {
   }
 
   public static GameObject CreateGameObjectFromJson(JsonNode json, ObjectMapper mapper) {
+    System.out.println("New Game Object!");
 
     GameObject go = new GameObject();
-    Iterator<Entry<String, JsonNode>> components = json.fields();
+    Iterator<Entry<String, JsonNode>> components = json.get("components").fields();
 
     while (components.hasNext()) { // Builds the components of the game object
       Entry<String, JsonNode> component = components.next();
@@ -192,6 +193,17 @@ public class GameObject {
           System.err.printf("Field %s on component of type %s isn't public (what?)!\n",
               field_name, component_type);
           continue;
+        }
+      }
+    }
+    JsonNode children = json.get("children");
+    if (children != null) {
+      for (JsonNode child_json : children) {
+        GameObject child = CreateGameObjectFromJson(child_json, mapper);
+        try {
+          go.addChild(child);
+        } catch (Exception e) {
+          System.err.printf("Issue adding child to game object!\n");
         }
       }
     }

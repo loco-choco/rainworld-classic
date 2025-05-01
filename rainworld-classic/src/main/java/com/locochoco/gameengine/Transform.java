@@ -32,7 +32,7 @@ public final class Transform extends Component {
     Point2d transformed_position = new Point2d(local_position);
     transformed_position.add(position);
     if (parent != null)
-      transformed_position = parent.getTransform().transformToGlobalSpace(local_position);
+      transformed_position = parent.getTransform().transformToGlobalSpace(transformed_position);
 
     return transformed_position;
   }

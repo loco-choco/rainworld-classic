@@ -26,6 +26,9 @@ public class Level {
   }
 
   public void AddGameObject(GameObject gameObject) {
+    for (GameObject child : gameObject.getChildren()) {
+      AddGameObject(child);
+    }
     game_objects.add(gameObject);
   }
 
@@ -64,8 +67,6 @@ public class Level {
     JsonNode root = mapper.readTree(json_file);
     JsonNode game_objects = root.get("game_objects");
     for (JsonNode game_object : game_objects) { // Builds the gameobjects in the level
-
-      System.out.println("New Game Object!");
       new_level.AddGameObject(GameObject.CreateGameObjectFromJson(game_object, mapper));
     }
     System.out.printf("Finished building level %s\n", filename);
