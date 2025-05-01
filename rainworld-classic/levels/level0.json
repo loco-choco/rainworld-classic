@@ -10,7 +10,7 @@
       "com.locochoco.gameengine.RigidBody": {
         "mass": 1,
         "elasticity": 0,
-        "friction": 1,
+        "friction": 0.6,
         "velocity": {
           "x": 8,
           "y": 10
@@ -18,7 +18,7 @@
       },
       "com.locochoco.game.CharacterController": {
         "max_speed": 20,
-        "acceleration": 80,
+        "acceleration": 160,
         "jump_velocity": 40,
         "jump_coyote_time": 0.15,
         "wall_jump_height_contribution": 1,
@@ -57,7 +57,7 @@
       "com.locochoco.gameengine.RigidBody": {
         "immovable": true,
         "elasticity": 0,
-        "friction": 0.5
+        "friction": 1
       },
       "com.locochoco.gameengine.Collider": {
         "corner_a": {
@@ -68,8 +68,7 @@
           "x": 100,
           "y": 5
         },
-        "center": null,
-        "elasticity": 0
+        "center": null
       },
       "com.locochoco.gameengine.BoxRenderer": {
         "width": 100,
@@ -93,7 +92,7 @@
       "com.locochoco.gameengine.RigidBody": {
         "immovable": true,
         "elasticity": 0,
-        "friction": 0.5
+        "friction": 1
       },
       "com.locochoco.gameengine.Collider": {
         "corner_a": {
@@ -104,8 +103,7 @@
           "x": 5,
           "y": 75
         },
-        "center": null,
-        "elasticity": 0
+        "center": null
       },
       "com.locochoco.gameengine.BoxRenderer": {
         "width": 5,
@@ -129,7 +127,7 @@
       "com.locochoco.gameengine.RigidBody": {
         "immovable": true,
         "elasticity": 0,
-        "friction": 0.5
+        "friction": 1
       },
       "com.locochoco.gameengine.Collider": {
         "corner_a": {
@@ -140,8 +138,7 @@
           "x": 5,
           "y": 30
         },
-        "center": null,
-        "elasticity": 0
+        "center": null
       },
       "com.locochoco.gameengine.BoxRenderer": {
         "width": 5,

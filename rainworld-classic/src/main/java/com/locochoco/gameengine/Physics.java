@@ -57,7 +57,7 @@ public class Physics {
   }
 
   public void Update(double delta_time) {
-    HandleCollision();
+    HandleCollision(delta_time);
     for (GameObject g : game.getLevel().getGameObjects()) {
       RigidBody r = g.getRigidBody();
       if (r == null)
@@ -71,7 +71,7 @@ public class Physics {
     }
   }
 
-  private void HandleCollision() {
+  private void HandleCollision(double delta_time) {
     ArrayList<GameObject> game_objects = game.getLevel().getGameObjects();
     for (GameObject ga : game_objects) {
       Collider collider_ga = ga.getCollider();
@@ -102,13 +102,13 @@ public class Physics {
           // Position Correction Handler
           double total_mass = 1 / ga_rigidbody.getMass() + 1 / gb_rigidbody.getMass();
           if (total_mass != 0) {
-            double porcentage_to_move_by = total_mass / ga_rigidbody.getMass();
+            double porcentage_to_move_by = total_mass * ga_rigidbody.getMass();
             Vector2d correction = new Vector2d(collision_vector);
             correction.scale(porcentage_to_move_by);
             ga.getTransform().getPosition().add(correction);
           }
 
-          ApplyCollisionImpulses(ga_rigidbody, gb_rigidbody, collision_vector);
+          ApplyCollisionImpulses(ga_rigidbody, gb_rigidbody, collision_vector, delta_time);
         }
 
       }
@@ -116,7 +116,7 @@ public class Physics {
   }
 
   // Reference: https://youtu.be/1L2g4ZqmFLQ
-  private void ApplyCollisionImpulses(RigidBody ra, RigidBody rb, Vector2d collision_direction) {
+  private void ApplyCollisionImpulses(RigidBody ra, RigidBody rb, Vector2d collision_direction, double delta_time) {
     Vector2d normal = new Vector2d(collision_direction);
     normal.normalize();
     // RigidBody elastic collision calculations
@@ -132,21 +132,26 @@ public class Physics {
     Vector2d normal_force = new Vector2d(vel_diff_from_collision);
     double sum_of_inverse_mass = 1 / ra.getMass() + 1 / rb.getMass();
     double elastic_influence = 1 + Math.min(ra.getElasticity(), rb.getElasticity());
-    normal_force.scale(elastic_influence / sum_of_inverse_mass);
+    normal_force.scale(-elastic_influence / (sum_of_inverse_mass * delta_time));
     // Add Normal Force
     ra.AddForce(normal_force);
 
     // Calculate Friction Force
-    double vel_normal_to_collision = rel_velocity.dot(normal);
     Vector2d rel_vel_ortogonal = new Vector2d(normal);
-    rel_velocity.scale(-vel_normal_to_collision);
-    rel_velocity.add(rel_velocity);
+    rel_vel_ortogonal.scale(-velocity_being_lost);
+    rel_vel_ortogonal.add(rel_velocity);
+    double ortogonal_vel = rel_vel_ortogonal.length();
+    if (ortogonal_vel == 0)
+      return;
     Vector2d ortogonal = new Vector2d(rel_vel_ortogonal);
     ortogonal.normalize();
     // Add Friction Force
     Vector2d friction_force = new Vector2d(ortogonal);
     double friction_coeficient = Math.min(ra.getFriction(), rb.getFriction());
-    friction_force.scale(-normal_force.length() * friction_coeficient);
+    double friction = normal_force.length() * friction_coeficient;
+
+    friction = Math.clamp(friction, 0, ortogonal_vel / delta_time);
+    friction_force.scale(-friction);
     ra.AddForce(friction_force);
   }
 }
