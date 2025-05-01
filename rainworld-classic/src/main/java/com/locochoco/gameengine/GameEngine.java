@@ -1,9 +1,13 @@
 package com.locochoco.gameengine;
 
 import java.awt.Color;
+import java.io.FileReader;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locochoco.game.*;
 
 /**
@@ -41,16 +45,9 @@ public class GameEngine {
     // Game Specific Settings
     swing_graphics.SetWindowSize(480, 272);
     swing_graphics.SetPixelToTransformScale(5);
+
     instance = this;
-    // TODO MOVE THIS TO APP
-    try {
-      level = Level.ReadLevelFromJson("levels/level0.json");
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-    }
-    // TODO ADD THIS TO A GAME.json config or smth
-    // Physics Settings
-    physics.setGravity(new Vector2d(0, 100));
+    LoadGameSettings("game.json");
   }
 
   public static GameEngine getGameEngine() {
@@ -66,6 +63,12 @@ public class GameEngine {
   }
 
   public boolean LoadLevel(String name) {
+    try {
+      level = Level.ReadLevelFromJson(name);
+      return true;
+    } catch (Exception e) {
+      System.err.println(String.format("Error while reading %s level: %s", name, e.getMessage()));
+    }
     return false;
   }
 
@@ -93,5 +96,26 @@ public class GameEngine {
 
     level.LateUpdate(logic_delta_time);
     last_logic_time = current_time;
+  }
+
+  private ObjectMapper mapper;
+
+  public void LoadGameSettings(String filename) {
+    if (mapper == null)
+      mapper = new ObjectMapper();
+
+    try {
+      FileReader json_file = new FileReader(filename);
+      JsonNode root = mapper.readTree(json_file);
+
+      JsonNode physics_json = root.get("physics");
+      physics.ReadSettingsFromJson(physics_json, mapper);
+
+      JsonNode first_level_json = root.get("first_level");
+      LoadLevel(first_level_json.textValue());
+
+    } catch (Exception e) {
+      System.err.println("Error while reading game settings: " + e.getMessage());
+    }
   }
 }

@@ -67,8 +67,8 @@ public class Level {
 
       System.out.println("New Game Object!");
       new_level.AddGameObject(GameObject.CreateGameObjectFromJson(game_object, mapper));
-      System.out.printf("Finished building level %s\n", filename);
     }
+    System.out.printf("Finished building level %s\n", filename);
     return new_level;
   }
 }

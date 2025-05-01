@@ -3,11 +3,14 @@ package com.locochoco.gameengine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.lang.String;
-import java.security.KeyException;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
 import javax.vecmath.Vector2d;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Hanldes all the physics logics and calculations
@@ -153,5 +156,25 @@ public class Physics {
     friction = Math.clamp(friction, 0, ortogonal_vel / delta_time);
     friction_force.scale(-friction);
     ra.AddForce(friction_force);
+  }
+
+  public void ReadSettingsFromJson(JsonNode json, ObjectMapper mapper) {
+    // Collision Matrix
+    JsonNode collision_matrix = json.get("collision_matrix");
+    Iterator<Entry<String, JsonNode>> fields = collision_matrix.fields();
+    while (fields.hasNext()) { // Fills the fields of each component
+      Entry<String, JsonNode> layer = fields.next();
+      ArrayList<String> colliding_layers_list = new ArrayList<>();
+      for (JsonNode other_layer : layer.getValue()) {
+        colliding_layers_list.add(other_layer.asText());
+      }
+      String[] colliding_layers = new String[colliding_layers_list.size()];
+      colliding_layers = colliding_layers_list.toArray(colliding_layers);
+      addCollisionLayer(layer.getKey(), colliding_layers);
+    }
+    // Gravity
+    Vector2d gravity = new Vector2d();
+    gravity = mapper.convertValue(json.get("gravity"), gravity.getClass());
+    setGravity(gravity);
   }
 }
