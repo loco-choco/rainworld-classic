@@ -138,7 +138,8 @@
           "x": 5,
           "y": 30
         },
-        "center": null
+        "center": null,
+        "layer": "floor"
       },
       "com.locochoco.gameengine.BoxRenderer": {
         "width": 5,

@@ -89,10 +89,10 @@
                 <goal>copy-resources</goal>
               </goals>
               <configuration>
-               <outputDirectory>${basedir}/target/levels</outputDirectory>
+               <outputDirectory>${basedir}/target/game</outputDirectory>
                <resources>
                  <resource>
-                   <directory>levels</directory>
+                   <directory>game</directory>
                  </resource>
                </resources>
               </configuration>

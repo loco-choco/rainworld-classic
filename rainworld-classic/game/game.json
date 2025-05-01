@@ -1,0 +1,14 @@
+{
+  "first_level": "levels/level0.json",
+  "physics": {
+    "gravity": {
+      "x": 0,
+      "y": 100
+    },
+    "collision_matrix": {
+      "creature": [
+        "terrain"
+      ]
+    }
+  }
+}
