@@ -34,6 +34,7 @@ public class Physics {
   }
 
   public void addCollisionLayer(String layer, String... collides_with) {
+    makeLayersCollidable(layer, layer);
     for (String other_layer : collides_with) {
       makeLayersCollidable(layer, other_layer);
     }
