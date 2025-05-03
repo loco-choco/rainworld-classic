@@ -1,6 +1,7 @@
 {
   "game_objects": [
     {
+      "name": "slugcat",
       "components": {
         "com.locochoco.gameengine.Transform": {
           "position": {
@@ -40,6 +41,7 @@
       },
       "children": [
         {
+          "name": "body",
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
@@ -62,6 +64,7 @@
           }
         },
         {
+          "name": "left_ear",
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
@@ -84,6 +87,7 @@
           }
         },
         {
+          "name": "right_ear",
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
@@ -106,6 +110,7 @@
           }
         },
         {
+          "name": "tail",
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
@@ -130,6 +135,7 @@
       ]
     },
     {
+      "name": "wall",
       "components": {
         "com.locochoco.gameengine.Transform": {
           "position": {
@@ -169,6 +175,7 @@
       }
     },
     {
+      "name": "wall",
       "components": {
         "com.locochoco.gameengine.Transform": {
           "position": {
@@ -208,6 +215,7 @@
       }
     },
     {
+      "name": "wall",
       "components": {
         "com.locochoco.gameengine.Transform": {
           "position": {

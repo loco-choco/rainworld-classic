@@ -12,6 +12,12 @@ public final class Transform extends Component {
     position = new Point2d(0.0, 0.0);
   }
 
+  public void OnEnabled() {
+  }
+
+  public void OnDisabled() {
+  }
+
   public void Start() {
   }
 

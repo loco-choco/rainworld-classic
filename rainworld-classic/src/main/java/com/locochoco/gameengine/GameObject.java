@@ -29,6 +29,7 @@ public class GameObject {
     parent = null;
     children = new ArrayList<>();
     enabled = false;
+    name = "";
 
     components = new ArrayList<>();
     transform = new Transform();
@@ -67,6 +68,14 @@ public class GameObject {
     return enabled;
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public Transform getTransform() {
     return transform;
   }
@@ -86,11 +95,11 @@ public class GameObject {
   public void setEnabled(boolean enabled) {
     if (enabled && !this.enabled) {
       for (Component c : components)
-        c.OnEnable();
+        c.OnEnabled();
     }
     if (!enabled && this.enabled) {
       for (Component c : components)
-        c.OnDisable();
+        c.OnDisabled();
     }
     this.enabled = enabled;
     for (GameObject child : children)
@@ -135,6 +144,14 @@ public class GameObject {
     this.parent = parent;
   }
 
+  public GameObject findFirstChild(String child_name) {
+    for (GameObject child : children) {
+      if (child.getName() == child_name)
+        return child;
+    }
+    return null;
+  }
+
   public ArrayList<GameObject> getChildren() {
     return children;
   }
@@ -149,9 +166,13 @@ public class GameObject {
   }
 
   public static GameObject CreateGameObjectFromJson(JsonNode json, ObjectMapper mapper) {
-    System.out.println("New Game Object!");
 
     GameObject go = new GameObject();
+    // Name
+    JsonNode name = json.get("name");
+    go.setName(name.asText());
+    System.out.printf("New Game Object %s!\n", go.getName());
+    // Components
     Iterator<Entry<String, JsonNode>> components = json.get("components").fields();
 
     while (components.hasNext()) { // Builds the components of the game object
