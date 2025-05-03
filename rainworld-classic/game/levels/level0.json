@@ -23,7 +23,7 @@
           "jump_velocity": 40,
           "jump_coyote_time": 0.15,
           "wall_jump_height_contribution": 1,
-          "wall_jump_horizontal_contribution": 0.5
+          "wall_jump_horizontal_contribution": 0.7
         },
         "com.locochoco.gameengine.Collider": {
           "corner_a": {
@@ -48,6 +48,7 @@
               }
             },
             "com.locochoco.gameengine.BoxRenderer": {
+              "layer": "creature",
               "width": 5,
               "height": 10,
               "center": null,
@@ -69,6 +70,7 @@
               }
             },
             "com.locochoco.gameengine.BoxRenderer": {
+              "layer": "creature_front_detail",
               "width": 2,
               "height": 3,
               "center": null,
@@ -90,6 +92,7 @@
               }
             },
             "com.locochoco.gameengine.BoxRenderer": {
+              "layer": "creature_front_detail",
               "width": 2,
               "height": 3,
               "center": null,
@@ -111,6 +114,7 @@
               }
             },
             "com.locochoco.gameengine.BoxRenderer": {
+              "layer": "creature_back_detail",
               "width": 6,
               "height": 3,
               "center": null,
@@ -151,6 +155,7 @@
           "layer": "terrain"
         },
         "com.locochoco.gameengine.BoxRenderer": {
+          "layer": "foreground",
           "width": 100,
           "height": 5,
           "center": null,
@@ -189,6 +194,7 @@
           "layer": "terrain"
         },
         "com.locochoco.gameengine.BoxRenderer": {
+          "layer": "foreground",
           "width": 5,
           "height": 75,
           "center": null,
@@ -227,6 +233,7 @@
           "layer": "terrain"
         },
         "com.locochoco.gameengine.BoxRenderer": {
+          "layer": "foreground",
           "width": 5,
           "height": 30,
           "center": null,

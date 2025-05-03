@@ -10,6 +10,10 @@ public abstract class Component {
 
   public abstract void OnCreated();
 
+  public abstract void OnEnabled();
+
+  public abstract void OnDisabled();
+
   public abstract void Start();
 
   public abstract void PhysicsUpdate(double delta_time);

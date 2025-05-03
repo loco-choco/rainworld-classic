@@ -31,6 +31,12 @@ public class CharacterController extends Component implements CollisionListener 
     time_ungrounded = 0;
   }
 
+  public void OnEnabled() {
+  }
+
+  public void OnDisabled() {
+  }
+
   public void Start() {
     rigidbody = getGameObject().getRigidBody();
     collider = getGameObject().getCollider();
@@ -62,8 +68,9 @@ public class CharacterController extends Component implements CollisionListener 
     Vector2d movement_force = new Vector2d(0, 0);
     Vector2d jump_force = new Vector2d(0, -1);
     jump_force.scaleAdd(wall_jump_height_contribution, ground_normal);
-    if (jump_force.length() != 0)
+    if (jump_force.length() != 0) {
       jump_force.normalize();
+    }
     jump_force.setX(jump_force.getX() * wall_jump_horizontal_contribution);
     // Horizontal Force
     double horizontal_velocity = rigidbody.GetVelocity().getX();
@@ -87,14 +94,16 @@ public class CharacterController extends Component implements CollisionListener 
   }
 
   public void OnCollision(CollisionData data, Collider collidee) {
-    ground_normal = new Vector2d(data.getCollisionVector());
-    if (ground_normal.length() != 0)
+    Vector2d ground_normal = new Vector2d(data.getCollisionVector());
+    if (ground_normal.length() != 0) {
       ground_normal.normalize();
+      this.ground_normal = ground_normal;
+      is_grounded = true;
+      time_ungrounded = 0;
+    }
   }
 
   public void OnEnterCollision() {
-    is_grounded = true;
-    time_ungrounded = 0;
   }
 
   public void OnExitCollision() {

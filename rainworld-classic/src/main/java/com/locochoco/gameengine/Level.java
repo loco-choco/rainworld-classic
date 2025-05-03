@@ -30,31 +30,37 @@ public class Level {
       AddGameObject(child);
     }
     game_objects.add(gameObject);
+    gameObject.setEnabled(true);
   }
 
   public void StartObjects() {
     for (GameObject g : game_objects)
-      g.Start();
+      if (g.isEnabled())
+        g.Start();
   }
 
   public void PhysicsUpdate(double delta_time) {
     for (GameObject g : game_objects)
-      g.PhysicsUpdate(delta_time);
+      if (g.isEnabled())
+        g.PhysicsUpdate(delta_time);
   }
 
   public void GraphicsUpdate(double delta_time) {
     for (GameObject g : game_objects)
-      g.GraphicsUpdate(delta_time);
+      if (g.isEnabled())
+        g.GraphicsUpdate(delta_time);
   }
 
   public void Update(double delta_time) {
     for (GameObject g : game_objects)
-      g.Update(delta_time);
+      if (g.isEnabled())
+        g.Update(delta_time);
   }
 
   public void LateUpdate(double delta_time) {
     for (GameObject g : game_objects)
-      g.LateUpdate(delta_time);
+      if (g.isEnabled())
+        g.LateUpdate(delta_time);
   }
 
   private static ObjectMapper mapper;

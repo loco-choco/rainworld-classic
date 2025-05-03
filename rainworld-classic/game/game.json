@@ -11,5 +11,16 @@
       ],
       "terrain": []
     }
+  },
+  "graphics": {
+    "rendering_order": [
+      "ui",
+      "foreground",
+      "item",
+      "creature_front_detail",
+      "creature",
+      "creature_back_detail",
+      "background"
+    ]
   }
 }

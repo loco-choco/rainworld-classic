@@ -111,6 +111,9 @@ public class GameEngine {
       JsonNode physics_json = root.get("physics");
       physics.ReadSettingsFromJson(physics_json, mapper);
 
+      JsonNode graphics_json = root.get("graphics");
+      graphics.ReadSettingsFromJson(graphics_json, mapper);
+
       JsonNode first_level_json = root.get("first_level");
       LoadLevel(first_level_json.textValue());
 

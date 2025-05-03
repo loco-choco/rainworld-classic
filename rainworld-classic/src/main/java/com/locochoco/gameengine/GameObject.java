@@ -21,10 +21,14 @@ public class GameObject {
 
   private GameObject parent;
   private ArrayList<GameObject> children;
+  private boolean enabled;
+
+  private String name;
 
   public GameObject() {
     parent = null;
     children = new ArrayList<>();
+    enabled = false;
 
     components = new ArrayList<>();
     transform = new Transform();
@@ -59,6 +63,10 @@ public class GameObject {
     return component;
   }
 
+  public boolean isEnabled() {
+    return enabled;
+  }
+
   public Transform getTransform() {
     return transform;
   }
@@ -73,6 +81,20 @@ public class GameObject {
 
   public Renderer getRenderer() {
     return renderer;
+  }
+
+  public void setEnabled(boolean enabled) {
+    if (enabled && !this.enabled) {
+      for (Component c : components)
+        c.OnEnable();
+    }
+    if (!enabled && this.enabled) {
+      for (Component c : components)
+        c.OnDisable();
+    }
+    this.enabled = enabled;
+    for (GameObject child : children)
+      child.setEnabled(enabled);
   }
 
   public void Start() {

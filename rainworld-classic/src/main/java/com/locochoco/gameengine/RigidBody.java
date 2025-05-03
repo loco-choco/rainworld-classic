@@ -22,6 +22,12 @@ public final class RigidBody extends Component {
     friction = 0;
   }
 
+  public void OnEnabled() {
+  }
+
+  public void OnDisabled() {
+  }
+
   public void Start() {
   }
 

@@ -36,6 +36,12 @@ public class Collider extends Component {
     was_colliding_last_frame = false;
   }
 
+  public void OnEnabled() {
+  }
+
+  public void OnDisabled() {
+  }
+
   public void Start() {
     if (center == null) { // Null is a way to show we want the collider to be centered
       center = new Point2d(corner_a);
