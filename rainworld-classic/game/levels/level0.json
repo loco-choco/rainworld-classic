@@ -49,63 +49,42 @@
                 "y": 0
               }
             },
-            "com.locochoco.gameengine.BoxRenderer": {
+            "com.locochoco.gameengine.SpriteRenderer": {
               "layer": "creature",
-              "width": 5,
-              "height": 10,
-              "center": null,
-              "color": {
-                "red": 255,
-                "green": 255,
-                "blue": 0,
-                "alpha": 255
-              }
+              "file_name": "assets/slugcat/body.png"
             }
           }
         },
         {
-          "name": "left_ear",
+          "name": "ears",
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
-                "x": -1.5,
-                "y": -6.5
+                "x": 0,
+                "y": -5.5
               }
             },
-            "com.locochoco.gameengine.BoxRenderer": {
+            "com.locochoco.gameengine.SpriteRenderer": {
               "layer": "creature_front_detail",
-              "width": 2,
-              "height": 3,
-              "center": null,
-              "color": {
-                "red": 255,
-                "green": 255,
-                "blue": 0,
-                "alpha": 255
-              }
+              "file_name": "assets/slugcat/ears.png"
             }
           }
         },
         {
-          "name": "right_ear",
+          "name": "eyes",
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
-                "x": 1.5,
-                "y": -6.5
+                "x": 0,
+                "y": -2.5
               }
             },
-            "com.locochoco.gameengine.BoxRenderer": {
+            "com.locochoco.gameengine.SpriteRenderer": {
               "layer": "creature_front_detail",
-              "width": 2,
-              "height": 3,
-              "center": null,
-              "color": {
-                "red": 255,
-                "green": 255,
-                "blue": 0,
-                "alpha": 255
-              }
+              "file_name": "assets/slugcat/eyes.png"
+            },
+            "com.locochoco.game.EyesController": {
+              "movement_radius": 0.7
             }
           }
         },
