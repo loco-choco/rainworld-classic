@@ -86,7 +86,9 @@ public class SwingGraphics
   }
 
   public void DrawSprite(Image image, Point2d position) {
-    current_frame.drawImage(image, (int) Math.round(position.getX() * pixel_to_transform_scale),
+    Image scaled = image.getScaledInstance((int) Math.round(image.getWidth(null) * pixel_to_transform_scale),
+        (int) Math.round(image.getHeight(null) * pixel_to_transform_scale), Image.SCALE_FAST);
+    current_frame.drawImage(scaled, (int) Math.round(position.getX() * pixel_to_transform_scale),
         (int) Math.round(position.getY() * pixel_to_transform_scale), null);
   }
 
