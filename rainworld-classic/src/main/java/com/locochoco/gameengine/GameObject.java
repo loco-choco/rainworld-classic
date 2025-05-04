@@ -146,7 +146,7 @@ public class GameObject {
 
   public GameObject findFirstChild(String child_name) {
     for (GameObject child : children) {
-      if (child.getName() == child_name)
+      if (child.getName().equals(child_name))
         return child;
     }
     return null;

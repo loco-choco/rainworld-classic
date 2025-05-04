@@ -94,10 +94,11 @@ public class Physics {
         CollisionData data = collider_ga.CheckCollision(collider_gb);
         RigidBody ga_rigidbody = ga.getRigidBody();
         RigidBody gb_rigidbody = gb.getRigidBody();
-        if (ga_rigidbody == null || gb_rigidbody == null)
-          continue;
         if (data.getCollision()) {
           collider_ga.OnCollision(data, collider_gb);
+          if (ga_rigidbody == null || gb_rigidbody == null)
+            continue;
+
           Vector2d collision_vector = data.getCollisionVector();
 
           if (collision_vector.length() == 0)

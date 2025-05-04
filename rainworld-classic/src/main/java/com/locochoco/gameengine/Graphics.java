@@ -34,8 +34,10 @@ public class Graphics {
     gos.sort((go1, go2) -> {
       Renderer rend1 = go1.getRenderer();
       Renderer rend2 = go2.getRenderer();
-      if (rend1 == null || rend2 == null)
-        return 0;
+      if (rend1 == null)
+        return 1;
+      if (rend2 == null)
+        return -1;
       int layer_rend1 = rendering_order.getOrDefault(rend1.layer, 0);
       int layer_rend2 = rendering_order.getOrDefault(rend2.layer, 0);
       if (layer_rend1 > layer_rend2)
@@ -46,8 +48,9 @@ public class Graphics {
     });
     for (GameObject g : gos) {
       Renderer r = g.getRenderer();
-      if (r != null && g.isEnabled())
+      if (r != null && g.isEnabled()) {
         r.RenderObject(graphics_api);
+      }
     }
     graphics_api.FlushBuffer();
   }

@@ -7,9 +7,11 @@
     },
     "collision_matrix": {
       "creature": [
-        "terrain"
+        "terrain",
+        "entrable"
       ],
-      "terrain": []
+      "terrain": [],
+      "entrable": []
     }
   },
   "graphics": {

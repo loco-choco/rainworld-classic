@@ -52,7 +52,11 @@ public final class Transform extends Component {
   }
 
   public void setGlobalPosition(Point2d global_position) {
-    this.position = transformToLocalSpace(global_position);
+    GameObject parent = getGameObject().getParent();
+    if (parent != null)
+      this.position = parent.getTransform().transformToLocalSpace(global_position);
+    else
+      this.position = global_position;
   }
 
   public Point2d getGlobalPosition() {

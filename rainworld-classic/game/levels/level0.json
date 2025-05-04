@@ -225,6 +225,393 @@
           }
         }
       }
+    },
+    {
+      "name": "pipe",
+      "components": {
+        "com.locochoco.game.PipeController": {},
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        }
+      },
+      "children": [
+        {
+          "name": "side_a",
+          "components": {
+            "com.locochoco.gameengine.Transform": {
+              "position": {
+                "x": 20,
+                "y": 0
+              }
+            },
+            "com.locochoco.gameengine.BoxRenderer": {
+              "layer": "background",
+              "width": 3,
+              "height": 3,
+              "center": null,
+              "color": {
+                "red": 255,
+                "green": 255,
+                "blue": 0,
+                "alpha": 255
+              }
+            }
+          },
+          "children": [
+            {
+              "name": "entrance",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": -5,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.Collider": {
+                  "corner_a": {
+                    "x": 0,
+                    "y": 0
+                  },
+                  "corner_b": {
+                    "x": 2.5,
+                    "y": 5
+                  },
+                  "center": null,
+                  "layer": "entrable"
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 2.5,
+                  "height": 5,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 255
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "side_b",
+          "components": {
+            "com.locochoco.gameengine.Transform": {
+              "position": {
+                "x": -20,
+                "y": 0
+              }
+            },
+            "com.locochoco.gameengine.BoxRenderer": {
+              "layer": "background",
+              "width": 3,
+              "height": 3,
+              "center": null,
+              "color": {
+                "red": 255,
+                "green": 255,
+                "blue": 0,
+                "alpha": 255
+              }
+            }
+          },
+          "children": [
+            {
+              "name": "entrance",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 5,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.Collider": {
+                  "corner_a": {
+                    "x": 0,
+                    "y": 0
+                  },
+                  "corner_b": {
+                    "x": 2.5,
+                    "y": 5
+                  },
+                  "center": null,
+                  "layer": "entrable"
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 2.5,
+                  "height": 5,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 255
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "pipes",
+          "components": {
+            "com.locochoco.gameengine.Transform": {
+              "position": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "children": [
+            {
+              "name": "pipe1",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 12,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 200
+                  }
+                }
+              },
+              "children": [
+                {
+                  "name": "flash",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background",
+                      "width": 5,
+                      "height": 5,
+                      "center": null,
+                      "color": {
+                        "red": 255,
+                        "green": 255,
+                        "blue": 255,
+                        "alpha": 255
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "pipe2",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 6,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 200
+                  }
+                }
+              },
+              "children": [
+                {
+                  "name": "flash",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background",
+                      "width": 5,
+                      "height": 5,
+                      "center": null,
+                      "color": {
+                        "red": 255,
+                        "green": 255,
+                        "blue": 255,
+                        "alpha": 255
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "pipe3",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 0,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 200
+                  }
+                }
+              },
+              "children": [
+                {
+                  "name": "flash",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background",
+                      "width": 5,
+                      "height": 5,
+                      "center": null,
+                      "color": {
+                        "red": 255,
+                        "green": 255,
+                        "blue": 255,
+                        "alpha": 255
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "pipe4",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": -6,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 200
+                  }
+                }
+              },
+              "children": [
+                {
+                  "name": "flash",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background",
+                      "width": 5,
+                      "height": 5,
+                      "center": null,
+                      "color": {
+                        "red": 255,
+                        "green": 255,
+                        "blue": 255,
+                        "alpha": 255
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "pipe5",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": -12,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 200
+                  }
+                }
+              },
+              "children": [
+                {
+                  "name": "flash",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background",
+                      "width": 5,
+                      "height": 5,
+                      "center": null,
+                      "color": {
+                        "red": 255,
+                        "green": 255,
+                        "blue": 255,
+                        "alpha": 255
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

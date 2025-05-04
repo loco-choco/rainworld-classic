@@ -138,6 +138,8 @@ public class Collider extends Component {
 
   public CollisionData CheckCollision(Collider other) {
     CollisionData data = new CollisionData();
+    data.setFirstCollider(this);
+    data.setSecondCollider(other);
     Point2d our_pos = transform.getGlobalPosition();
     Point2d other_pos = other.getGameObject().getTransform().getGlobalPosition();
 
