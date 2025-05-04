@@ -1,6 +1,5 @@
 package com.locochoco.gameengine;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -42,6 +41,17 @@ public class SpriteRenderer extends Renderer {
   public SpriteRenderer SetCenter(Point2d center) {
     this.center = center;
     return this;
+  }
+
+  public SpriteRenderer SetSprite(BufferedImage sprite) {
+    this.sprite = sprite;
+    sprite_width = sprite.getWidth(null);
+    sprite_height = sprite.getHeight(null);
+    return this;
+  }
+
+  public BufferedImage GetSprite() {
+    return sprite;
   }
 
   public void RenderObject(GraphicsAPI graphics_api) {

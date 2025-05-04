@@ -93,22 +93,15 @@
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
-                "x": -3,
+                "x": -4.5,
                 "y": 3.5
               }
             },
-            "com.locochoco.gameengine.BoxRenderer": {
-              "layer": "creature_back_detail",
-              "width": 6,
-              "height": 3,
-              "center": null,
-              "color": {
-                "red": 255,
-                "green": 255,
-                "blue": 0,
-                "alpha": 255
-              }
-            }
+            "com.locochoco.gameengine.SpriteRenderer": {
+              "layer": "creature_front_detail",
+              "file_name": "assets/slugcat/tail.png"
+            },
+            "com.locochoco.game.TailController": {}
           }
         }
       ]
