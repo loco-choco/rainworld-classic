@@ -92,6 +92,16 @@ public class GameObject {
     return renderer;
   }
 
+  public Component getComponent(Class<?> component) {
+    if (!Component.class.isAssignableFrom(component))
+      return null;
+    for (Component attached_component : components) {
+      if (component.isAssignableFrom(attached_component.getClass()))
+        return attached_component;
+    }
+    return null;
+  }
+
   public void setEnabled(boolean enable) {
     this.enabled = enable;
 
