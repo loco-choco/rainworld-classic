@@ -92,23 +92,19 @@ public class GameObject {
     return renderer;
   }
 
-  public void setEnabled(boolean enabled) {
-    if (enabled && !this.enabled) {
-      for (Component c : components)
-        c.OnEnabled();
-    }
-    if (!enabled && this.enabled) {
-      for (Component c : components)
-        c.OnDisabled();
-    }
-    this.enabled = enabled;
+  public void setEnabled(boolean enable) {
+    this.enabled = enable;
+
+    for (Component c : components)
+      c.setEnabled(enable);
+
     for (GameObject child : children)
       child.setEnabled(enabled);
   }
 
   public void Start() {
     for (Component c : components)
-      if (!c.getHasStarted()) {
+      if (c.isEnabled() && !c.getHasStarted()) {
         c.Start();
         c.setHasStarted(true);
       }
@@ -116,22 +112,26 @@ public class GameObject {
 
   public void PhysicsUpdate(double delta_time) {
     for (Component c : components)
-      c.PhysicsUpdate(delta_time);
+      if (c.isEnabled())
+        c.PhysicsUpdate(delta_time);
   }
 
   public void GraphicsUpdate(double delta_time) {
     for (Component c : components)
-      c.GraphicsUpdate(delta_time);
+      if (c.isEnabled())
+        c.GraphicsUpdate(delta_time);
   }
 
   public void Update(double delta_time) {
     for (Component c : components)
-      c.Update(delta_time);
+      if (c.isEnabled())
+        c.Update(delta_time);
   }
 
   public void LateUpdate(double delta_time) {
     for (Component c : components)
-      c.LateUpdate(delta_time);
+      if (c.isEnabled())
+        c.LateUpdate(delta_time);
   }
 
   public GameObject getParent() {

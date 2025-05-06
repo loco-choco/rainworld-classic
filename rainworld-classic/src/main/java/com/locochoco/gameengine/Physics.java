@@ -64,7 +64,7 @@ public class Physics {
     HandleCollision(delta_time);
     for (GameObject g : game.getLevel().getGameObjects()) {
       RigidBody r = g.getRigidBody();
-      if (r == null || !g.isEnabled())
+      if (r == null || !g.isEnabled() || !r.isEnabled())
         continue;
       Vector2d gravity_force = new Vector2d(gravity);
       gravity_force.scale(r.getMass());
@@ -79,11 +79,11 @@ public class Physics {
     ArrayList<GameObject> game_objects = game.getLevel().getGameObjects();
     for (GameObject ga : game_objects) {
       Collider collider_ga = ga.getCollider();
-      if (collider_ga == null || !ga.isEnabled())
+      if (collider_ga == null || !ga.isEnabled() || !collider_ga.isEnabled())
         continue;
       for (GameObject gb : game_objects) {
         Collider collider_gb = gb.getCollider();
-        if (collider_gb == null || collider_ga == collider_gb || !gb.isEnabled())
+        if (collider_gb == null || collider_ga == collider_gb || !gb.isEnabled() || !collider_gb.isEnabled())
           continue;
         // If the layer field is either null or an empty string, collide either way
         if (!collider_ga.layer.isEmpty() && !collider_gb.layer.isEmpty()

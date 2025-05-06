@@ -48,7 +48,7 @@ public class Graphics {
     });
     for (GameObject g : gos) {
       Renderer r = g.getRenderer();
-      if (r != null && g.isEnabled()) {
+      if (r != null && g.isEnabled() && r.isEnabled()) {
         r.RenderObject(graphics_api);
       }
     }
