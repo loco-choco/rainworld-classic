@@ -13,9 +13,11 @@ public class CharacterInventory extends Component implements CollisionListener {
 
   private Collider collider;
 
+  private GameObject left_arm;
   private GameObject left_hand;
   private Item left_hand_item;
 
+  private GameObject right_arm;
   private GameObject right_hand;
   private Item right_hand_item;
 
@@ -41,10 +43,12 @@ public class CharacterInventory extends Component implements CollisionListener {
 
     rigidBody = go.getRigidBody();
 
-    left_hand = go.findFirstChild("left_hand");
-    right_hand = go.findFirstChild("right_hand");
-    left_hand.setEnabled(false);
-    right_hand.setEnabled(false);
+    left_arm = go.findFirstChild("left_arm");
+    left_hand = left_arm.findFirstChild("hand");
+    right_arm = go.findFirstChild("right_arm");
+    right_hand = right_arm.findFirstChild("hand");
+    left_arm.setEnabled(false);
+    right_arm.setEnabled(false);
   }
 
   public void PhysicsUpdate(double delta_time) {
@@ -60,9 +64,9 @@ public class CharacterInventory extends Component implements CollisionListener {
     if (item == null) // We only care about items
       return;
     if (left_hand_item == null) // Adding first to the left hand
-      AddItemToHand(left_hand, item);
+      AddItemToHand(left_hand, left_arm, item);
     else if (right_hand_item == null) // Then to the right hand
-      AddItemToHand(right_hand, item);
+      AddItemToHand(right_hand, right_arm, item);
     // If not enough space, ignore
   }
 
@@ -79,39 +83,42 @@ public class CharacterInventory extends Component implements CollisionListener {
     boolean use_item = inputs.GetKeyPressed(KeyEvent.VK_X);
     boolean drop_item = inputs.GetKeyPressed(KeyEvent.VK_DOWN) && use_item;
     GameObject main_hand = null;
+    GameObject main_arm = null;
     Item main_item = null;
     if (left_hand_item != null) { // Left Hand has Priority
       main_item = left_hand_item;
       main_hand = left_hand;
+      main_arm = left_arm;
     } else if (right_hand_item != null) { // Then right_hand
       main_item = right_hand_item;
       main_hand = right_hand;
+      main_arm = right_arm;
     }
     // If no items, pass
     if (main_item == null)
       return;
 
     if (drop_item) {
-      ThrowItemFromHand(main_hand, main_item, new Vector2d(0, 0));
+      ThrowItemFromHand(main_hand, main_arm, main_item, new Vector2d(0, 0));
     } else if (use_item) {
-      InteractWithItem(main_hand, main_item);
+      InteractWithItem(main_hand, main_arm, main_item);
     }
   }
 
-  private void AddItemToHand(GameObject hand, Item item) {
+  private void AddItemToHand(GameObject hand, GameObject arm, Item item) {
     GameObject item_go = item.getGameObject();
     try {
       item_go.setParent(hand);
 
     } catch (Exception e) {
-      System.err.printf("Issues attaching item %s to hand %s\n", item_go.getName(), hand.getName());
+      System.err.printf("Issues attaching item %s to hand on arm %s\n", item_go.getName(), arm.getName());
       return;
     }
     item_go.getTransform().setPosition(new Point2d(0, 0));
-    hand.setEnabled(true);
+    arm.setEnabled(true);
   }
 
-  private void InteractWithItem(GameObject hand, Item item) {
+  private void InteractWithItem(GameObject hand, GameObject arm, Item item) {
     // TODO ADD ITEM INTERACION BUT BETTER
     if (item instanceof Food food) {
       int food_pips = food.AmountOfFoodPips();
@@ -120,21 +127,21 @@ public class CharacterInventory extends Component implements CollisionListener {
     } else {
       Vector2d vel = new Vector2d(last_looked_direction);
       vel.scale(throw_velocity);
-      ThrowItemFromHand(hand, item, vel);
+      ThrowItemFromHand(hand, arm, item, vel);
     }
   }
 
-  private void ThrowItemFromHand(GameObject hand, Item item, Vector2d velocity) {
+  private void ThrowItemFromHand(GameObject hand, GameObject arm, Item item, Vector2d velocity) {
     GameObject item_go = item.getGameObject();
     try {
       item_go.setParent(null);
 
     } catch (Exception e) {
-      System.err.printf("Issues detaching item %s from hand %s\n", item_go.getName(), hand.getName());
+      System.err.printf("Issues detaching item %s from hand on arm %s\n", item_go.getName(), arm.getName());
       return;
     }
     item.Throw(velocity);
-    hand.setEnabled(false);
+    arm.setEnabled(false);
   }
 
   public void LateUpdate(double delta_time) {
