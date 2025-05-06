@@ -75,6 +75,7 @@ public class Physics {
     }
   }
 
+  // TODO FIX COLLISIONS BEING SOLVED IN THE 'WRONG' ORDER CAUSING ISSUES
   private void HandleCollision(double delta_time) {
     ArrayList<GameObject> game_objects = game.getLevel().getGameObjects();
     for (GameObject ga : game_objects) {
