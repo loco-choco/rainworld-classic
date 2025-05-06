@@ -26,6 +26,9 @@
           "wall_jump_height_contribution": 1,
           "wall_jump_horizontal_contribution": 0.7
         },
+        "com.locochoco.game.CharacterInventory": {
+          "throw_velocity": 20
+        },
         "com.locochoco.gameengine.Collider": {
           "corner_a": {
             "x": 0,
@@ -51,7 +54,7 @@
             },
             "com.locochoco.gameengine.SpriteRenderer": {
               "layer": "creature",
-              "file_name": "assets/slugcat/body.png"
+              "file_name": "assets/creatures/slugcat/body.png"
             }
           }
         },
@@ -66,7 +69,7 @@
             },
             "com.locochoco.gameengine.SpriteRenderer": {
               "layer": "creature_front_detail",
-              "file_name": "assets/slugcat/ears.png"
+              "file_name": "assets/creatures/slugcat/ears.png"
             }
           }
         },
@@ -81,7 +84,7 @@
             },
             "com.locochoco.gameengine.SpriteRenderer": {
               "layer": "creature_front_detail",
-              "file_name": "assets/slugcat/eyes.png"
+              "file_name": "assets/creatures/slugcat/eyes.png"
             },
             "com.locochoco.game.EyesController": {
               "movement_radius": 0.7
@@ -99,10 +102,90 @@
             },
             "com.locochoco.gameengine.SpriteRenderer": {
               "layer": "creature_front_detail",
-              "file_name": "assets/slugcat/tail.png"
+              "file_name": "assets/creatures/slugcat/tail.png"
             },
             "com.locochoco.game.TailController": {}
           }
+        },
+        {
+          "name": "left_arm",
+          "components": {
+            "com.locochoco.gameengine.Transform": {
+              "position": {
+                "x": -4,
+                "y": -0.5
+              }
+            },
+            "com.locochoco.gameengine.SpriteRenderer": {
+              "layer": "creature_front_detail",
+              "file_name": "assets/creatures/slugcat/left_arm.png"
+            }
+          },
+          "children": [
+            {
+              "name": "hand",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": -0.5,
+                    "y": -0.5
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 0.75,
+                  "height": 0.75,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 200
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "right_arm",
+          "components": {
+            "com.locochoco.gameengine.Transform": {
+              "position": {
+                "x": 4,
+                "y": -0.5
+              }
+            },
+            "com.locochoco.gameengine.SpriteRenderer": {
+              "layer": "creature_front_detail",
+              "file_name": "assets/creatures/slugcat/right_arm.png"
+            }
+          },
+          "children": [
+            {
+              "name": "hand",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 0.5,
+                    "y": 0.5
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "foreground",
+                  "width": 0.75,
+                  "height": 0.75,
+                  "center": null,
+                  "color": {
+                    "red": 255,
+                    "green": 0,
+                    "blue": 0,
+                    "alpha": 200
+                  }
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -227,14 +310,54 @@
       }
     },
     {
+      "name": "fruit",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        "com.locochoco.gameengine.RigidBody": {
+          "mass": 0.1,
+          "elasticity": 0.6,
+          "friction": 1
+        },
+        "com.locochoco.gameengine.Collider": {
+          "corner_a": {
+            "x": 0,
+            "y": 0
+          },
+          "corner_b": {
+            "x": 1.5,
+            "y": 1.5
+          },
+          "center": null,
+          "layer": "creature"
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "layer": "item",
+          "width": 1.5,
+          "height": 1.5,
+          "center": null,
+          "color": {
+            "red": 255,
+            "green": 0,
+            "blue": 255,
+            "alpha": 255
+          }
+        }
+      }
+    },
+    {
       "name": "pipe",
       "components": {
         "com.locochoco.game.PipeController": {
-          "side_a_entrance": {
+          "side_a_direction": {
             "x": 1,
             "y": 0
           },
-          "side_b_entrance": {
+          "side_b_direction": {
             "x": -1,
             "y": 0
           },
@@ -243,7 +366,7 @@
         "com.locochoco.gameengine.Transform": {
           "position": {
             "x": 40,
-            "y": 40
+            "y": 30
           }
         }
       },
