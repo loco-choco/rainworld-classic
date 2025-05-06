@@ -17,6 +17,10 @@ public class PipeController extends Component implements CollisionListener {
   private GameObject side_b;
   private GameObject side_b_entrance;
 
+  public double repulsion_force;
+  public Vector2d side_a_direction;
+  public Vector2d side_b_direction;
+
   private double pipe_total_lenght;
   private ArrayList<BoxRenderer> pipes;
 
@@ -24,6 +28,8 @@ public class PipeController extends Component implements CollisionListener {
     objects_traveling = new ArrayList<>();
     pipes = new ArrayList<>();
     traveling_speed = 20;
+    side_a_direction = new Vector2d();
+    side_b_direction = new Vector2d();
   }
 
   public void OnEnabled() {
@@ -77,13 +83,26 @@ public class PipeController extends Component implements CollisionListener {
     // Side A
     if (entrance == side_a_entrance) {
       object = new ObjectTravelingPipe(creature, side_b.getTransform(),
-          traveling_speed, 1, pipe_total_lenght);
+          traveling_speed, 1, pipe_total_lenght, side_a_direction);
     }
     // Side B
     else if (entrance == side_b_entrance) {
       object = new ObjectTravelingPipe(creature, side_a.getTransform(),
-          traveling_speed, -1, pipe_total_lenght);
+          traveling_speed, -1, pipe_total_lenght, side_b_direction);
     }
+
+    // Means that we have something that shouldn't be able to use the pipe
+    // Be it an item or another entrance that accidentaly is colliding
+    if (creature.getCollider().layer == entrance.getCollider().layer) {
+      RigidBody creature_r = creature.getRigidBody();
+      if (creature_r != null) { // If this thing has a RigidBody, push it out
+        Vector2d force = new Vector2d(object.getExitDirection());
+        force.scale(repulsion_force);
+        creature_r.AddForce(force);
+      }
+      return;
+    }
+
     if (object != null) {
       object.MakeObjectEnterPipe();
       objects_traveling.add(object);
@@ -133,13 +152,16 @@ class ObjectTravelingPipe {
   double direction;
   double speed;
   Transform exit_end;
+  Vector2d exit_direction;
 
-  public ObjectTravelingPipe(GameObject object, Transform exit_end, double speed, double direction, double distance) {
+  public ObjectTravelingPipe(GameObject object, Transform exit_end, double speed, double direction, double distance,
+      Vector2d exit_direction) {
     this.object = object;
     this.direction = direction;
     this.speed = speed;
     this.exit_end = exit_end;
     this.distance = distance;
+    this.exit_direction = exit_direction;
     if (direction >= 0)
       porcentage = 0;
     else
@@ -148,6 +170,10 @@ class ObjectTravelingPipe {
 
   public void MakeObjectEnterPipe() {
     object.setEnabled(false);
+  }
+
+  public Vector2d getExitDirection() {
+    return exit_direction;
   }
 
   public void MakeObjectExitPipe() {
