@@ -7,7 +7,7 @@ public abstract class Component {
 
   private GameObject owner;
 
-  private boolean enabled = false;
+  public boolean enabled = true;
   private boolean has_started = false;
 
   public abstract void OnCreated();

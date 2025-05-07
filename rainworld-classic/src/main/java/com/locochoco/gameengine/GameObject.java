@@ -28,7 +28,7 @@ public class GameObject {
   public GameObject() {
     parent = null;
     children = new ArrayList<>();
-    enabled = false;
+    enabled = true;
     name = "";
 
     components = new ArrayList<>();
@@ -64,8 +64,14 @@ public class GameObject {
     return component;
   }
 
+  // The enabled condition depends on its parent, so we go up the tree to see who
+  // is the first not enabled, or if we reached the end
   public boolean isEnabled() {
-    return enabled;
+    if (!enabled)
+      return false;
+    if (parent == null)
+      return enabled;
+    return enabled && parent.isEnabled();
   }
 
   public String getName() {
@@ -104,12 +110,6 @@ public class GameObject {
 
   public void setEnabled(boolean enable) {
     this.enabled = enable;
-
-    for (Component c : components)
-      c.setEnabled(enable);
-
-    for (GameObject child : children)
-      child.setEnabled(enabled);
   }
 
   public void Start() {
@@ -178,12 +178,30 @@ public class GameObject {
   public static GameObject CreateGameObjectFromJson(JsonNode json, ObjectMapper mapper) {
 
     GameObject go = new GameObject();
+    // Enabled when created
+    JsonNode enable = json.get("enable");
+    if (enable != null)
+      go.setEnabled(enable.asBoolean());
     // Name
     JsonNode name = json.get("name");
-    go.setName(name.asText());
-    System.out.printf("New Game Object %s!\n", go.getName());
+    String go_name = "default_name";
+    if (name != null)
+      go_name = name.asText();
+    go.setName(go_name);
+    System.out.printf("New Game Object %s!\n", go_name);
     // Components
-    Iterator<Entry<String, JsonNode>> components = json.get("components").fields();
+    JsonNode components = json.get("components");
+    if (components != null)
+      ReadComponents(components, mapper, go);
+    JsonNode children = json.get("children");
+    if (children != null)
+      ReadChildren(children, mapper, go);
+    return go;
+  }
+
+  private static void ReadComponents(JsonNode components_json, ObjectMapper mapper, GameObject go) {
+    // Components
+    Iterator<Entry<String, JsonNode>> components = components_json.fields();
 
     while (components.hasNext()) { // Builds the components of the game object
       Entry<String, JsonNode> component = components.next();
@@ -249,17 +267,16 @@ public class GameObject {
         }
       }
     }
-    JsonNode children = json.get("children");
-    if (children != null) {
-      for (JsonNode child_json : children) {
-        GameObject child = CreateGameObjectFromJson(child_json, mapper);
-        try {
-          go.addChild(child);
-        } catch (Exception e) {
-          System.err.printf("Issue adding child to game object!\n");
-        }
+  }
+
+  private static void ReadChildren(JsonNode children_json, ObjectMapper mapper, GameObject go) {
+    for (JsonNode child_json : children_json) {
+      GameObject child = CreateGameObjectFromJson(child_json, mapper);
+      try {
+        go.addChild(child);
+      } catch (Exception e) {
+        System.err.printf("Issue adding child to game object!\n");
       }
     }
-    return go;
   }
 }
