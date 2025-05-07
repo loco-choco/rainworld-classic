@@ -25,9 +25,12 @@ public class CharacterInventory extends Component implements CollisionListener {
   public double throw_velocity;
   private Vector2d last_looked_direction;
 
+  boolean pressed_use_item;
+
   public void OnCreated() {
     inputs = GameEngine.getGameEngine().getInputs();
     last_looked_direction = new Vector2d(1, 0);
+    pressed_use_item = false;
   }
 
   public void OnEnabled() {
@@ -63,10 +66,13 @@ public class CharacterInventory extends Component implements CollisionListener {
     Item item = (Item) data.getOtherCollider().getGameObject().getComponent(Item.class);
     if (item == null) // We only care about items
       return;
-    if (left_hand_item == null) // Adding first to the left hand
+    if (left_hand_item == null) { // Adding first to the left hand
       AddItemToHand(left_hand, left_arm, item);
-    else if (right_hand_item == null) // Then to the right hand
+      left_hand_item = item;
+    } else if (right_hand_item == null) { // Then to the right hand
       AddItemToHand(right_hand, right_arm, item);
+      right_hand_item = item;
+    }
     // If not enough space, ignore
   }
 
@@ -80,7 +86,11 @@ public class CharacterInventory extends Component implements CollisionListener {
   }
 
   public void Update(double delta_time) {
-    boolean use_item = inputs.GetKeyPressed(KeyEvent.VK_X);
+    boolean use_item_input = inputs.GetKeyPressed(KeyEvent.VK_X);
+    boolean use_item = use_item_input;
+    if (use_item_input && pressed_use_item)
+      use_item = false;
+    pressed_use_item = use_item_input;
     boolean drop_item = inputs.GetKeyPressed(KeyEvent.VK_DOWN) && use_item;
     GameObject main_hand = null;
     GameObject main_arm = null;
@@ -107,6 +117,8 @@ public class CharacterInventory extends Component implements CollisionListener {
 
   private void AddItemToHand(GameObject hand, GameObject arm, Item item) {
     GameObject item_go = item.getGameObject();
+    if (!item.TryToBeGrabbed())
+      return;
     try {
       item_go.setParent(hand);
 
