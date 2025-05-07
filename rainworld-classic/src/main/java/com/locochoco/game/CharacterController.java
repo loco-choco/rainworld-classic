@@ -93,7 +93,7 @@ public class CharacterController extends Component implements CollisionListener 
       time_ungrounded = jump_coyote_time;
   }
 
-  public void OnCollision(CollisionData data, Collider collidee) {
+  public void OnCollision(CollisionData data) {
     Vector2d ground_normal = new Vector2d(data.getCollisionVector());
     if (ground_normal.length() != 0) {
       ground_normal.normalize();
@@ -103,10 +103,10 @@ public class CharacterController extends Component implements CollisionListener 
     }
   }
 
-  public void OnEnterCollision() {
+  public void OnEnterCollision(Collider collider) {
   }
 
-  public void OnExitCollision() {
+  public void OnExitCollision(Collider collider) {
     is_grounded = false;
   }
 

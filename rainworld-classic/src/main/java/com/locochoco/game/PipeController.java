@@ -68,18 +68,10 @@ public class PipeController extends Component implements CollisionListener {
     }
   }
 
-  public void OnCollision(CollisionData data, Collider collidee) {
+  public void OnCollision(CollisionData data) {
     ObjectTravelingPipe object = null;
-    GameObject entrance;
-    GameObject creature;
-    if (data.getFirstCollider().getGameObject() == side_a_entrance
-        || data.getFirstCollider().getGameObject() == side_b_entrance) {
-      entrance = data.getFirstCollider().getGameObject();
-      creature = data.getSecondCollider().getGameObject();
-    } else {
-      entrance = data.getSecondCollider().getGameObject();
-      creature = data.getFirstCollider().getGameObject();
-    }
+    GameObject entrance = data.getOurCollider().getGameObject();
+    GameObject creature = data.getOtherCollider().getGameObject();
     // Side A
     if (entrance == side_a_entrance) {
       object = new ObjectTravelingPipe(creature, side_b.getTransform(),
@@ -93,7 +85,7 @@ public class PipeController extends Component implements CollisionListener {
 
     // Means that we have something that shouldn't be able to use the pipe
     // Be it an item or another entrance that accidentaly is colliding
-    if (creature.getCollider().layer == entrance.getCollider().layer) {
+    if (data.getOtherCollider().layer == data.getOurCollider().layer) {
       RigidBody creature_r = creature.getRigidBody();
       if (creature_r != null) { // If this thing has a RigidBody, push it out
         Vector2d force = new Vector2d(object.getExitDirection());
@@ -109,10 +101,10 @@ public class PipeController extends Component implements CollisionListener {
     }
   }
 
-  public void OnEnterCollision() {
+  public void OnEnterCollision(Collider collider) {
   }
 
-  public void OnExitCollision() {
+  public void OnExitCollision(Collider collider) {
   }
 
   public void PhysicsUpdate(double delta_time) {

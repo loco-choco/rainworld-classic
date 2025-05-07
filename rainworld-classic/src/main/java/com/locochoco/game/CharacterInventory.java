@@ -59,8 +59,8 @@ public class CharacterInventory extends Component implements CollisionListener {
     }
   }
 
-  public void OnCollision(CollisionData data, Collider collidee) {
-    Item item = (Item) collidee.getGameObject().getComponent(Item.class);
+  public void OnCollision(CollisionData data) {
+    Item item = (Item) data.getOtherCollider().getGameObject().getComponent(Item.class);
     if (item == null) // We only care about items
       return;
     if (left_hand_item == null) // Adding first to the left hand
@@ -70,10 +70,10 @@ public class CharacterInventory extends Component implements CollisionListener {
     // If not enough space, ignore
   }
 
-  public void OnEnterCollision() {
+  public void OnEnterCollision(Collider collider) {
   }
 
-  public void OnExitCollision() {
+  public void OnExitCollision(Collider collider) {
   }
 
   public void GraphicsUpdate(double delta_time) {

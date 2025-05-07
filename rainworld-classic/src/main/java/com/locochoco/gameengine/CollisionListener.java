@@ -5,9 +5,10 @@ package com.locochoco.gameengine;
  */
 public interface CollisionListener {
 
-  public void OnEnterCollision();
-  public void OnExitCollision();
+  public void OnEnterCollision(Collider collider);
 
-  public void OnCollision(CollisionData data, Collider collidee);
+  public void OnExitCollision(Collider collider);
+
+  public void OnCollision(CollisionData data);
 
 }

@@ -29,7 +29,7 @@
         "com.locochoco.game.CharacterInventory": {
           "throw_velocity": 20
         },
-        "com.locochoco.gameengine.Collider": {
+        "com.locochoco.gameengine.BoxCollider": {
           "corner_a": {
             "x": 0,
             "y": 0
@@ -203,7 +203,7 @@
           "elasticity": 0,
           "friction": 1
         },
-        "com.locochoco.gameengine.Collider": {
+        "com.locochoco.gameengine.BoxCollider": {
           "corner_a": {
             "x": 0,
             "y": 0
@@ -243,7 +243,7 @@
           "elasticity": 0,
           "friction": 1
         },
-        "com.locochoco.gameengine.Collider": {
+        "com.locochoco.gameengine.BoxCollider": {
           "corner_a": {
             "x": 0,
             "y": 0
@@ -283,7 +283,7 @@
           "elasticity": 0,
           "friction": 1
         },
-        "com.locochoco.gameengine.Collider": {
+        "com.locochoco.gameengine.BoxCollider": {
           "corner_a": {
             "x": 0,
             "y": 0
@@ -323,7 +323,7 @@
           "elasticity": 0.6,
           "friction": 1
         },
-        "com.locochoco.gameengine.Collider": {
+        "com.locochoco.gameengine.BoxCollider": {
           "corner_a": {
             "x": 0,
             "y": 0
@@ -403,7 +403,7 @@
                     "y": 0
                   }
                 },
-                "com.locochoco.gameengine.Collider": {
+                "com.locochoco.gameengine.BoxCollider": {
                   "corner_a": {
                     "x": 0,
                     "y": 0
@@ -463,7 +463,7 @@
                     "y": 0
                   }
                 },
-                "com.locochoco.gameengine.Collider": {
+                "com.locochoco.gameengine.BoxCollider": {
                   "corner_a": {
                     "x": 0,
                     "y": 0

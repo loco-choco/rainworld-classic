@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.lang.String;
 
+import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -75,48 +76,84 @@ public class Physics {
     }
   }
 
-  // TODO FIX COLLISIONS BEING SOLVED IN THE 'WRONG' ORDER CAUSING ISSUES
   private void HandleCollision(double delta_time) {
+    // System.out.printf("--------------------------------\n");
     ArrayList<GameObject> game_objects = game.getLevel().getGameObjects();
-    for (GameObject ga : game_objects) {
-      Collider collider_ga = ga.getCollider();
-      if (collider_ga == null || !ga.isEnabled() || !collider_ga.isEnabled())
+    int i, j;
+    // This way, we only check for collision on different objects, and we don't
+    // repeat checks
+    for (i = 0; i < game_objects.size(); i++) {
+      GameObject gameObject_a = game_objects.get(i);
+      Collider collider_a = gameObject_a.getCollider();
+      if (collider_a == null || !gameObject_a.isEnabled() || !collider_a.isEnabled())
         continue;
-      for (GameObject gb : game_objects) {
-        Collider collider_gb = gb.getCollider();
-        if (collider_gb == null || collider_ga == collider_gb || !gb.isEnabled() || !collider_gb.isEnabled())
+      HashSet<String> collision_layers = collision_matrix.getOrDefault(collider_a.getLayer(), new HashSet<String>());
+      // System.out.printf("Obj: %s (%s)\n", gameObject_a.getName(),
+      // collider_a.getLayer());
+
+      for (j = i + 1; j < game_objects.size(); j++) {
+        GameObject gameObject_b = game_objects.get(j);
+        Collider collider_b = gameObject_b.getCollider();
+        if (collider_b == null || !gameObject_b.isEnabled() || !gameObject_b.isEnabled())
           continue;
-        // If the layer field is either null or an empty string, collide either way
-        if (!collider_ga.layer.isEmpty() && !collider_gb.layer.isEmpty()
-            && collision_matrix.containsKey(collider_ga.layer)
-            && !collision_matrix.get(collider_ga.layer).contains(collider_gb.layer))
+        // Only collide if they are in the same collision list
+        if (!collision_layers.contains(collider_b.getLayer()))
           continue;
 
-        CollisionData data = collider_ga.CheckCollision(collider_gb);
-        RigidBody ga_rigidbody = ga.getRigidBody();
-        RigidBody gb_rigidbody = gb.getRigidBody();
-        if (data.getCollision()) {
-          collider_ga.OnCollision(data, collider_gb);
-          if (ga_rigidbody == null || gb_rigidbody == null)
-            continue;
+        // -------------------- SOLVE COLLISION -----------------------
+        Vector2d collision_vector = CollisionMath.CheckCollision(collider_a, collider_b);
+        // System.out.printf("\t\t- Col: %s\n", collision_vector);
 
-          Vector2d collision_vector = data.getCollisionVector();
+        if (collision_vector == null)
+          continue; // If null, then no collision
+        // Send Collision Data to Colliders
+        collider_a.OnCollision(new CollisionData()
+            .setCollisionVector(collision_vector)
+            .setOurCollider(collider_a)
+            .setOtherCollider(collider_b));
 
-          if (collision_vector.length() == 0)
-            continue;
+        collider_b.OnCollision(new CollisionData()
+            .setCollisionVector(collision_vector)
+            .setOurCollider(collider_b)
+            .setOtherCollider(collider_a));
+        // -------------------- APPLY PHYSICS -------------------------
+        // If either collider is non physical, skip
+        if (!collider_a.getPhysical() || !collider_a.getPhysical())
+          continue;
+        RigidBody rigidBody_a = gameObject_a.getRigidBody();
+        RigidBody rigidBody_b = gameObject_b.getRigidBody();
+        // If either doesn't have a rigidbody, we don't even try
+        if (rigidBody_a == null || rigidBody_b == null)
+          continue;
+        // If the collision vector is of size 0, then we don't need to apply any physics
+        // (both are touching but that's it)
+        if (collision_vector.length() == 0)
+          continue;
+        // ------- 1) Position Fix
+        // Move based on the mass distribution between both of the objects
+        Transform transform_a = gameObject_a.getTransform();
+        Transform transform_b = gameObject_b.getTransform();
 
-          // Position Correction Handler
-          double total_mass = 1 / ga_rigidbody.getMass() + 1 / gb_rigidbody.getMass();
-          if (total_mass != 0) {
-            double porcentage_to_move_by = total_mass * ga_rigidbody.getMass();
-            Vector2d correction = new Vector2d(collision_vector);
-            correction.scale(porcentage_to_move_by);
-            ga.getTransform().getPosition().add(correction);
-          }
+        double mass_a = rigidBody_a.getMass();
+        double mass_b = rigidBody_b.getMass();
 
-          ApplyCollisionImpulses(ga_rigidbody, gb_rigidbody, collision_vector, delta_time);
-        }
+        double mass_sum = Double.isInfinite(mass_b) ? mass_a : mass_a + mass_b;
+        double porcent_to_move_a = Double.isInfinite(mass_a) ? 0 : mass_a / mass_sum;
+        double porcent_to_move_b = Double.isInfinite(mass_b) ? 0 : 1.0 - porcent_to_move_a;
 
+        Vector2d correction_a = new Vector2d(collision_vector);
+        correction_a.scale(porcent_to_move_a);
+        Vector2d correction_b = new Vector2d(collision_vector);
+        correction_b.scale(-porcent_to_move_b); // A '-' because the collision_vector is on the POV is A
+
+        Point2d new_pos_a = new Point2d(transform_a.getGlobalPosition());
+        new_pos_a.add(correction_a);
+        transform_a.setGlobalPosition(new_pos_a);
+        Point2d new_pos_b = new Point2d(transform_b.getGlobalPosition());
+        new_pos_b.add(correction_b);
+        transform_b.setGlobalPosition(new_pos_b);
+        // ------- 2) Force Application
+        ApplyCollisionImpulses(rigidBody_a, rigidBody_b, collision_vector, delta_time);
       }
     }
   }
@@ -127,7 +164,7 @@ public class Physics {
     normal.normalize();
     // RigidBody elastic collision calculations
     Vector2d ra_velocity = ra.GetVelocity();
-    Vector2d rb_velocity = new Vector2d(0, 0);
+    Vector2d rb_velocity = rb.GetVelocity();
     Vector2d rel_velocity = new Vector2d(ra_velocity);
     rel_velocity.sub(rb_velocity);
     // Vel change from collision
@@ -141,6 +178,8 @@ public class Physics {
     normal_force.scale(-elastic_influence / (sum_of_inverse_mass * delta_time));
     // Add Normal Force
     ra.AddForce(normal_force);
+    normal_force.scale(-1); // Equal to the oposite side
+    rb.AddForce(normal_force);
 
     // Calculate Friction Force
     Vector2d rel_vel_ortogonal = new Vector2d(normal);
@@ -159,6 +198,8 @@ public class Physics {
     friction = Math.clamp(friction, 0, ortogonal_vel / delta_time);
     friction_force.scale(-friction);
     ra.AddForce(friction_force);
+    friction_force.scale(-1); // Equal to the oposite side
+    rb.AddForce(friction_force);
   }
 
   public void ReadSettingsFromJson(JsonNode json, ObjectMapper mapper) {

@@ -12,28 +12,19 @@ import java.util.ArrayList;
  */
 public class Collider extends Component {
   public boolean physical;
-  public Point2d center;
-  public Point2d corner_a;
-  public Point2d corner_b;
 
   public String layer;
 
-  private Transform transform;
-
   private ArrayList<CollisionListener> collision_listeners;
-  private boolean entered_collision_this_frame;
-  private boolean was_colliding_last_frame;
+  private ArrayList<Collider> colliders_on_collision;
+  private ArrayList<Collider> colliders_this_frame;
 
   public void OnCreated() {
-    transform = getGameObject().getTransform();
-    center = new Point2d(0, 0);
-    corner_a = new Point2d(0, 0);
-    corner_b = new Point2d(0, 0);
     physical = true;
     layer = "";
     collision_listeners = new ArrayList<>();
-    entered_collision_this_frame = false;
-    was_colliding_last_frame = false;
+    colliders_on_collision = new ArrayList<>();
+    colliders_this_frame = new ArrayList<>();
   }
 
   public void OnEnabled() {
@@ -43,26 +34,26 @@ public class Collider extends Component {
   }
 
   public void Start() {
-    if (center == null) { // Null is a way to show we want the collider to be centered
-      center = new Point2d(corner_a);
-      center.add(corner_b);
-      center.scale(0.5);
-    }
   }
 
   public void PhysicsUpdate(double delta_time) {
-    if (!was_colliding_last_frame && entered_collision_this_frame) // OnEnterCollision
-    {
-      for (CollisionListener listener : collision_listeners)
-        listener.OnEnterCollision();
+    // Check New Colliders
+    for (Collider collider : colliders_this_frame) {
+      if (!colliders_on_collision.contains(collider)) {
+        colliders_on_collision.contains(collider);
+        for (CollisionListener listener : collision_listeners)
+          listener.OnEnterCollision(collider);
+      }
     }
-    if (was_colliding_last_frame && !entered_collision_this_frame) // OnExitCollision
-    {
-      for (CollisionListener listener : collision_listeners)
-        listener.OnExitCollision();
+    // Check Removed Colliders
+    for (Collider collider : colliders_on_collision) {
+      if (!colliders_this_frame.contains(collider)) {
+        colliders_on_collision.remove(collider);
+        for (CollisionListener listener : collision_listeners)
+          listener.OnExitCollision(collider);
+      }
     }
-    was_colliding_last_frame = entered_collision_this_frame;
-    entered_collision_this_frame = false;
+    colliders_this_frame.clear();
   }
 
   public void GraphicsUpdate(double delta_time) {
@@ -74,24 +65,11 @@ public class Collider extends Component {
   public void LateUpdate(double delta_time) {
   }
 
-  public void OnCollision(CollisionData data, Collider collidee) {
-    // Tell listeners about the collision, if there is one
+  public void OnCollision(CollisionData data) {
+    // Tell listeners about the collision, if there is on
+    colliders_this_frame.add(data.getOtherCollider());
     for (CollisionListener listener : collision_listeners)
-      listener.OnCollision(data, collidee);
-    entered_collision_this_frame |= true;
-  }
-
-  public Collider setCenter(Point2d center) {
-    this.center = center;
-    return this;
-  }
-
-  public Collider setShape(Point2d corner_a, Point2d corner_b) throws Exception {
-    if (corner_a.getX() > corner_b.getX() || corner_a.getY() > corner_b.getY())
-      throw new Exception("The collider needs to be a convex shape!");
-    this.corner_a = corner_a;
-    this.corner_b = corner_b;
-    return this;
+      listener.OnCollision(data);
   }
 
   public Collider setPhysical(boolean physical) {
@@ -102,18 +80,6 @@ public class Collider extends Component {
   public Collider setLayer(String layer) {
     this.layer = layer;
     return this;
-  }
-
-  public Point2d getCenter() {
-    return center;
-  }
-
-  public Point2d getCornerA() {
-    return corner_a;
-  }
-
-  public Point2d getCornerB() {
-    return corner_b;
   }
 
   public boolean getPhysical() {
@@ -135,63 +101,4 @@ public class Collider extends Component {
   public void clearCollisionListeners() {
     collision_listeners.clear();
   }
-
-  public CollisionData CheckCollision(Collider other) {
-    CollisionData data = new CollisionData();
-    data.setFirstCollider(this);
-    data.setSecondCollider(other);
-    Point2d our_pos = transform.getGlobalPosition();
-    Point2d other_pos = other.getGameObject().getTransform().getGlobalPosition();
-
-    // Calculating our center and corners relative to the world
-    Point2d our_center_world = new Point2d(our_pos);
-    our_center_world.sub(center);
-    Point2d our_corner_a_world = new Point2d(our_center_world);
-    our_corner_a_world.add(corner_a);
-    Point2d our_corner_b_world = new Point2d(our_center_world);
-    our_corner_b_world.add(corner_b);
-    // Calculating the other center and corners relative to the world
-    Point2d other_center_world = new Point2d(other_pos);
-    other_center_world.sub(other.getCenter());
-    Point2d other_corner_a_world = new Point2d(other_center_world);
-    other_corner_a_world.add(other.getCornerA());
-    Point2d other_corner_b_world = new Point2d(other_center_world);
-    other_corner_b_world.add(other.getCornerB());
-
-    Vector2d overlap_vector_our_a_other_b = new Vector2d(other_corner_b_world);
-    overlap_vector_our_a_other_b.sub(our_corner_a_world);
-
-    Vector2d overlap_vector_our_b_other_a = new Vector2d(other_corner_a_world);
-    overlap_vector_our_b_other_a.sub(our_corner_b_world);
-
-    if (overlap_vector_our_a_other_b.getX() >= 0 && overlap_vector_our_a_other_b.getY() >= 0
-        && overlap_vector_our_b_other_a.getX() <= 0 && overlap_vector_our_b_other_a.getY() <= 0)
-      data.setCollision(true);
-    else
-      data.setCollision(false);
-
-    Vector2d collision_vector = new Vector2d(0, 0);
-    // Getting the smalled step to handle the collision from the 2 vectors
-    Vector2d collision_handling_vector = new Vector2d();
-    if (Math.abs(overlap_vector_our_a_other_b.getX()) <= Math.abs(overlap_vector_our_b_other_a.getX()))
-      collision_handling_vector.setX(overlap_vector_our_a_other_b.getX());
-    else
-      collision_handling_vector.setX(overlap_vector_our_b_other_a.getX());
-
-    if (Math.abs(overlap_vector_our_a_other_b.getY()) <= Math.abs(overlap_vector_our_b_other_a.getY()))
-      collision_handling_vector.setY(overlap_vector_our_a_other_b.getY());
-    else
-      collision_handling_vector.setY(overlap_vector_our_b_other_a.getY());
-
-    // Get the smallest X,Y or XY change to handle the collision
-    if (Math.abs(collision_handling_vector.getX()) <= Math.abs(collision_handling_vector.getY()))
-      collision_vector.setX(collision_handling_vector.getX());
-    if (Math.abs(collision_handling_vector.getY()) <= Math.abs(collision_handling_vector.getX()))
-      collision_vector.setY(collision_handling_vector.getY());
-
-    data.setCollisionVector(collision_vector);
-
-    return data;
-  }
-
 }
