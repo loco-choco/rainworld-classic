@@ -323,6 +323,9 @@
           "elasticity": 0.6,
           "friction": 1
         },
+        "com.locochoco.game.Food": {
+          "food_pips": 1
+        },
         "com.locochoco.gameengine.BoxCollider": {
           "corner_a": {
             "x": 0,
