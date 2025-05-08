@@ -43,6 +43,9 @@ public class CharacterController extends Component implements CollisionListener 
     collider = getGameObject().getCollider();
     collider.addCollisionListener(this);
   }
+  public void OnDestroyed() {
+    collider.removeCollisionListener(this);
+  }
 
   public CharacterController setMaxSpeed(double max_speed) {
     this.max_speed = max_speed;

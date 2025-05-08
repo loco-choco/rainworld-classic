@@ -3,9 +3,6 @@ package com.locochoco.gameengine;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -61,6 +58,28 @@ public class Level {
     for (GameObject g : game_objects)
       if (g.isEnabled())
         g.LateUpdate(delta_time);
+  }
+
+  public void DestroyAllGameObjects() {
+    for (GameObject g : game_objects) {
+      g.Destroy();
+    }
+    game_objects.clear();
+  }
+
+  public void DestroyMarkedGameObjects() {
+    // TODO BY CHANGING THE LIST OF GO's TO A TREE STRUCTURE WE CAN MAKE THIS GO
+    // FASTER
+    ArrayList<GameObject> gos_to_destroy = new ArrayList<>();
+    for (GameObject g : game_objects) {
+      if (g.isMarkedToDestruction()) {
+        gos_to_destroy.add(g);
+        g.Destroy();
+      } else {
+        g.DestroyMarkedComponents();
+      }
+    }
+    game_objects.removeAll(gos_to_destroy);
   }
 
   private static ObjectMapper mapper;

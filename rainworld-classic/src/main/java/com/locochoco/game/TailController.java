@@ -28,6 +28,9 @@ public class TailController extends Component {
   public void OnDisabled() {
   }
 
+  public void OnDestroyed() {
+  }
+
   public void Start() {
     GameObject go = getGameObject();
     rigidBody = go.getParent().getRigidBody();

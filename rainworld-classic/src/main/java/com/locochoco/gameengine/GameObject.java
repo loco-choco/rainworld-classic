@@ -27,11 +27,14 @@ public class GameObject {
 
   private String name;
 
+  private boolean marked_to_destruction;
+
   public GameObject() {
     parent = null;
     children = new ArrayList<>();
     enabled = true;
     name = "";
+    marked_to_destruction = false;
 
     components = new ArrayList<>();
     transform = new Transform();
@@ -82,6 +85,18 @@ public class GameObject {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void MarkToDestruction() {
+    marked_to_destruction = true;
+  }
+
+  public boolean isMarkedToDestruction() {
+    if (marked_to_destruction)
+      return true;
+    if (parent == null)
+      return marked_to_destruction;
+    return marked_to_destruction || parent.isMarkedToDestruction();
   }
 
   public Transform getTransform() {
@@ -146,6 +161,23 @@ public class GameObject {
         c.LateUpdate(delta_time);
   }
 
+  public void DestroyMarkedComponents() {
+    Iterator<Component> ittr = components.iterator();
+    while (ittr.hasNext()) {
+      Component c = ittr.next();
+      if (c.isMarkedToDestruction()) {
+        c.OnDestroyed();
+        ittr.remove();
+      }
+    }
+  }
+
+  public void Destroy() {
+    for (Component c : components)
+      c.OnDestroyed();
+
+  }
+
   public GameObject getParent() {
     return parent;
   }
@@ -153,10 +185,13 @@ public class GameObject {
   public void setParent(GameObject parent) throws Exception {
     if (parent == this)
       throw new Exception("GameObject can't parent to itself!");
-    // Transform t = getTransform();
-    // Point2d global_pos = t.getGlobalPosition();
-    // t.setPosition(new
-    // Point2d(parent.getTransform().transformToLocalSpace(global_pos)));
+    if (this.parent != parent) {
+      Transform t = getTransform();
+      Point2d global_pos = t.getGlobalPosition();
+      this.parent.removeChild(this);
+      parent.addChild(this);
+      t.setGlobalPosition(global_pos);
+    }
     this.parent = parent;
   }
 

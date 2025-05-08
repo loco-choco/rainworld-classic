@@ -50,6 +50,15 @@ public class CharacterInventory extends Component implements CollisionListener {
     }
   }
 
+  public void OnDestroyed() {
+    collider.removeCollisionListener(this);
+    for (CarryingLimb limb : carrying_limbs) {
+      if (limb.IsCarryingItem()) {
+        ThrowItem(limb, new Vector2d(0, 0));
+      }
+    }
+  }
+
   public void PhysicsUpdate(double delta_time) {
     // TODO DO THIS BETTER
     // Vector2d vel = rigidBody.GetVelocity();

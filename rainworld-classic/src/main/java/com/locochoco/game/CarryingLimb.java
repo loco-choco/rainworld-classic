@@ -23,6 +23,9 @@ public class CarryingLimb extends Component {
   public void OnDisabled() {
   }
 
+  public void OnDestroyed() {
+  }
+
   public void Start() {
     GameObject go = getGameObject();
 

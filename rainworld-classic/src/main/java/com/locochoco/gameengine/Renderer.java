@@ -16,6 +16,9 @@ public abstract class Renderer extends Component {
   public void OnDisabled() {
   }
 
+  public void OnDestroyed() {
+  }
+
   public void Start() {
   }
 

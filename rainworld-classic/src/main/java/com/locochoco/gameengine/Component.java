@@ -10,11 +10,15 @@ public abstract class Component {
   public boolean enabled = true;
   private boolean has_started = false;
 
+  private boolean marked_to_destrucion = false;
+
   public abstract void OnCreated();
 
   public abstract void OnEnabled();
 
   public abstract void OnDisabled();
+
+  public abstract void OnDestroyed();
 
   public abstract void Start();
 
@@ -52,5 +56,13 @@ public abstract class Component {
 
   public GameObject getGameObject() {
     return owner;
+  }
+
+  public void Destroy() {
+    marked_to_destrucion = true;
+  }
+
+  public boolean isMarkedToDestruction() {
+    return marked_to_destrucion;
   }
 }

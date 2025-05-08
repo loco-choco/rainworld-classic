@@ -96,6 +96,9 @@ public class GameEngine {
 
     level.LateUpdate(logic_delta_time);
     last_logic_time = current_time;
+
+    // Object Cleanup
+    level.DestroyMarkedGameObjects();
   }
 
   private ObjectMapper mapper;

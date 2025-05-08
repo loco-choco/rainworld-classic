@@ -18,6 +18,9 @@ public abstract class Item extends Component {
   public void OnDisabled() {
   }
 
+  public void OnDestroyed() {
+  }
+
   public void Start() {
     rigidBody = getGameObject().getRigidBody();
     collider = getGameObject().getCollider();

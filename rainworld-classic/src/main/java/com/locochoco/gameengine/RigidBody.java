@@ -29,6 +29,9 @@ public final class RigidBody extends Component {
   public void OnDisabled() {
   }
 
+  public void OnDestroyed() {
+  }
+
   public void Start() {
   }
 

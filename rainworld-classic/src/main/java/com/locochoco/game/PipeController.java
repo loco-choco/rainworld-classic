@@ -68,6 +68,13 @@ public class PipeController extends Component implements CollisionListener {
     }
   }
 
+  public void OnDestroyed() {
+    side_a_entrance.getCollider().removeCollisionListener(this);
+    side_b_entrance.getCollider().removeCollisionListener(this);
+    for (ObjectTravelingPipe objs : objects_traveling)
+      objs.MakeObjectExitPipe();
+  }
+
   public void OnCollision(CollisionData data) {
     ObjectTravelingPipe object = null;
     GameObject entrance = data.getOurCollider().getGameObject();

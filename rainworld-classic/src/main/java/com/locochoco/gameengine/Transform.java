@@ -18,6 +18,9 @@ public final class Transform extends Component {
   public void OnDisabled() {
   }
 
+  public void OnDestroyed() {
+  }
+
   public void Start() {
   }
 
