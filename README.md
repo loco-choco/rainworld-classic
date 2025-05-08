@@ -17,14 +17,18 @@ java -jar target/rainworld-classic-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 ## Current TO-DOs
 
-- [ ] Add Game Configs and load them via json
-    - [ ] Load Collision Matrix
-    - [ ] Load Other Physics settings
-- [x] Make Jump Reset when grounded
-- [x] Get collision event
-- [x] Physics Layer System
-- [x] GameObject Hierarchy
-
+- [ ] Make a Camera Object 
+    - [ ] Follow the player into rooms
+- [ ] Make Rooms / levels
+    - [ ] Shelter to save and load next
+- [ ] Add UI 
+    - [ ] Amount of food the player ate
+    - [ ] Amount of time left before the rain
+- [ ] Add Other Creatures
+    - [ ] Simple follow PID based AI ([creature-control](https://github.com/loco-choco/creature-control) is back?!)
+    - [ ] Green Lizard :3
+- [ ] Make UML Diagram 
+- [ ] Make Final Report
 
 
 ## References
