@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import javax.vecmath.Point2d;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -151,6 +153,10 @@ public class GameObject {
   public void setParent(GameObject parent) throws Exception {
     if (parent == this)
       throw new Exception("GameObject can't parent to itself!");
+    // Transform t = getTransform();
+    // Point2d global_pos = t.getGlobalPosition();
+    // t.setPosition(new
+    // Point2d(parent.getTransform().transformToLocalSpace(global_pos)));
     this.parent = parent;
   }
 

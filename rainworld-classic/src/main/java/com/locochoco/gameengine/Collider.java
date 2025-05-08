@@ -6,6 +6,7 @@ import javax.vecmath.Vector2d;
 import java.lang.Exception;
 import java.lang.String;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Representation of a Object in game
@@ -40,15 +41,17 @@ public class Collider extends Component {
     // Check New Colliders
     for (Collider collider : colliders_this_frame) {
       if (!colliders_on_collision.contains(collider)) {
-        colliders_on_collision.contains(collider);
+        colliders_on_collision.add(collider);
         for (CollisionListener listener : collision_listeners)
           listener.OnEnterCollision(collider);
       }
     }
     // Check Removed Colliders
-    for (Collider collider : colliders_on_collision) {
+    Iterator<Collider> ittr = colliders_on_collision.iterator();
+    while (ittr.hasNext()) {
+      Collider collider = ittr.next();
       if (!colliders_this_frame.contains(collider)) {
-        colliders_on_collision.remove(collider);
+        ittr.remove();
         for (CollisionListener listener : collision_listeners)
           listener.OnExitCollision(collider);
       }

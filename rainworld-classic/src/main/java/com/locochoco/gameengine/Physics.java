@@ -94,8 +94,10 @@ public class Physics {
       for (j = i + 1; j < game_objects.size(); j++) {
         GameObject gameObject_b = game_objects.get(j);
         Collider collider_b = gameObject_b.getCollider();
-        if (collider_b == null || !gameObject_b.isEnabled() || !gameObject_b.isEnabled())
+        if (collider_b == null || !gameObject_b.isEnabled() || !collider_b.isEnabled())
           continue;
+        // System.out.printf("Obj: %s (%s)\n", gameObject_a.getName(),
+        // collider_a.getLayer());
         // Only collide if they are in the same collision list
         if (!collision_layers.contains(collider_b.getLayer()))
           continue;
@@ -138,8 +140,10 @@ public class Physics {
         double mass_b = rigidBody_b.getMass();
 
         double mass_sum = Double.isInfinite(mass_b) ? mass_a : mass_a + mass_b;
-        double porcent_to_move_a = Double.isInfinite(mass_a) ? 0 : mass_a / mass_sum;
+        double porcent_to_move_a = Double.isInfinite(mass_a) ? 0 : 1.0 - mass_a / mass_sum;
         double porcent_to_move_b = Double.isInfinite(mass_b) ? 0 : 1.0 - porcent_to_move_a;
+        if (Double.isInfinite(mass_b))
+          porcent_to_move_a = 1.0;
 
         Vector2d correction_a = new Vector2d(collision_vector);
         correction_a.scale(porcent_to_move_a);
