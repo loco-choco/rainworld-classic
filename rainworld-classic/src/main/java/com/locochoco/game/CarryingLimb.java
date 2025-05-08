@@ -59,7 +59,6 @@ public class CarryingLimb extends Component {
   public Item ReleaseItem() throws Exception {
     Item item = this.item;
     item_go.setParent(null);
-    item_go.getTransform().setGlobalPosition(item_socket.getTransform().getGlobalPosition());
 
     visuals.setEnabled(false);
     item.GetReleased();

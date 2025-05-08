@@ -126,7 +126,7 @@ public class CharacterInventory extends Component implements CollisionListener {
     if (item instanceof Food food) {
       int food_pips = food.AmountOfFoodPips();
       System.out.printf("Ate %s pips\n", food_pips);
-      // TODO Destroy Food Item
+      ConsumeItem(limb);
     } else {
       Vector2d vel = new Vector2d(last_looked_direction);
       vel.scale(throw_velocity);
@@ -146,6 +146,18 @@ public class CharacterInventory extends Component implements CollisionListener {
     Vector2d vel_to_set = new Vector2d(velocity);
     vel_to_set.add(rigidBody.GetVelocity());
     item.getGameObject().getRigidBody().SetVelocity(vel_to_set);
+  }
+
+  private void ConsumeItem(CarryingLimb limb) {
+    Item item = limb.GetHeldItem();
+    try {
+      item = limb.ReleaseItem();
+    } catch (Exception e) {
+      System.err.printf("Issues detaching item from limb %s while consuming it\n",
+          limb.getGameObject().getName());
+      return;
+    }
+    item.getGameObject().MarkToDestruction();
   }
 
   public void LateUpdate(double delta_time) {
