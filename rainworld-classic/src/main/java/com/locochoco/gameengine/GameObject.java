@@ -185,14 +185,16 @@ public class GameObject {
   public void setParent(GameObject parent) throws Exception {
     if (parent == this)
       throw new Exception("GameObject can't parent to itself!");
+    Transform t = getTransform();
+    Point2d global_pos = t.getGlobalPosition();
     if (this.parent != parent) {
-      Transform t = getTransform();
-      Point2d global_pos = t.getGlobalPosition();
-      this.parent.removeChild(this);
-      parent.addChild(this);
-      t.setGlobalPosition(global_pos);
+      if (this.parent != null)
+        this.parent.removeChild(this);
+      if (parent != null)
+        parent.addChild(this);
     }
     this.parent = parent;
+    t.setPosition(global_pos);
   }
 
   public GameObject findFirstChild(String child_name) {
@@ -207,12 +209,11 @@ public class GameObject {
     return children;
   }
 
-  public boolean addChild(GameObject child) throws Exception {
-    child.setParent(this);
+  private boolean addChild(GameObject child) throws Exception {
     return children.add(child);
   }
 
-  public boolean removeChild(GameObject child) {
+  private boolean removeChild(GameObject child) {
     return children.remove(child);
   }
 
@@ -314,7 +315,7 @@ public class GameObject {
     for (JsonNode child_json : children_json) {
       GameObject child = CreateGameObjectFromJson(child_json, mapper);
       try {
-        go.addChild(child);
+        child.setParent(go);
       } catch (Exception e) {
         System.err.printf("Issue adding child to game object!\n");
       }
