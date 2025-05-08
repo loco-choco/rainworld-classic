@@ -108,20 +108,14 @@ public class Physics {
 
         if (collision_vector == null)
           continue; // If null, then no collision
-        // Send Collision Data to Colliders
-        collider_a.OnCollision(new CollisionData()
-            .setCollisionVector(collision_vector)
-            .setOurCollider(collider_a)
-            .setOtherCollider(collider_b));
-
-        collider_b.OnCollision(new CollisionData()
-            .setCollisionVector(collision_vector)
-            .setOurCollider(collider_b)
-            .setOtherCollider(collider_a));
-        // -------------------- APPLY PHYSICS -------------------------
-        // If either collider is non physical, skip
-        if (!collider_a.getPhysical() || !collider_a.getPhysical())
+                    //
+        // If either collider is non physical, skip applying physics and report
+        // collision
+        if (!collider_a.getPhysical() || !collider_a.getPhysical()) {
+          ReportCollision(collider_a, collider_b, collision_vector);
           continue;
+        }
+        // -------------------- APPLY PHYSICS -------------------------
         RigidBody rigidBody_a = gameObject_a.getRigidBody();
         RigidBody rigidBody_b = gameObject_b.getRigidBody();
         // If either doesn't have a rigidbody, we don't even try
@@ -158,8 +152,22 @@ public class Physics {
         transform_b.setGlobalPosition(new_pos_b);
         // ------- 2) Force Application
         ApplyCollisionImpulses(rigidBody_a, rigidBody_b, collision_vector);
+        // ------- 3) Report Collision after solved
+        ReportCollision(collider_a, collider_b, collision_vector);
       }
     }
+  }
+
+  private void ReportCollision(Collider collider_a, Collider collider_b, Vector2d collision_vector) {
+    collider_a.OnCollision(new CollisionData()
+        .setCollisionVector(collision_vector)
+        .setOurCollider(collider_a)
+        .setOtherCollider(collider_b));
+
+    collider_b.OnCollision(new CollisionData()
+        .setCollisionVector(collision_vector)
+        .setOurCollider(collider_b)
+        .setOtherCollider(collider_a));
   }
 
   // Reference: https://youtu.be/1L2g4ZqmFLQ
