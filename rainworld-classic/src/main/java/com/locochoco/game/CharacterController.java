@@ -13,6 +13,7 @@ public class CharacterController extends Component implements CollisionListener 
   private Collider collider;
   public double max_speed;
   public double acceleration;
+  public double air_acceleration;
   public double jump_velocity;
   public double wall_jump_height_contribution;
   public double wall_jump_horizontal_contribution;
@@ -61,7 +62,8 @@ public class CharacterController extends Component implements CollisionListener 
   public void PhysicsUpdate(double delta_time) {
     // Input Gathering
     double horizontal_movement = 0;
-    boolean jump = (time_ungrounded < jump_coyote_time) && !jumped_was_pressed && inputs.GetKeyPressed(KeyEvent.VK_Z);
+    boolean jump = (is_grounded || (time_ungrounded < jump_coyote_time))
+        && !jumped_was_pressed && inputs.GetKeyPressed(KeyEvent.VK_Z);
     horizontal_movement += inputs.GetKeyPressed(KeyEvent.VK_LEFT) ? -1 : 0;
     horizontal_movement += inputs.GetKeyPressed(KeyEvent.VK_RIGHT) ? 1 : 0;
     // Movement Force
@@ -74,6 +76,7 @@ public class CharacterController extends Component implements CollisionListener 
     jump_force.setX(jump_force.getX() * wall_jump_horizontal_contribution);
     // Horizontal Force
     double horizontal_velocity = rigidbody.GetVelocity().getX();
+    double acceleration = is_grounded ? this.acceleration : this.air_acceleration;
     double target_acceleration = Math.clamp(acceleration, 0.0,
         Math.abs(Math.min(Math.abs(horizontal_velocity), max_speed) * Math.signum(horizontal_velocity)
             - max_speed * horizontal_movement) / delta_time);
@@ -99,7 +102,6 @@ public class CharacterController extends Component implements CollisionListener 
       ground_normal.normalize();
       this.ground_normal = ground_normal;
       is_grounded = true;
-      time_ungrounded = 0;
     }
   }
 
@@ -107,6 +109,7 @@ public class CharacterController extends Component implements CollisionListener 
   }
 
   public void OnExitCollision(Collider collider) {
+    time_ungrounded = 0;
     is_grounded = false;
   }
 

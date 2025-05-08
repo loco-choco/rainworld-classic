@@ -12,7 +12,7 @@
         "com.locochoco.gameengine.RigidBody": {
           "mass": 1,
           "elasticity": 0,
-          "friction": 0.6,
+          "friction": 1,
           "velocity": {
             "x": 8,
             "y": 10
@@ -21,10 +21,11 @@
         "com.locochoco.game.CharacterController": {
           "max_speed": 20,
           "acceleration": 160,
+          "air_acceleration": 100,
           "jump_velocity": 40,
           "jump_coyote_time": 0.15,
           "wall_jump_height_contribution": 1,
-          "wall_jump_horizontal_contribution": 0.7
+          "wall_jump_horizontal_contribution": 0.8
         },
         "com.locochoco.game.CharacterInventory": {
           "throw_velocity": 20
@@ -108,82 +109,95 @@
           }
         },
         {
-          "name": "left_arm",
+          "name": "limbs",
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
-                "x": -4,
-                "y": -0.5
+                "x": 0,
+                "y": 0
               }
-            },
-            "com.locochoco.gameengine.SpriteRenderer": {
-              "layer": "creature_front_detail",
-              "file_name": "assets/creatures/slugcat/left_arm.png"
             }
           },
           "children": [
             {
-              "name": "hand",
+              "name": "left_arm",
               "components": {
                 "com.locochoco.gameengine.Transform": {
                   "position": {
-                    "x": -0.5,
+                    "x": -4,
                     "y": -0.5
                   }
                 },
-                "com.locochoco.gameengine.BoxRenderer": {
-                  "layer": "foreground",
-                  "width": 0.75,
-                  "height": 0.75,
-                  "center": null,
-                  "color": {
-                    "red": 255,
-                    "green": 0,
-                    "blue": 0,
-                    "alpha": 200
+                "com.locochoco.game.CarryingLimb": {}
+              },
+              "children": [
+                {
+                  "name": "visual",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.SpriteRenderer": {
+                      "layer": "creature_front_detail",
+                      "file_name": "assets/creatures/slugcat/left_arm.png"
+                    }
+                  }
+                },
+                {
+                  "name": "item_socket",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": -0.5,
+                        "y": -0.5
+                      }
+                    }
                   }
                 }
-              }
-            }
-          ]
-        },
-        {
-          "name": "right_arm",
-          "components": {
-            "com.locochoco.gameengine.Transform": {
-              "position": {
-                "x": 4,
-                "y": -0.5
-              }
+              ]
             },
-            "com.locochoco.gameengine.SpriteRenderer": {
-              "layer": "creature_front_detail",
-              "file_name": "assets/creatures/slugcat/right_arm.png"
-            }
-          },
-          "children": [
             {
-              "name": "hand",
+              "name": "right_arm",
               "components": {
                 "com.locochoco.gameengine.Transform": {
                   "position": {
-                    "x": 0.5,
-                    "y": 0.5
+                    "x": 4,
+                    "y": -0.5
                   }
                 },
-                "com.locochoco.gameengine.BoxRenderer": {
-                  "layer": "foreground",
-                  "width": 0.75,
-                  "height": 0.75,
-                  "center": null,
-                  "color": {
-                    "red": 255,
-                    "green": 0,
-                    "blue": 0,
-                    "alpha": 200
+                "com.locochoco.game.CarryingLimb": {}
+              },
+              "children": [
+                {
+                  "name": "visual",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.SpriteRenderer": {
+                      "layer": "creature_front_detail",
+                      "file_name": "assets/creatures/slugcat/right_arm.png"
+                    }
+                  }
+                },
+                {
+                  "name": "item_socket",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0.5,
+                        "y": 0.5
+                      }
+                    }
                   }
                 }
-              }
+              ]
             }
           ]
         }
@@ -319,29 +333,27 @@
           }
         },
         "com.locochoco.gameengine.RigidBody": {
-          "mass": 0.1,
+          "mass": 0.01,
           "elasticity": 0.6,
           "friction": 1
         },
-        "com.locochoco.game.Food": {
-          "food_pips": 1
-        },
+        "com.locochoco.game.Food": {},
         "com.locochoco.gameengine.BoxCollider": {
           "corner_a": {
             "x": 0,
             "y": 0
           },
           "corner_b": {
-            "x": 1.5,
-            "y": 1.5
+            "x": 1,
+            "y": 1
           },
           "center": null,
           "layer": "creature"
         },
         "com.locochoco.gameengine.BoxRenderer": {
           "layer": "item",
-          "width": 1.5,
-          "height": 1.5,
+          "width": 1,
+          "height": 1,
           "center": null,
           "color": {
             "red": 255,

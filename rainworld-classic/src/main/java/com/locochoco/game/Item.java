@@ -1,7 +1,5 @@
 package com.locochoco.game;
 
-import java.util.Vector;
-
 import javax.vecmath.Vector2d;
 
 import com.locochoco.gameengine.*;
@@ -9,6 +7,7 @@ import com.locochoco.gameengine.*;
 public abstract class Item extends Component {
 
   RigidBody rigidBody;
+  Collider collider;
 
   public void OnCreated() {
   }
@@ -21,6 +20,7 @@ public abstract class Item extends Component {
 
   public void Start() {
     rigidBody = getGameObject().getRigidBody();
+    collider = getGameObject().getCollider();
   }
 
   public void PhysicsUpdate(double delta_time) {
@@ -41,12 +41,14 @@ public abstract class Item extends Component {
   }
 
   protected void GetGrabbed() {
+    rigidBody.SetVelocity(new Vector2d(0, 0));
     rigidBody.setEnabled(false);
+    collider.setEnabled(false);
   }
 
-  public void Throw(Vector2d velocity) {
-    rigidBody.SetVelocity(velocity);
-    rigidBody.setEnabled(false);
+  public void GetReleased() {
+    rigidBody.setEnabled(true);
+    collider.setEnabled(true);
   }
 
 }

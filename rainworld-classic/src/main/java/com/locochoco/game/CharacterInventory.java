@@ -1,6 +1,7 @@
 package com.locochoco.game;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
@@ -13,13 +14,7 @@ public class CharacterInventory extends Component implements CollisionListener {
 
   private Collider collider;
 
-  private GameObject left_arm;
-  private GameObject left_hand;
-  private Item left_hand_item;
-
-  private GameObject right_arm;
-  private GameObject right_hand;
-  private Item right_hand_item;
+  private ArrayList<CarryingLimb> carrying_limbs;
 
   private RigidBody rigidBody;
   public double throw_velocity;
@@ -29,6 +24,7 @@ public class CharacterInventory extends Component implements CollisionListener {
 
   public void OnCreated() {
     inputs = GameEngine.getGameEngine().getInputs();
+    carrying_limbs = new ArrayList<>();
     last_looked_direction = new Vector2d(1, 0);
     pressed_use_item = false;
   }
@@ -46,34 +42,41 @@ public class CharacterInventory extends Component implements CollisionListener {
 
     rigidBody = go.getRigidBody();
 
-    left_arm = go.findFirstChild("left_arm");
-    left_hand = left_arm.findFirstChild("hand");
-    right_arm = go.findFirstChild("right_arm");
-    right_hand = right_arm.findFirstChild("hand");
-    left_arm.setEnabled(false);
-    right_arm.setEnabled(false);
+    GameObject limbs = go.findFirstChild("limbs");
+    for (GameObject limb : limbs.getChildren()) {
+      CarryingLimb carrying_limb = (CarryingLimb) limb.getComponent(CarryingLimb.class);
+      if (carrying_limb != null)
+        carrying_limbs.add(carrying_limb);
+    }
   }
 
   public void PhysicsUpdate(double delta_time) {
-    Vector2d vel = rigidBody.GetVelocity();
-    if (vel.lengthSquared() != 0) {
-      last_looked_direction = new Vector2d(vel);
-      last_looked_direction.normalize();
-    }
+    // TODO DO THIS BETTER
+    // Vector2d vel = rigidBody.GetVelocity();
+    // if (vel.lengthSquared() != 0) {
+    // last_looked_direction = new Vector2d(vel);
+    // last_looked_direction.normalize();
+    // }
   }
 
   public void OnCollision(CollisionData data) {
     Item item = (Item) data.getOtherCollider().getGameObject().getComponent(Item.class);
     if (item == null) // We only care about items
       return;
-    if (left_hand_item == null) { // Adding first to the left hand
-      AddItemToHand(left_hand, left_arm, item);
-      left_hand_item = item;
-    } else if (right_hand_item == null) { // Then to the right hand
-      AddItemToHand(right_hand, right_arm, item);
-      right_hand_item = item;
+    // Try to give the item to the limbs in order
+    for (CarryingLimb carrying_limb : carrying_limbs) {
+      if (!carrying_limb.IsCarryingItem()) {
+        try {
+          carrying_limb.GrabItem(item);
+          return;
+        } catch (Exception e) {
+          System.err.printf("Issues attaching item %s to hand on arm %s\n",
+              item.getGameObject().getName(),
+              carrying_limb.getGameObject().getName());
+          return;
+        }
+      }
     }
-    // If not enough space, ignore
   }
 
   public void OnEnterCollision(Collider collider) {
@@ -92,45 +95,24 @@ public class CharacterInventory extends Component implements CollisionListener {
       use_item = false;
     pressed_use_item = use_item_input;
     boolean drop_item = inputs.GetKeyPressed(KeyEvent.VK_DOWN) && use_item;
-    GameObject main_hand = null;
-    GameObject main_arm = null;
-    Item main_item = null;
-    if (left_hand_item != null) { // Left Hand has Priority
-      main_item = left_hand_item;
-      main_hand = left_hand;
-      main_arm = left_arm;
-    } else if (right_hand_item != null) { // Then right_hand
-      main_item = right_hand_item;
-      main_hand = right_hand;
-      main_arm = right_arm;
+    CarryingLimb main_limb = null;
+    for (CarryingLimb carrying_limb : carrying_limbs) {
+      if (carrying_limb.IsCarryingItem()) {
+        main_limb = carrying_limb;
+        break;
+      }
     }
-    // If no items, pass
-    if (main_item == null)
+    if (main_limb == null)
       return;
-
     if (drop_item) {
-      ThrowItemFromHand(main_hand, main_arm, main_item, new Vector2d(0, 0));
+      ThrowItem(main_limb, new Vector2d(0, 0));
     } else if (use_item) {
-      InteractWithItem(main_hand, main_arm, main_item);
+      InteractWithItem(main_limb);
     }
   }
 
-  private void AddItemToHand(GameObject hand, GameObject arm, Item item) {
-    GameObject item_go = item.getGameObject();
-    if (!item.TryToBeGrabbed())
-      return;
-    try {
-      item_go.setParent(hand);
-
-    } catch (Exception e) {
-      System.err.printf("Issues attaching item %s to hand on arm %s\n", item_go.getName(), arm.getName());
-      return;
-    }
-    item_go.getTransform().setPosition(new Point2d(0, 0));
-    arm.setEnabled(true);
-  }
-
-  private void InteractWithItem(GameObject hand, GameObject arm, Item item) {
+  private void InteractWithItem(CarryingLimb limb) {
+    Item item = limb.GetHeldItem();
     // TODO ADD ITEM INTERACION BUT BETTER
     if (item instanceof Food food) {
       int food_pips = food.AmountOfFoodPips();
@@ -139,21 +121,22 @@ public class CharacterInventory extends Component implements CollisionListener {
     } else {
       Vector2d vel = new Vector2d(last_looked_direction);
       vel.scale(throw_velocity);
-      ThrowItemFromHand(hand, arm, item, vel);
+      ThrowItem(limb, vel);
     }
   }
 
-  private void ThrowItemFromHand(GameObject hand, GameObject arm, Item item, Vector2d velocity) {
-    GameObject item_go = item.getGameObject();
+  private void ThrowItem(CarryingLimb limb, Vector2d velocity) {
+    Item item;
     try {
-      item_go.setParent(null);
-
+      item = limb.ReleaseItem();
     } catch (Exception e) {
-      System.err.printf("Issues detaching item %s from hand on arm %s\n", item_go.getName(), arm.getName());
+      System.err.printf("Issues detaching item from limb %s\n",
+          limb.getGameObject().getName());
       return;
     }
-    item.Throw(velocity);
-    arm.setEnabled(false);
+    Vector2d vel_to_set = new Vector2d(velocity);
+    vel_to_set.add(rigidBody.GetVelocity());
+    item.getGameObject().getRigidBody().SetVelocity(vel_to_set);
   }
 
   public void LateUpdate(double delta_time) {
