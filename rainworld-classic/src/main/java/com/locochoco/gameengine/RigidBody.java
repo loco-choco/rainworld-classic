@@ -23,6 +23,7 @@ public final class RigidBody extends Component {
   }
 
   public void OnEnabled() {
+    force = new Vector2d(0, 0);
   }
 
   public void OnDisabled() {
@@ -61,11 +62,11 @@ public final class RigidBody extends Component {
   }
 
   public void PhysicsUpdate(double delta_time) {
-    if (immovable)
-      return;
-    Vector2d deltaVel = new Vector2d(force);
-    deltaVel.scale(delta_time / mass);
-    velocity.add(deltaVel);
+    if (!immovable) {
+      Vector2d deltaVel = new Vector2d(force);
+      deltaVel.scale(delta_time / mass);
+      velocity.add(deltaVel);
+    }
     force = new Vector2d(0.0, 0.0);
   }
 

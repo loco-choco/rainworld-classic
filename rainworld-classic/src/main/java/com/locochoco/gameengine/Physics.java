@@ -62,7 +62,7 @@ public class Physics {
   }
 
   public void Update(double delta_time) {
-    HandleCollision(delta_time);
+    HandleCollision();
     for (GameObject g : game.getLevel().getGameObjects()) {
       RigidBody r = g.getRigidBody();
       if (r == null || !g.isEnabled() || !r.isEnabled())
@@ -76,7 +76,7 @@ public class Physics {
     }
   }
 
-  private void HandleCollision(double delta_time) {
+  private void HandleCollision() {
     // System.out.printf("--------------------------------\n");
     ArrayList<GameObject> game_objects = game.getLevel().getGameObjects();
     int i, j;
@@ -153,13 +153,13 @@ public class Physics {
         new_pos_b.add(correction_b);
         transform_b.setGlobalPosition(new_pos_b);
         // ------- 2) Force Application
-        ApplyCollisionImpulses(rigidBody_a, rigidBody_b, collision_vector, delta_time);
+        ApplyCollisionImpulses(rigidBody_a, rigidBody_b, collision_vector);
       }
     }
   }
 
   // Reference: https://youtu.be/1L2g4ZqmFLQ
-  private void ApplyCollisionImpulses(RigidBody ra, RigidBody rb, Vector2d collision_direction, double delta_time) {
+  private void ApplyCollisionImpulses(RigidBody ra, RigidBody rb, Vector2d collision_direction) {
     Vector2d normal = new Vector2d(collision_direction);
     normal.normalize();
     // RigidBody elastic collision calculations
@@ -172,34 +172,51 @@ public class Physics {
     Vector2d vel_diff_from_collision = new Vector2d(normal);
     // The collision vector goes from gb to ga, so we dont need to times by -1
     vel_diff_from_collision.scale(velocity_being_lost);
-    Vector2d normal_force = new Vector2d(vel_diff_from_collision);
+    Vector2d normal_impulse = new Vector2d(vel_diff_from_collision);
     double sum_of_inverse_mass = 1 / ra.getMass() + 1 / rb.getMass();
     double elastic_influence = 1 + Math.min(ra.getElasticity(), rb.getElasticity());
-    normal_force.scale(-elastic_influence / (sum_of_inverse_mass * delta_time));
-    // Add Normal Force
-    ra.AddForce(normal_force);
-    normal_force.scale(-1); // Equal to the oposite side
-    rb.AddForce(normal_force);
+    double normal_impulse_val = sum_of_inverse_mass == 0 ? 0
+        : elastic_influence / sum_of_inverse_mass;
+    normal_impulse.scale(normal_impulse_val);
+    // Add Normal Impulse
+    Vector2d ra_normal_vel_change = new Vector2d(normal_impulse);
+    ra_normal_vel_change.scale(1.0 / ra.getMass());
+    ra.velocity.sub(ra_normal_vel_change);
+    Vector2d rb_normal_vel_change = new Vector2d(normal_impulse);
+    rb_normal_vel_change.scale(1.0 / rb.getMass());
+    rb.velocity.add(rb_normal_vel_change);
 
+    // https://github.com/gszauer/GamePhysicsCookbook/blob/master/Code/RigidbodyVolume.cpp#L174
     // Calculate Friction Force
     Vector2d rel_vel_ortogonal = new Vector2d(normal);
     rel_vel_ortogonal.scale(-velocity_being_lost);
     rel_vel_ortogonal.add(rel_velocity);
+
     double ortogonal_vel = rel_vel_ortogonal.length();
     if (ortogonal_vel == 0)
       return;
+
     Vector2d ortogonal = new Vector2d(rel_vel_ortogonal);
     ortogonal.normalize();
-    // Add Friction Force
-    Vector2d friction_force = new Vector2d(ortogonal);
-    double friction_coeficient = Math.min(ra.getFriction(), rb.getFriction());
-    double friction = normal_force.length() * friction_coeficient;
+    // Add Friction Impulse
+    double friction_impulse_val = sum_of_inverse_mass == 0 ? 0
+        : ortogonal_vel / sum_of_inverse_mass;
+    double friction_coeficient = Math.sqrt(ra.getFriction() * rb.getFriction());
+    double friction_impulse_val_from_normal = normal_impulse_val * friction_coeficient;
+    if (friction_impulse_val > friction_impulse_val_from_normal) {
+      friction_impulse_val = friction_impulse_val_from_normal;
+    } else if (friction_impulse_val < -friction_impulse_val_from_normal) {
+      friction_impulse_val = -friction_impulse_val_from_normal;
+    }
+    Vector2d friction_impulse = new Vector2d(ortogonal);
+    friction_impulse.scale(friction_impulse_val);
 
-    friction = Math.clamp(friction, 0, ortogonal_vel / delta_time);
-    friction_force.scale(-friction);
-    ra.AddForce(friction_force);
-    friction_force.scale(-1); // Equal to the oposite side
-    rb.AddForce(friction_force);
+    Vector2d ra_orto_vel_change = new Vector2d(friction_impulse);
+    ra_orto_vel_change.scale(1.0 / ra.getMass());
+    ra.velocity.sub(ra_orto_vel_change);
+    Vector2d rb_orto_vel_change = new Vector2d(friction_impulse);
+    rb_orto_vel_change.scale(1.0 / rb.getMass());
+    rb.velocity.add(rb_orto_vel_change);
   }
 
   public void ReadSettingsFromJson(JsonNode json, ObjectMapper mapper) {
