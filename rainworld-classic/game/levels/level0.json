@@ -1,6 +1,18 @@
 {
   "game_objects": [
     {
+      "name": "camera",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "com.locochoco.gameengine.Camera": {}
+      }
+    },
+    {
       "name": "slugcat",
       "components": {
         "com.locochoco.gameengine.Transform": {
