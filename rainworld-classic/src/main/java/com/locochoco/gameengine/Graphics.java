@@ -38,6 +38,8 @@ public class Graphics {
     gos.sort((go1, go2) -> {
       Renderer rend1 = go1.getRenderer();
       Renderer rend2 = go2.getRenderer();
+      if (rend1 == null && rend2 == null)
+        return 0;
       if (rend1 == null)
         return 1;
       if (rend2 == null)
