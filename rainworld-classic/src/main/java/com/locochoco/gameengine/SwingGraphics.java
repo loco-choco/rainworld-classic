@@ -12,12 +12,10 @@ import java.awt.image.BufferStrategy;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.GroupLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.vecmath.Point2d;
-import javax.vecmath.Point2i;
 
 /**
  * Handles all the graphic logic and calculations
@@ -94,6 +92,7 @@ public class SwingGraphics
 
   public void FlushBuffer() {
     current_frame.dispose();
+
     if (!getBufferStrategy().contentsLost()) {
       getBufferStrategy().show();
     }
