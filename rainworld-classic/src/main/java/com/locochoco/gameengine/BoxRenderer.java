@@ -49,8 +49,8 @@ public class BoxRenderer extends Renderer {
     return this;
   }
 
-  public void RenderObject(GraphicsAPI graphics_api) {
-    Point2d position = new Point2d(transform.getGlobalPosition());
+  public void RenderObject(GraphicsAPI graphics_api, Transform camera_transform) {
+    Point2d position = new Point2d(camera_transform.transformToLocalSpace(transform.getGlobalPosition()));
     position.sub(center);
     graphics_api.DrawRect(position, width, height, color);
   }

@@ -28,7 +28,11 @@ public class Graphics {
     rendering_order.put(layer, rendering_order.size());
   }
 
-  public void Update() {
+  public void Update(Camera camera) {
+    // If no camera, or it is deactivated, dont render this frame
+    if (camera == null || !camera.isEnabled() || !camera.getGameObject().isEnabled())
+      return;
+    Transform camera_transform = camera.getGameObject().getTransform();
     graphics_api.CreateBuffer();
     ArrayList<GameObject> gos = new ArrayList<>(game.getLevel().getGameObjects());
     gos.sort((go1, go2) -> {
@@ -49,7 +53,7 @@ public class Graphics {
     for (GameObject g : gos) {
       Renderer r = g.getRenderer();
       if (r != null && g.isEnabled() && r.isEnabled()) {
-        r.RenderObject(graphics_api);
+        r.RenderObject(graphics_api, camera_transform);
       }
     }
     graphics_api.FlushBuffer();

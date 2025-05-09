@@ -54,11 +54,11 @@ public class SpriteRenderer extends Renderer {
     return sprite;
   }
 
-  public void RenderObject(GraphicsAPI graphics_api) {
+  public void RenderObject(GraphicsAPI graphics_api, Transform camera_transform) {
     if (sprite == null)
       return;
     Point2d position = new Point2d(-sprite_width / 2.0, -sprite_height / 2.0);
-    position.add(transform.getGlobalPosition());
+    position.add(camera_transform.transformToLocalSpace(transform.getGlobalPosition()));
     position.add(center);
     graphics_api.DrawSprite(sprite, position);
   }

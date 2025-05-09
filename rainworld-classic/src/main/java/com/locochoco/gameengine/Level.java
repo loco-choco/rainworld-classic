@@ -13,9 +13,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class Level {
   private ArrayList<GameObject> game_objects;
+  private Camera main_camera;
 
   public Level() {
     game_objects = new ArrayList<>();
+    main_camera = null;
+  }
+
+  public void setMainCamera(Camera camera) {
+    if (main_camera != null)
+      main_camera.setIsMainCamera(false);
+    main_camera = camera;
+  }
+
+  public Camera getMainCamera() {
+    return main_camera;
   }
 
   public ArrayList<GameObject> getGameObjects() {

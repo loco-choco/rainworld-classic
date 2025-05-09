@@ -90,7 +90,7 @@ public class GameEngine {
     level.Update(logic_delta_time);
     if (graphics_delta_time >= frame_rate) {
       level.GraphicsUpdate(graphics_delta_time);
-      graphics.Update();
+      graphics.Update(level.getMainCamera());
       last_graphics_time = current_time;
     }
 

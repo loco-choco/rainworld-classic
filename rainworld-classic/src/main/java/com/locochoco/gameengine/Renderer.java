@@ -34,5 +34,5 @@ public abstract class Renderer extends Component {
   public void LateUpdate(double delta_time) {
   }
 
-  public abstract void RenderObject(GraphicsAPI graphics_api);
+  public abstract void RenderObject(GraphicsAPI graphics_api, Transform camera_transform);
 }
