@@ -14,7 +14,6 @@ public class Camera extends Component {
   }
 
   public void OnEnabled() {
-    setIsMainCamera(main_camera);
   }
 
   public void setIsMainCamera(boolean is_main_camera) {
@@ -37,6 +36,7 @@ public class Camera extends Component {
   }
 
   public void Start() {
+    setIsMainCamera(main_camera);
   }
 
   public void PhysicsUpdate(double delta_time) {
