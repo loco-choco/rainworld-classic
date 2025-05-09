@@ -111,7 +111,7 @@ public class Physics {
                     //
         // If either collider is non physical, skip applying physics and report
         // collision
-        if (!collider_a.getPhysical() || !collider_a.getPhysical()) {
+        if (!collider_a.getPhysical() || !collider_b.getPhysical()) {
           ReportCollision(collider_a, collider_b, collision_vector);
           continue;
         }
