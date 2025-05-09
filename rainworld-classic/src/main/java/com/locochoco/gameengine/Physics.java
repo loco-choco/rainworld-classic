@@ -76,8 +76,11 @@ public class Physics {
     }
   }
 
+  private final boolean DEBUG_LOGS = false;
+
   private void HandleCollision() {
-    // System.out.printf("--------------------------------\n");
+    if (DEBUG_LOGS)
+      System.out.printf("--------------------------------\n");
     ArrayList<GameObject> game_objects = game.getLevel().getGameObjects();
     int i, j;
     // This way, we only check for collision on different objects, and we don't
@@ -88,23 +91,26 @@ public class Physics {
       if (collider_a == null || !gameObject_a.isEnabled() || !collider_a.isEnabled())
         continue;
       HashSet<String> collision_layers = collision_matrix.getOrDefault(collider_a.getLayer(), new HashSet<String>());
-      // System.out.printf("Obj: %s (%s)\n", gameObject_a.getName(),
-      // collider_a.getLayer());
+      if (DEBUG_LOGS)
+        System.out.printf("Obj: %s (%s)\n", gameObject_a.getName(),
+            collider_a.getLayer());
 
       for (j = i + 1; j < game_objects.size(); j++) {
         GameObject gameObject_b = game_objects.get(j);
         Collider collider_b = gameObject_b.getCollider();
         if (collider_b == null || !gameObject_b.isEnabled() || !collider_b.isEnabled())
           continue;
-        // System.out.printf("Obj: %s (%s)\n", gameObject_a.getName(),
-        // collider_a.getLayer());
+        if (DEBUG_LOGS)
+          System.out.printf("\tObj: %s (%s)\n", gameObject_b.getName(),
+              collider_b.getLayer());
         // Only collide if they are in the same collision list
         if (!collision_layers.contains(collider_b.getLayer()))
           continue;
 
         // -------------------- SOLVE COLLISION -----------------------
         Vector2d collision_vector = CollisionMath.CheckCollision(collider_a, collider_b);
-        // System.out.printf("\t\t- Col: %s\n", collision_vector);
+        if (DEBUG_LOGS)
+          System.out.printf("\t\t- Col: %s\n", collision_vector);
 
         if (collision_vector == null)
           continue; // If null, then no collision
@@ -119,12 +125,16 @@ public class Physics {
         RigidBody rigidBody_a = gameObject_a.getRigidBody();
         RigidBody rigidBody_b = gameObject_b.getRigidBody();
         // If either doesn't have a rigidbody, we don't even try
-        if (rigidBody_a == null || rigidBody_b == null)
+        if (rigidBody_a == null || rigidBody_b == null) {
+          ReportCollision(collider_a, collider_b, collision_vector);
           continue;
+        }
         // If the collision vector is of size 0, then we don't need to apply any physics
         // (both are touching but that's it)
-        if (collision_vector.length() == 0)
+        if (collision_vector.length() == 0) {
+          ReportCollision(collider_a, collider_b, collision_vector);
           continue;
+        }
         // ------- 1) Position Fix
         // Move based on the mass distribution between both of the objects
         Transform transform_a = gameObject_a.getTransform();
