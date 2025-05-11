@@ -110,6 +110,7 @@ public class Level {
   private static ObjectMapper mapper;
 
   public static Level ReadLevelFromJson(String filename) throws FileNotFoundException, IOException {
+    System.out.printf("Loading level %s\n", filename);
     Level new_level = new Level();
     if (mapper == null) {
       mapper = new ObjectMapper();
@@ -126,5 +127,30 @@ public class Level {
     }
     System.out.printf("Finished building level %s\n", filename);
     return new_level;
+  }
+
+  public void AdditiveLevelLoad(String filename, GameObject go_root) {
+    System.out.printf("Additively loading level %s\n", filename);
+    try {
+      if (mapper == null) {
+        mapper = new ObjectMapper();
+        SimpleModule awtModule = new SimpleModule("AWT Module");
+        awtModule.addSerializer(Color.class, new ColorJsonSerializer());
+        awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
+        mapper.registerModule(awtModule);
+      }
+      FileReader json_file = new FileReader(filename);
+      JsonNode root = mapper.readTree(json_file);
+      JsonNode game_objects = root.get("game_objects");
+      for (JsonNode game_object : game_objects) { // Builds the gameobjects in the level
+        GameObject go = GameObject.Deserialize(game_object, mapper);
+        go.setParent(go_root);
+        AddGameObject(go);
+      }
+      System.out.printf("Finished loading additively level %s\n", filename);
+    } catch (Exception e) {
+      System.err.printf("Issues loading additively level %s\n", filename);
+    }
+
   }
 }

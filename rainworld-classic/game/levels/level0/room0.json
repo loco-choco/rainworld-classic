@@ -1,31 +1,6 @@
 {
   "game_objects": [
     {
-      "name": "camera",
-      "components": {
-        "com.locochoco.gameengine.Transform": {
-          "position": {
-            "x": 43,
-            "y": 27.2
-          }
-        }
-      },
-      "children": [
-        {
-          "name": "cam",
-          "components": {
-            "com.locochoco.gameengine.Transform": {
-              "position": {
-                "x": -43,
-                "y": -27.2
-              }
-            },
-            "com.locochoco.gameengine.Camera": {}
-          }
-        }
-      ]
-    },
-    {
       "name": "tile",
       "components": {
         "com.locochoco.gameengine.Transform": {

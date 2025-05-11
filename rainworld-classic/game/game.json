@@ -1,5 +1,5 @@
 {
-  "first_level": "room0.json",
+  "first_level": "levels/level0.json",
   "physics": {
     "gravity": {
       "x": 0,
