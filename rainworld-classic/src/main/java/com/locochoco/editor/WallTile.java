@@ -4,7 +4,6 @@ import javax.vecmath.Point2d;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.locochoco.gameengine.Component;
 
 public class WallTile extends Tile {
 

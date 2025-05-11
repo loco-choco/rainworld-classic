@@ -1,0 +1,193 @@
+{
+  "game_objects": [
+    {
+      "name": "camera",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 43,
+            "y": 27.2
+          }
+        }
+      },
+      "children": [
+        {
+          "name": "cam",
+          "components": {
+            "com.locochoco.gameengine.Transform": {
+              "position": {
+                "x": -43,
+                "y": -27.2
+              }
+            },
+            "com.locochoco.gameengine.Camera": {}
+          }
+        }
+      ]
+    },
+    {
+      "name": "tile",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 60.0,
+            "y": 45.0
+          },
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxCollider": {
+          "center": {
+            "x": 60.0,
+            "y": 65.0
+          },
+          "corner_a": {
+            "x": 40.0,
+            "y": 40.0
+          },
+          "corner_b": {
+            "x": 80.0,
+            "y": 90.0
+          },
+          "physical": true,
+          "layer": "terrain",
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "center": {
+            "x": 20.0,
+            "y": 25.0
+          },
+          "width": 40,
+          "height": 50,
+          "color": -16711681,
+          "layer": "background",
+          "enabled": true
+        }
+      },
+      "children": []
+    },
+    {
+      "name": "tile",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 150.0,
+            "y": 75.0
+          },
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxCollider": {
+          "center": {
+            "x": 150.0,
+            "y": 75.0
+          },
+          "corner_a": {
+            "x": 150.0,
+            "y": 40.0
+          },
+          "corner_b": {
+            "x": 150.0,
+            "y": 110.0
+          },
+          "physical": true,
+          "layer": "terrain",
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "center": {
+            "x": 0.0,
+            "y": 35.0
+          },
+          "width": 0,
+          "height": 70,
+          "color": -16711681,
+          "layer": "background",
+          "enabled": true
+        }
+      },
+      "children": []
+    },
+    {
+      "name": "tile",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 120.0,
+            "y": 75.0
+          },
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxCollider": {
+          "center": {
+            "x": 120.0,
+            "y": 75.0
+          },
+          "corner_a": {
+            "x": 90.0,
+            "y": 40.0
+          },
+          "corner_b": {
+            "x": 150.0,
+            "y": 110.0
+          },
+          "physical": true,
+          "layer": "terrain",
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "center": {
+            "x": 30.0,
+            "y": 35.0
+          },
+          "width": 60,
+          "height": 70,
+          "color": -16711681,
+          "layer": "background",
+          "enabled": true
+        }
+      },
+      "children": []
+    },
+    {
+      "name": "tile",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 60.0,
+            "y": 105.0
+          },
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxCollider": {
+          "center": {
+            "x": 180.0,
+            "y": 65.0
+          },
+          "corner_a": {
+            "x": 170.0,
+            "y": 30.0
+          },
+          "corner_b": {
+            "x": 190.0,
+            "y": 100.0
+          },
+          "physical": true,
+          "layer": "terrain",
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "center": {
+            "x": 10.0,
+            "y": 35.0
+          },
+          "width": 20,
+          "height": 70,
+          "color": -16711681,
+          "layer": "background",
+          "enabled": true
+        }
+      },
+      "children": []
+    }
+  ]
+}

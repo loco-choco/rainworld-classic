@@ -1,13 +1,21 @@
 package com.locochoco.editor;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Point2d;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.locochoco.gameengine.*;
+import com.locochoco.serialization.ColorJsonDeserializer;
+import com.locochoco.serialization.ColorJsonSerializer;
 
 public class EditorController extends Component {
 
@@ -112,6 +120,28 @@ public class EditorController extends Component {
     return null;
   }
 
+  private void SaveRoomToFile() {
+    System.out.println("Saving room to file...");
+    ObjectMapper mapper = new ObjectMapper();
+    SimpleModule awtModule = new SimpleModule("AWT Module");
+    awtModule.addSerializer(Color.class, new ColorJsonSerializer());
+    awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
+    mapper.registerModule(awtModule);
+    try {
+      JsonGenerator generator = mapper.createGenerator(new File("room0.json"), JsonEncoding.UTF8);
+      generator.writeStartObject();
+      generator.writeArrayFieldStart("game_objects");
+      for (Tile tile : tile_list)
+        tile.SaveToJson(generator, mapper);
+      generator.writeEndArray();
+      generator.flush();
+      generator.close();
+      System.out.println("Room saved!");
+    } catch (Exception e) {
+      System.err.println("Issue writing room to file " + e.getMessage());
+    }
+  }
+
   private void SwitchMode() {
     boolean wall_mode = inputs.GetKeyPressed(KeyEvent.VK_W);
     boolean pipe_mode = inputs.GetKeyPressed(KeyEvent.VK_P);
@@ -135,6 +165,8 @@ public class EditorController extends Component {
           new_mode = Mode.MOVE;
         else if (clear) {
           ClearAllTiles();
+        } else if (save) {
+          SaveRoomToFile();
         }
         break;
       case Mode.WALL:

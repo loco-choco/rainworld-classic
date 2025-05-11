@@ -80,6 +80,7 @@ public abstract class Component {
       generator.writeFieldName(component.getClass().getName());
       generator.writeStartObject();
       for (Field field : component.getClass().getFields()) {
+
         generator.writePOJOField(field.getName(), field.get(component));
       }
       generator.writeEndObject();

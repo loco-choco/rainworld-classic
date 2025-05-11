@@ -1,5 +1,5 @@
 {
-  "first_level": "levels/levelEditor.json",
+  "first_level": "room0.json",
   "physics": {
     "gravity": {
       "x": 0,

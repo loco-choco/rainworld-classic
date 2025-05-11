@@ -1,5 +1,6 @@
 package com.locochoco.gameengine;
 
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,6 +8,9 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.locochoco.serialization.ColorJsonDeserializer;
+import com.locochoco.serialization.ColorJsonSerializer;
 
 /**
  * Abstraction over the loaded objects in game
@@ -107,8 +111,13 @@ public class Level {
 
   public static Level ReadLevelFromJson(String filename) throws FileNotFoundException, IOException {
     Level new_level = new Level();
-    if (mapper == null)
+    if (mapper == null) {
       mapper = new ObjectMapper();
+      SimpleModule awtModule = new SimpleModule("AWT Module");
+      awtModule.addSerializer(Color.class, new ColorJsonSerializer());
+      awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
+      mapper.registerModule(awtModule);
+    }
     FileReader json_file = new FileReader(filename);
     JsonNode root = mapper.readTree(json_file);
     JsonNode game_objects = root.get("game_objects");
