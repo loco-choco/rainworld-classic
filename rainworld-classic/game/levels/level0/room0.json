@@ -5,22 +5,157 @@
       "components": {
         "com.locochoco.gameengine.Transform": {
           "position": {
+            "x": 55.0,
+            "y": 75.0
+          },
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxCollider": {
+          "center": {
+            "x": 55.0,
+            "y": 75.0
+          },
+          "corner_a": {
+            "x": 50.0,
+            "y": 40.0
+          },
+          "corner_b": {
             "x": 60.0,
+            "y": 110.0
+          },
+          "physical": true,
+          "layer": "terrain",
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "center": {
+            "x": 5.0,
+            "y": 35.0
+          },
+          "width": 10,
+          "height": 70,
+          "color": -16711681,
+          "layer": "background",
+          "enabled": true
+        },
+        "com.locochoco.editor.WallSpawner": {
+          "file_name": "objects/enviroments/wall.json",
+          "enabled": true
+        }
+      },
+      "children": []
+    },
+    {
+      "name": "tile",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 115.0,
+            "y": 105.0
+          },
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxCollider": {
+          "center": {
+            "x": 115.0,
+            "y": 105.0
+          },
+          "corner_a": {
+            "x": 60.0,
+            "y": 100.0
+          },
+          "corner_b": {
+            "x": 170.0,
+            "y": 110.0
+          },
+          "physical": true,
+          "layer": "terrain",
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "center": {
+            "x": 55.0,
+            "y": 5.0
+          },
+          "width": 110,
+          "height": 10,
+          "color": -16711681,
+          "layer": "background",
+          "enabled": true
+        },
+        "com.locochoco.editor.WallSpawner": {
+          "file_name": "objects/enviroments/wall.json",
+          "enabled": true
+        }
+      },
+      "children": []
+    },
+    {
+      "name": "tile",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 105.0,
             "y": 45.0
           },
           "enabled": true
         },
         "com.locochoco.gameengine.BoxCollider": {
           "center": {
-            "x": 60.0,
-            "y": 65.0
+            "x": 105.0,
+            "y": 45.0
           },
           "corner_a": {
-            "x": 40.0,
+            "x": 60.0,
             "y": 40.0
           },
           "corner_b": {
-            "x": 80.0,
+            "x": 150.0,
+            "y": 50.0
+          },
+          "physical": true,
+          "layer": "terrain",
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "center": {
+            "x": 45.0,
+            "y": 5.0
+          },
+          "width": 90,
+          "height": 10,
+          "color": -16711681,
+          "layer": "background",
+          "enabled": true
+        },
+        "com.locochoco.editor.WallSpawner": {
+          "file_name": "objects/enviroments/wall.json",
+          "enabled": true
+        }
+      },
+      "children": []
+    },
+    {
+      "name": "tile",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 105.0,
+            "y": 70.0
+          },
+          "enabled": true
+        },
+        "com.locochoco.gameengine.BoxCollider": {
+          "center": {
+            "x": 105.0,
+            "y": 70.0
+          },
+          "corner_a": {
+            "x": 100.0,
+            "y": 50.0
+          },
+          "corner_b": {
+            "x": 110.0,
             "y": 90.0
           },
           "physical": true,
@@ -29,13 +164,17 @@
         },
         "com.locochoco.gameengine.BoxRenderer": {
           "center": {
-            "x": 20.0,
-            "y": 25.0
+            "x": 5.0,
+            "y": 20.0
           },
-          "width": 40,
-          "height": 50,
+          "width": 10,
+          "height": 40,
           "color": -16711681,
           "layer": "background",
+          "enabled": true
+        },
+        "com.locochoco.editor.WallSpawner": {
+          "file_name": "objects/enviroments/wall.json",
           "enabled": true
         }
       },
@@ -46,23 +185,23 @@
       "components": {
         "com.locochoco.gameengine.Transform": {
           "position": {
-            "x": 150.0,
+            "x": 135.0,
             "y": 75.0
           },
           "enabled": true
         },
         "com.locochoco.gameengine.BoxCollider": {
           "center": {
-            "x": 150.0,
+            "x": 135.0,
             "y": 75.0
           },
           "corner_a": {
-            "x": 150.0,
-            "y": 40.0
+            "x": 130.0,
+            "y": 70.0
           },
           "corner_b": {
-            "x": 150.0,
-            "y": 110.0
+            "x": 140.0,
+            "y": 80.0
           },
           "physical": true,
           "layer": "terrain",
@@ -70,13 +209,17 @@
         },
         "com.locochoco.gameengine.BoxRenderer": {
           "center": {
-            "x": 0.0,
-            "y": 35.0
+            "x": 5.0,
+            "y": 5.0
           },
-          "width": 0,
-          "height": 70,
-          "color": -16711681,
+          "width": 10,
+          "height": 10,
+          "color": -256,
           "layer": "background",
+          "enabled": true
+        },
+        "com.locochoco.editor.CreatureSpawner": {
+          "file_name": "objects/creatures/slugcat.json",
           "enabled": true
         }
       },
@@ -87,23 +230,23 @@
       "components": {
         "com.locochoco.gameengine.Transform": {
           "position": {
-            "x": 120.0,
+            "x": 75.0,
             "y": 75.0
           },
           "enabled": true
         },
         "com.locochoco.gameengine.BoxCollider": {
           "center": {
-            "x": 120.0,
+            "x": 75.0,
             "y": 75.0
           },
           "corner_a": {
-            "x": 90.0,
-            "y": 40.0
+            "x": 70.0,
+            "y": 70.0
           },
           "corner_b": {
-            "x": 150.0,
-            "y": 110.0
+            "x": 80.0,
+            "y": 80.0
           },
           "physical": true,
           "layer": "terrain",
@@ -111,54 +254,17 @@
         },
         "com.locochoco.gameengine.BoxRenderer": {
           "center": {
-            "x": 30.0,
-            "y": 35.0
+            "x": 5.0,
+            "y": 5.0
           },
-          "width": 60,
-          "height": 70,
-          "color": -16711681,
+          "width": 10,
+          "height": 10,
+          "color": -256,
           "layer": "background",
           "enabled": true
-        }
-      },
-      "children": []
-    },
-    {
-      "name": "tile",
-      "components": {
-        "com.locochoco.gameengine.Transform": {
-          "position": {
-            "x": 60.0,
-            "y": 105.0
-          },
-          "enabled": true
         },
-        "com.locochoco.gameengine.BoxCollider": {
-          "center": {
-            "x": 180.0,
-            "y": 65.0
-          },
-          "corner_a": {
-            "x": 170.0,
-            "y": 30.0
-          },
-          "corner_b": {
-            "x": 190.0,
-            "y": 100.0
-          },
-          "physical": true,
-          "layer": "terrain",
-          "enabled": true
-        },
-        "com.locochoco.gameengine.BoxRenderer": {
-          "center": {
-            "x": 10.0,
-            "y": 35.0
-          },
-          "width": 20,
-          "height": 70,
-          "color": -16711681,
-          "layer": "background",
+        "com.locochoco.editor.CreatureSpawner": {
+          "file_name": "objects/creatures/slugcat.json",
           "enabled": true
         }
       },

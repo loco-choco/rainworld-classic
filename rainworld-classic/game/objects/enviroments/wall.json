@@ -1,0 +1,35 @@
+{
+  "name": "wall",
+  "components": {
+    "com.locochoco.gameengine.Transform": {
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    "com.locochoco.gameengine.RigidBody": {
+      "immovable": true,
+      "elasticity": 0,
+      "friction": 1
+    },
+    "com.locochoco.gameengine.BoxCollider": {
+      "corner_a": {
+        "x": 0,
+        "y": 0
+      },
+      "corner_b": {
+        "x": 100,
+        "y": 5
+      },
+      "center": null,
+      "layer": "terrain"
+    },
+    "com.locochoco.gameengine.BoxRenderer": {
+      "layer": "foreground",
+      "width": 100,
+      "height": 5,
+      "center": null,
+      "color": -16711681
+    }
+  }
+}

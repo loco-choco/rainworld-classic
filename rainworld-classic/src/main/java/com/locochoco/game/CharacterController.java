@@ -43,6 +43,7 @@ public class CharacterController extends Component implements CollisionListener 
     collider = getGameObject().getCollider();
     collider.addCollisionListener(this);
   }
+
   public void OnDestroyed() {
     collider.removeCollisionListener(this);
   }
@@ -103,6 +104,7 @@ public class CharacterController extends Component implements CollisionListener 
     Vector2d ground_normal = new Vector2d(data.getCollisionVector());
     if (ground_normal.length() != 0) {
       ground_normal.normalize();
+      ground_normal.scale(-1);
       this.ground_normal = ground_normal;
       is_grounded = true;
     }

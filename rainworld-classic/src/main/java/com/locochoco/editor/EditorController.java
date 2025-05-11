@@ -27,6 +27,7 @@ public class EditorController extends Component {
     NONE,
     WALL,
     PIPE,
+    SPAWNER,
     MOVE,
     DELETE
   }
@@ -58,6 +59,7 @@ public class EditorController extends Component {
     modes.put(Mode.MOVE, new MoveMode(this, inputs));
     modes.put(Mode.WALL, new WallMode(this, inputs));
     modes.put(Mode.DELETE, new DeleteMode(this, inputs));
+    modes.put(Mode.SPAWNER, new CreatureSpawnMode(this, inputs));
   }
 
   public void PhysicsUpdate(double delta_time) {
@@ -128,7 +130,7 @@ public class EditorController extends Component {
     awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
     mapper.registerModule(awtModule);
     try {
-      JsonGenerator generator = mapper.createGenerator(new File("room0.json"), JsonEncoding.UTF8);
+      JsonGenerator generator = mapper.createGenerator(new File("levels/level0/room0.json"), JsonEncoding.UTF8);
       generator.writeStartObject();
       generator.writeArrayFieldStart("game_objects");
       for (Tile tile : tile_list)
@@ -142,9 +144,13 @@ public class EditorController extends Component {
     }
   }
 
+  boolean save_was_pressed = false;
+  boolean clear_was_pressed = false;
+
   private void SwitchMode() {
     boolean wall_mode = inputs.GetKeyPressed(KeyEvent.VK_W);
     boolean pipe_mode = inputs.GetKeyPressed(KeyEvent.VK_P);
+    boolean spawner_mode = inputs.GetKeyPressed(KeyEvent.VK_C);
     boolean exit_mode = inputs.GetKeyPressed(KeyEvent.VK_ESCAPE);
     boolean delete_mode = inputs.GetKeyPressed(KeyEvent.VK_D);
     boolean move_mode = inputs.GetKeyPressed(KeyEvent.VK_M);
@@ -155,29 +161,30 @@ public class EditorController extends Component {
     Mode new_mode = current_mode;
     switch (current_mode) {
       case Mode.NONE:
-        if (wall_mode) {
+        if (wall_mode)
           new_mode = Mode.WALL;
-        } else if (pipe_mode)
+        else if (pipe_mode)
           new_mode = Mode.PIPE;
+        else if (spawner_mode)
+          new_mode = Mode.SPAWNER;
         else if (delete_mode)
           new_mode = Mode.DELETE;
         else if (move_mode)
           new_mode = Mode.MOVE;
-        else if (clear) {
+        if (clear && !clear_was_pressed) {
           ClearAllTiles();
-        } else if (save) {
+        }
+        clear_was_pressed = clear;
+        if (save && !save_was_pressed) {
           SaveRoomToFile();
         }
+        save_was_pressed = save;
         break;
-      case Mode.WALL:
-      case Mode.PIPE:
-      case Mode.MOVE:
-      case Mode.DELETE:
+      default:
         if (exit_mode) {
           System.out.println("No mode");
           new_mode = Mode.NONE;
         }
-      default:
         break;
     }
     if (new_mode != current_mode) {

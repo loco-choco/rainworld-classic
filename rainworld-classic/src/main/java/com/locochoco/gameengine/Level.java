@@ -109,9 +109,7 @@ public class Level {
 
   private static ObjectMapper mapper;
 
-  public static Level ReadLevelFromJson(String filename) throws FileNotFoundException, IOException {
-    System.out.printf("Loading level %s\n", filename);
-    Level new_level = new Level();
+  private static ObjectMapper GetMapper() {
     if (mapper == null) {
       mapper = new ObjectMapper();
       SimpleModule awtModule = new SimpleModule("AWT Module");
@@ -119,6 +117,13 @@ public class Level {
       awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
       mapper.registerModule(awtModule);
     }
+    return mapper;
+  }
+
+  public static Level ReadLevelFromJson(String filename) throws FileNotFoundException, IOException {
+    System.out.printf("Loading level %s\n", filename);
+    Level new_level = new Level();
+    ObjectMapper mapper = GetMapper();
     FileReader json_file = new FileReader(filename);
     JsonNode root = mapper.readTree(json_file);
     JsonNode game_objects = root.get("game_objects");
@@ -129,16 +134,27 @@ public class Level {
     return new_level;
   }
 
+  public GameObject LoadGameObjectFromJson(String filename, GameObject go_root) {
+    System.out.printf("Loading gameobject from %s\n", filename);
+    ObjectMapper mapper = GetMapper();
+    try {
+      FileReader json_file = new FileReader(filename);
+      JsonNode root = mapper.readTree(json_file);
+      GameObject go = GameObject.Deserialize(root, mapper);
+      go.setParent(go_root);
+      AddGameObject(go);
+      System.out.printf("Finished loading gameobject in %s\n", filename);
+      return go;
+    } catch (Exception e) {
+      System.err.printf("Issues loading gameobject from %s\n", filename);
+    }
+    return null;
+  }
+
   public void AdditiveLevelLoad(String filename, GameObject go_root) {
     System.out.printf("Additively loading level %s\n", filename);
     try {
-      if (mapper == null) {
-        mapper = new ObjectMapper();
-        SimpleModule awtModule = new SimpleModule("AWT Module");
-        awtModule.addSerializer(Color.class, new ColorJsonSerializer());
-        awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
-        mapper.registerModule(awtModule);
-      }
+      ObjectMapper mapper = GetMapper();
       FileReader json_file = new FileReader(filename);
       JsonNode root = mapper.readTree(json_file);
       JsonNode game_objects = root.get("game_objects");
