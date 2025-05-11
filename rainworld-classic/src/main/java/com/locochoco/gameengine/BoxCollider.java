@@ -31,12 +31,12 @@ public class BoxCollider extends Collider {
     }
   }
 
-  public Collider setCenter(Point2d center) {
+  public BoxCollider setCenter(Point2d center) {
     this.center = center;
     return this;
   }
 
-  public Collider setShape(Point2d corner_a, Point2d corner_b) throws Exception {
+  public BoxCollider setShape(Point2d corner_a, Point2d corner_b) throws Exception {
     if (corner_a.getX() > corner_b.getX() || corner_a.getY() > corner_b.getY())
       throw new Exception("The collider needs to be a convex shape!");
     this.corner_a = corner_a;

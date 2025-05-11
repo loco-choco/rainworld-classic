@@ -3,6 +3,8 @@ package com.locochoco.gameengine;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -32,7 +34,6 @@ public class SwingGraphics
 
   // InputAPI
   private Map<Integer, Boolean> keyboard_map;
-  private Point2d mouse_position;
   private boolean mouse_left_click;
   private boolean mouse_right_click;
 
@@ -42,7 +43,6 @@ public class SwingGraphics
     addMouseListener(this);
     addKeyListener(this);
     keyboard_map = new HashMap<>();
-    mouse_position = new Point2d(0, 0);
     mouse_left_click = false;
     mouse_right_click = false;
   }
@@ -117,7 +117,8 @@ public class SwingGraphics
 
   // InputAPI
   public Point2d GetMousePos() {
-    return mouse_position;
+    Point pos = MouseInfo.getPointerInfo().getLocation();
+    return new Point2d(pos.getX() / pixel_to_transform_scale, pos.getY() / pixel_to_transform_scale);
   }
 
   public boolean GetMouseRightClick() {
@@ -134,20 +135,15 @@ public class SwingGraphics
     return keyboard_map.get(key_code);
   }
 
-  public void mouseMoved(MouseEvent e) {
-    mouse_position.setX(e.getX() / pixel_to_transform_scale);
-    mouse_position.setY(e.getY() / pixel_to_transform_scale);
-  }
-
   public void mouseClicked(MouseEvent e) {
   }
 
   public void mouseReleased(MouseEvent e) {
     switch (e.getButton()) {
-      case MouseEvent.BUTTON1:
+      case MouseEvent.BUTTON3:
         mouse_right_click = false;
         break;
-      case MouseEvent.BUTTON2:
+      case MouseEvent.BUTTON1:
         mouse_left_click = false;
         break;
       default:
@@ -163,10 +159,10 @@ public class SwingGraphics
 
   public void mousePressed(MouseEvent e) {
     switch (e.getButton()) {
-      case MouseEvent.BUTTON1:
+      case MouseEvent.BUTTON3:
         mouse_right_click = true;
         break;
-      case MouseEvent.BUTTON2:
+      case MouseEvent.BUTTON1:
         mouse_left_click = true;
         break;
       default:

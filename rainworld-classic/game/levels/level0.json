@@ -442,7 +442,8 @@
             "x": -1,
             "y": 0
           },
-          "repulsion_force": 15
+          "repulsion_force": 15,
+          "traveling_speed": 40
         },
         "com.locochoco.gameengine.Transform": {
           "position": {

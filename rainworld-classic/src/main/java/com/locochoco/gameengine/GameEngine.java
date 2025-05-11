@@ -43,7 +43,7 @@ public class GameEngine {
     inputs = swing_graphics;
 
     // Game Specific Settings
-    swing_graphics.SetWindowSize(480, 272);
+    swing_graphics.SetWindowSize(1280, 720);
     swing_graphics.SetPixelToTransformScale(5);
 
     instance = this;
@@ -78,6 +78,7 @@ public class GameEngine {
     double graphics_delta_time = (current_time - last_graphics_time) / 1000.0; // seconds
     double physics_delta_time = (current_time - last_physics_time) / 1000.0; // seconds
 
+    level.AwakeObjects();
     level.StartObjects();
 
     if (physics_delta_time >= physics_rate) {

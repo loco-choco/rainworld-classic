@@ -13,10 +13,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class Level {
   private ArrayList<GameObject> game_objects;
+  private ArrayList<GameObject> objects_to_be_added;
   private Camera main_camera;
 
   public Level() {
     game_objects = new ArrayList<>();
+    objects_to_be_added = new ArrayList<>();
     main_camera = null;
   }
 
@@ -38,8 +40,15 @@ public class Level {
     for (GameObject child : gameObject.getChildren()) {
       AddGameObject(child);
     }
-    game_objects.add(gameObject);
+    objects_to_be_added.add(gameObject);
     gameObject.setEnabled(true);
+  }
+
+  public void AwakeObjects() {
+    for (GameObject go : objects_to_be_added) {
+      game_objects.add(go);
+    }
+    objects_to_be_added.clear();
   }
 
   public void StartObjects() {
@@ -104,7 +113,7 @@ public class Level {
     JsonNode root = mapper.readTree(json_file);
     JsonNode game_objects = root.get("game_objects");
     for (JsonNode game_object : game_objects) { // Builds the gameobjects in the level
-      new_level.AddGameObject(GameObject.CreateGameObjectFromJson(game_object, mapper));
+      new_level.AddGameObject(GameObject.Deserialize(game_object, mapper));
     }
     System.out.printf("Finished building level %s\n", filename);
     return new_level;

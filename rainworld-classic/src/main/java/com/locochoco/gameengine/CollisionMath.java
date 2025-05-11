@@ -5,6 +5,15 @@ import javax.vecmath.Vector2d;
 
 public class CollisionMath {
 
+  public static boolean CheckPointCollision(Collider c, Point2d point) {
+    if (c instanceof BoxCollider b)
+      return CheckBox2Point(b, point);
+
+    System.err.printf("Collider (%s) doesn't have a collision checker!\n", c.getClass());
+    return false;
+
+  }
+
   public static Vector2d CheckCollision(Collider a, Collider b) {
     if (a instanceof BoxCollider ba)
       return CheckBox2Smth(ba, b);
@@ -19,6 +28,16 @@ public class CollisionMath {
 
     System.err.printf("Collider b (%s) doesn't have a collision checker againt BoxCollider!\n", col.getClass());
     return null;
+  }
+
+  public static boolean CheckBox2Point(BoxCollider b, Point2d point) {
+    Point2d corner_a = b.getGlobalCornerA();
+    Point2d corner_b = b.getGlobalCornerB();
+    if (point.getX() < corner_a.getX() || point.getX() > corner_b.getX())
+      return false;
+    if (point.getY() < corner_a.getY() || point.getY() > corner_b.getY())
+      return false;
+    return true;
   }
 
   public static Vector2d CheckBox2Box(BoxCollider ba, BoxCollider bb) {
