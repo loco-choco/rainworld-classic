@@ -52,13 +52,7 @@ public class TailController extends Component {
       return;
     boolean going_to_the_right = horizontal > 0;
     if (going_to_the_right && !was_going_to_the_right || !going_to_the_right && was_going_to_the_right) {
-      BufferedImage image = tail.GetSprite();
-      AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
-      tx.translate(-image.getWidth(), 0);
-      AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-      image = op.filter(image, null);
-      tail.SetSprite(image);
-
+      tail.FlipImageHorizontal();
       Point2d pos = new Point2d(transform.getPosition());
       pos.setX(-pos.getX());
       transform.setPosition(pos);

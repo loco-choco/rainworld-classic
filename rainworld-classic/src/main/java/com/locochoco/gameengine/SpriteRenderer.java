@@ -1,5 +1,7 @@
 package com.locochoco.gameengine;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -13,6 +15,8 @@ public class SpriteRenderer extends Renderer {
   private Transform transform;
   public Point2d center;
   public String file_name;
+  public boolean horizontal_flip;
+  public boolean vertical_flip;
   private BufferedImage sprite;
   private int sprite_width;
   private int sprite_height;
@@ -36,6 +40,8 @@ public class SpriteRenderer extends Renderer {
     }
     sprite_width = sprite.getWidth();
     sprite_height = sprite.getHeight();
+    if(horizontal_flip) FlipImageHorizontal();
+    if(vertical_flip) FlipImageVertical();
   }
 
   public SpriteRenderer SetCenter(Point2d center) {
@@ -52,6 +58,20 @@ public class SpriteRenderer extends Renderer {
 
   public BufferedImage GetSprite() {
     return sprite;
+  }
+
+  public void FlipImageHorizontal() {
+    AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+    tx.translate(-sprite.getWidth(), 0);
+    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+    sprite = op.filter(sprite, null);
+  }
+
+  public void FlipImageVertical() {
+    AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
+    tx.translate(-sprite.getWidth(), 0);
+    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+    sprite = op.filter(sprite, null);
   }
 
   public void RenderObject(GraphicsAPI graphics_api, Transform camera_transform) {
