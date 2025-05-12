@@ -1,6 +1,7 @@
 package com.locochoco.editor;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import javax.vecmath.Point2d;
@@ -14,19 +15,11 @@ public abstract class PipeTile extends Tile {
   private HashSet<PipeTile> connections;
 
   public PipeTile(EditorController controller, Point2d position, int id) {
-    super(controller.RoundClosestPointDown(position), controller.RoundClosestPointUp(position));
+    super(controller.RoundClosestPointDown(position), controller.RoundClosestPointUp(position), Color.RED);
     this.id = id;
     this.connections = new HashSet<>();
-    try {
-      // spawner = representation.addComponent(new CreatureSpawner());
-      // spawner.file_name = "objects/creatures/slugcat.json";
-      // spawner.setEnabled(false);
-    } catch (Exception e) {
-      System.err.println("Couldn't add component");
-    }
     BoxRenderer renderer = (BoxRenderer) (representation.getRenderer());
     renderer.layer = "foreground";
-    renderer.SetColor(Color.RED);
   }
 
   public int GetId() {
@@ -65,13 +58,17 @@ public abstract class PipeTile extends Tile {
     return new HashSet<>(connections);
   }
 
+  public ArrayList<Integer> GetConnectionsIds() {
+    ArrayList<Integer> ids = new ArrayList<>();
+    for (PipeTile pipe : connections)
+      ids.add(pipe.GetId());
+    return ids;
+  }
+
   public boolean CheckConnection(PipeTile pipe) {
     return connections.contains(pipe);
   }
 
   public void SaveToJson(JsonGenerator generator, ObjectMapper mapper) {
-    // spawner.setEnabled(true);
-    representation.Deserialize(generator, mapper);
-    // spawner.setEnabled(false);
   }
 }

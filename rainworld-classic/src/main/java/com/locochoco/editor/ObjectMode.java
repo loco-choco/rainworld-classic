@@ -21,7 +21,7 @@ public class ObjectMode extends EditorMode<SubMode> {
   public ObjectMode(EditorController controller, InputAPI inputs) {
     super(controller, inputs, SubMode.NONE);
     AddSubmode(SubMode.WALL, new WallMode(controller, this, inputs));
-    AddSubmode(SubMode.SPAWNER, new CreatureSpawnMode(controller, this, inputs));
+    AddSubmode(SubMode.SPAWNER, new ObjectSpawnMode(controller, this, inputs));
     AddSubmode(SubMode.MOVE, new MoveMode(controller, this, inputs));
     AddSubmode(SubMode.DELETE, new DeleteMode(this, inputs));
   }

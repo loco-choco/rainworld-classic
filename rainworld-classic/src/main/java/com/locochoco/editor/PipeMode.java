@@ -118,7 +118,7 @@ public class PipeMode extends EditorMode<PipeSubMode> {
         PipeTile pipe = (PipeTile) tile;
         generator.writeStartObject();
         generator.writePOJOField("id", pipe.GetId());
-        generator.writePOJOField("connections", pipe.GetConnections());
+        generator.writePOJOField("connections", pipe.GetConnectionsIds());
         generator.writeEndObject();
       }
       generator.writeEndArray();

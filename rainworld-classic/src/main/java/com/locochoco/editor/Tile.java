@@ -12,15 +12,15 @@ public abstract class Tile {
 
   protected GameObject representation;
 
-  public Tile(Point2d start, Point2d end) {
-    this.representation = CreateTileObject(start, end);
+  public Tile(Point2d start, Point2d end, Color tile_color) {
+    this.representation = CreateTileObject(start, end, tile_color);
   }
 
   public GameObject GetGameObject() {
     return representation;
   }
 
-  protected GameObject CreateTileObject(Point2d start, Point2d end) {
+  protected GameObject CreateTileObject(Point2d start, Point2d end, Color tile_color) {
     GameObject representation = new GameObject();
     GameEngine.getGameEngine().getLevel().AddGameObject(representation);
     representation.setName("tile");
@@ -42,7 +42,7 @@ public abstract class Tile {
       renderer.SetCenter(new Point2d(width / 2, height / 2));
       renderer.SetWidth(width);
       renderer.SetHeight(height);
-      renderer.SetColor(Color.CYAN);
+      renderer.SetColor(tile_color);
     } catch (Exception e) {
       System.err.println("Somethind went wrong creating tile: " + e.getMessage());
     }
