@@ -14,6 +14,7 @@ public class PipeConnectorMode extends EditorSubmode {
   public PipeConnectorMode(PipeMode mode, InputAPI inputs) {
     super(mode);
     this.inputs = inputs;
+    connection_pipes = new ArrayList<>();
   }
 
   public void OnEnterSubmode() {
@@ -49,7 +50,7 @@ public class PipeConnectorMode extends EditorSubmode {
         last_pipe = connector;
       } else if (last_pipe != null && pressed_pipe != null && pressed_pipe instanceof PipeEntranceTile) {
         last_pipe.ReciprocalConnection(pressed_pipe);
-        System.out.printf("Ending Connection with %s ->\n", last_pipe.GetId(), pressed_pipe.GetId());
+        System.out.printf("Ending Connection with %s -> %s\n", last_pipe.GetId(), pressed_pipe.GetId());
         last_pipe = null;
         connection_pipes.clear();
       }
