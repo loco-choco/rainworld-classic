@@ -78,12 +78,22 @@ public class PipeMode extends EditorMode<PipeSubMode> {
   public void OnExitMode() {
   }
 
-  public void AddEntrance(Point2d position) {
+  public PipeEntranceTile AddEntrance(Point2d position) {
     last_id++;
-    PipeTile pipe = new PipeTile(controller, this, position, last_id);
+    PipeEntranceTile pipe = new PipeEntranceTile(controller, position, last_id);
     AddTile(pipe);
     pipes.put(last_id, pipe);
     System.out.printf("Added entrance %s\n", last_id);
+    return pipe;
+  }
+
+  public PipeConnectorTile AddConnector(Point2d position) {
+    last_id++;
+    PipeConnectorTile pipe = new PipeConnectorTile(controller, position, last_id);
+    AddTile(pipe);
+    pipes.put(last_id, pipe);
+    System.out.printf("Added entrance %s\n", last_id);
+    return pipe;
   }
 
   public PipeTile GetPipeTile(int id) {

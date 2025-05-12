@@ -1,6 +1,7 @@
 package com.locochoco.editor;
 
 import java.awt.Color;
+import java.util.HashSet;
 
 import javax.vecmath.Point2d;
 
@@ -8,15 +9,14 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locochoco.gameengine.BoxRenderer;
 
-public class PipeTile extends Tile {
+public abstract class PipeTile extends Tile {
   private int id;
-  private int exit_id;
-  private PipeMode mode;
+  private HashSet<PipeTile> connections;
 
-  public PipeTile(EditorController controller, PipeMode mode, Point2d position, int id) {
+  public PipeTile(EditorController controller, Point2d position, int id) {
     super(controller.RoundClosestPointDown(position), controller.RoundClosestPointUp(position));
     this.id = id;
-    this.mode = mode;
+    this.connections = new HashSet<>();
     try {
       // spawner = representation.addComponent(new CreatureSpawner());
       // spawner.file_name = "objects/creatures/slugcat.json";
@@ -33,17 +33,40 @@ public class PipeTile extends Tile {
     return id;
   }
 
-  public void AttachExit(int id) {
-    if (exit_id != id) {
-      PipeTile pipe = mode.GetPipeTile(exit_id);
-      if (pipe != null)
-        pipe.exit_id = 0;
-    }
-    exit_id = id;
+  public void ReciprocalConnection(PipeTile pipe) {
+    pipe.Connect(this);
+    Connect(pipe);
   }
 
-  public int GetAttachedExit() {
-    return exit_id;
+  public void Connect(PipeTile pipe) {
+    connections.add(pipe);
+  }
+
+  public void ReciprocalDisconnection(PipeTile pipe) {
+    pipe.Disconnect(this);
+    Disconnect(pipe);
+  }
+
+  public void Disconnect(PipeTile pipe) {
+    connections.remove(pipe);
+  }
+
+  public void DisconnectAll() {
+    connections.clear();
+  }
+
+  public void ReciprocalDisconnectAll() {
+    for (PipeTile pipe : connections)
+      pipe.Disconnect(this);
+    connections.clear();
+  }
+
+  public HashSet<PipeTile> GetConnections() {
+    return new HashSet<>(connections);
+  }
+
+  public boolean CheckConnection(PipeTile pipe) {
+    return connections.contains(pipe);
   }
 
   public void SaveToJson(JsonGenerator generator, ObjectMapper mapper) {
