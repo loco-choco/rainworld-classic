@@ -4,29 +4,31 @@ import javax.vecmath.Point2d;
 
 import com.locochoco.gameengine.*;
 
-public class WallMode extends EditorMode {
+public class WallMode extends EditorSubmode {
 
   private InputAPI inputs;
   private boolean was_mouse_clicked;
   private Point2d wall_start_position;
   private Point2d wall_end_position;
+  private EditorController controller;
 
-  public WallMode(EditorController controller, InputAPI inputs) {
-    super(controller);
+  public WallMode(EditorController controller, EditorMode<?> mode, InputAPI inputs) {
+    super(mode);
     this.inputs = inputs;
+    this.controller = controller;
   }
 
-  public void OnEnterMode() {
-    System.out.println("Wall Mode");
+  public void OnEnterSubmode() {
+    System.out.println("\tWall Mode");
     wall_start_position = null;
     wall_end_position = null;
     was_mouse_clicked = false;
   }
 
-  public void OnExitMode() {
+  public void OnExitSubmode() {
   }
 
-  public void OnLoopMode() {
+  public void OnLoopSubmode() {
     boolean mouse_clicked = inputs.GetMouseLeftClick();
     if (mouse_clicked && !was_mouse_clicked) {
       if (wall_start_position == null)
@@ -46,7 +48,7 @@ public class WallMode extends EditorMode {
     if (wall_start_position != null && wall_end_position != null) {
       WallTile wall = new WallTile(controller.RoundClosestPointDown(wall_start_position),
           controller.RoundClosestPointUp(wall_end_position));
-      controller.AddTile(wall);
+      mode.AddTile(wall);
       wall_start_position = null;
       wall_end_position = null;
     }

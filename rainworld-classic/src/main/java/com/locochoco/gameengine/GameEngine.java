@@ -43,7 +43,7 @@ public class GameEngine {
     inputs = swing_graphics;
 
     // Game Specific Settings
-    swing_graphics.SetWindowSize(1280, 720);
+    swing_graphics.SetWindowSize(960, 720);
     swing_graphics.SetPixelToTransformScale(5);
 
     instance = this;

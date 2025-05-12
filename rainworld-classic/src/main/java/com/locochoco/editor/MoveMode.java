@@ -4,30 +4,32 @@ import javax.vecmath.Point2d;
 
 import com.locochoco.gameengine.*;
 
-public class MoveMode extends EditorMode {
+public class MoveMode extends EditorSubmode {
 
   private InputAPI inputs;
   private boolean was_mouse_clicked;
   private Tile moving_tile;
   private Point2d moving_tile_og_pos;
   private Point2d initial_mouse_pos;
+  private EditorController controller;
 
-  public MoveMode(EditorController controller, InputAPI inputs) {
-    super(controller);
+  public MoveMode(EditorController controller, EditorMode<?> mode, InputAPI inputs) {
+    super(mode);
     this.inputs = inputs;
+    this.controller = controller;
   }
 
-  public void OnEnterMode() {
-    System.out.println("Move Mode");
+  public void OnEnterSubmode() {
+    System.out.println("\tMove Mode");
     was_mouse_clicked = false;
     moving_tile = null;
   }
 
-  public void OnLoopMode() {
+  public void OnLoopSubmode() {
     boolean mouse_clicked = inputs.GetMouseLeftClick();
     if (mouse_clicked && !was_mouse_clicked) {
       if (moving_tile == null) {
-        moving_tile = controller.GetTileUnderCursor();
+        moving_tile = mode.GetTileUnderCursor();
         if (moving_tile != null) {
           moving_tile_og_pos = moving_tile.GetGameObject().getTransform().getGlobalPosition();
           initial_mouse_pos = inputs.GetMousePos();
@@ -45,7 +47,7 @@ public class MoveMode extends EditorMode {
     }
   }
 
-  public void OnExitMode() {
+  public void OnExitSubmode() {
     if (moving_tile != null)
       moving_tile.GetGameObject().getTransform().setGlobalPosition(moving_tile_og_pos);
   }

@@ -25,21 +25,15 @@ public class EditorController extends Component {
 
   public enum Mode {
     NONE,
-    WALL,
-    PIPE,
-    SPAWNER,
-    MOVE,
-    DELETE
+    OBJECT,
+    PIPE
   }
 
-  private HashMap<Mode, EditorMode> modes;
-
-  private ArrayList<Tile> tile_list;
+  private HashMap<Mode, EditorMode<?>> modes;
 
   private Mode current_mode;
 
   public void OnCreated() {
-    tile_list = new ArrayList<>();
     current_mode = Mode.NONE;
     tile_size = 10;
     modes = new HashMap<>();
@@ -56,10 +50,8 @@ public class EditorController extends Component {
 
   public void Start() {
     inputs = GameEngine.getGameEngine().getInputs();
-    modes.put(Mode.MOVE, new MoveMode(this, inputs));
-    modes.put(Mode.WALL, new WallMode(this, inputs));
-    modes.put(Mode.DELETE, new DeleteMode(this, inputs));
-    modes.put(Mode.SPAWNER, new CreatureSpawnMode(this, inputs));
+    modes.put(Mode.OBJECT, new ObjectMode(this, inputs));
+    modes.put(Mode.PIPE, new PipeMode(this, inputs));
   }
 
   public void PhysicsUpdate(double delta_time) {
@@ -98,31 +90,8 @@ public class EditorController extends Component {
     return new Point2d(x, y);
   }
 
-  public void AddTile(Tile tile) {
-    tile_list.add(tile);
-  }
-
-  public void RemoveTile(Tile tile) {
-    tile_list.remove(tile);
-    tile.Destroy();
-  }
-
-  public void ClearAllTiles() {
-    for (Tile tile : tile_list)
-      tile.Destroy();
-    tile_list.clear();
-  }
-
-  public Tile GetTileUnderCursor() {
-    Point2d cursor = inputs.GetMousePos();
-    for (Tile tile : tile_list) {
-      if (CollisionMath.CheckPointCollision(tile.GetGameObject().getCollider(), cursor))
-        return tile;
-    }
-    return null;
-  }
-
   private void SaveRoomToFile() {
+
     System.out.println("Saving room to file...");
     ObjectMapper mapper = new ObjectMapper();
     SimpleModule awtModule = new SimpleModule("AWT Module");
@@ -133,8 +102,10 @@ public class EditorController extends Component {
       JsonGenerator generator = mapper.createGenerator(new File("levels/level0/room0.json"), JsonEncoding.UTF8);
       generator.writeStartObject();
       generator.writeArrayFieldStart("game_objects");
-      for (Tile tile : tile_list)
-        tile.SaveToJson(generator, mapper);
+
+      for (EditorMode<?> mode : modes.values())
+        mode.SerializeTiles(generator, mapper);
+
       generator.writeEndArray();
       generator.flush();
       generator.close();
@@ -142,51 +113,40 @@ public class EditorController extends Component {
     } catch (Exception e) {
       System.err.println("Issue writing room to file " + e.getMessage());
     }
+
   }
 
-  boolean save_was_pressed = false;
-  boolean clear_was_pressed = false;
+  boolean was_any_pressed = false;
 
   private void SwitchMode() {
-    boolean wall_mode = inputs.GetKeyPressed(KeyEvent.VK_W);
-    boolean pipe_mode = inputs.GetKeyPressed(KeyEvent.VK_P);
-    boolean spawner_mode = inputs.GetKeyPressed(KeyEvent.VK_C);
-    boolean exit_mode = inputs.GetKeyPressed(KeyEvent.VK_ESCAPE);
-    boolean delete_mode = inputs.GetKeyPressed(KeyEvent.VK_D);
-    boolean move_mode = inputs.GetKeyPressed(KeyEvent.VK_M);
+    boolean object = inputs.GetKeyPressed(KeyEvent.VK_O);
+    boolean pipe = inputs.GetKeyPressed(KeyEvent.VK_P);
+    boolean exit = inputs.GetKeyPressed(KeyEvent.VK_ESCAPE);
     boolean save = inputs.GetKeyPressed(KeyEvent.VK_S);
-    boolean clear = inputs.GetKeyPressed(KeyEvent.VK_DELETE);
     boolean new_room = inputs.GetKeyPressed(KeyEvent.VK_N);
 
     Mode new_mode = current_mode;
-    switch (current_mode) {
-      case Mode.NONE:
-        if (wall_mode)
-          new_mode = Mode.WALL;
-        else if (pipe_mode)
-          new_mode = Mode.PIPE;
-        else if (spawner_mode)
-          new_mode = Mode.SPAWNER;
-        else if (delete_mode)
-          new_mode = Mode.DELETE;
-        else if (move_mode)
-          new_mode = Mode.MOVE;
-        if (clear && !clear_was_pressed) {
-          ClearAllTiles();
-        }
-        clear_was_pressed = clear;
-        if (save && !save_was_pressed) {
-          SaveRoomToFile();
-        }
-        save_was_pressed = save;
-        break;
-      default:
-        if (exit_mode) {
-          System.out.println("No mode");
-          new_mode = Mode.NONE;
-        }
-        break;
+    if (!was_any_pressed &&
+        (!modes.containsKey(current_mode) || modes.get(current_mode).IsAtDefaultSubmode())) {
+      switch (current_mode) {
+        case Mode.NONE:
+          if (object)
+            new_mode = Mode.OBJECT;
+          else if (pipe)
+            new_mode = Mode.PIPE;
+          if (save) {
+            SaveRoomToFile();
+          }
+          break;
+        default:
+          if (exit) {
+            System.out.println("No mode");
+            new_mode = Mode.NONE;
+          }
+          break;
+      }
     }
+    was_any_pressed = object || pipe || exit || save || new_room;
     if (new_mode != current_mode) {
       if (modes.containsKey(current_mode))
         modes.get(current_mode).OnExitMode();

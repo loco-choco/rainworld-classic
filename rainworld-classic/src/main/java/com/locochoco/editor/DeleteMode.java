@@ -2,33 +2,32 @@ package com.locochoco.editor;
 
 import com.locochoco.gameengine.*;
 
-public class DeleteMode extends EditorMode {
+public class DeleteMode extends EditorSubmode {
 
   private InputAPI inputs;
   private boolean was_mouse_clicked;
 
-  public DeleteMode(EditorController controller, InputAPI inputs) {
-    super(controller);
+  public DeleteMode(EditorMode<?> mode, InputAPI inputs) {
+    super(mode);
     this.inputs = inputs;
   }
 
-  public void OnEnterMode() {
-    System.out.println("Delete Mode");
+  public void OnEnterSubmode() {
+    System.out.println("\tDelete Mode");
     was_mouse_clicked = false;
   }
 
-  public void OnLoopMode() {
+  public void OnLoopSubmode() {
     Tile tile;
     boolean mouse_clicked = inputs.GetMouseLeftClick();
     if (mouse_clicked && !was_mouse_clicked) {
-      tile = controller.GetTileUnderCursor();
+      tile = mode.GetTileUnderCursor();
       if (tile != null)
-        controller.RemoveTile(tile);
-
+        mode.RemoveTile(tile);
     }
   }
 
-  public void OnExitMode() {
+  public void OnExitSubmode() {
   }
 
 }
