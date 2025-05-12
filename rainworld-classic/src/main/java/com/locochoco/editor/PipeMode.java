@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import javax.vecmath.Point2d;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locochoco.gameengine.*;
 
 enum PipeSubMode {
@@ -98,6 +100,36 @@ public class PipeMode extends EditorMode<PipeSubMode> {
 
   public PipeTile GetPipeTile(int id) {
     return pipes.get(id);
+  }
+
+  public void SerializeTiles(JsonGenerator generator, ObjectMapper mapper) {
+    try {
+      generator.writeStartObject();
+
+      generator.writePOJOField("name", "pipes");
+
+      generator.writeFieldName("components");
+      generator.writeStartObject();
+
+      generator.writeFieldName("com.locochoco.editor.PipeGenerator");
+      generator.writeStartObject();
+      generator.writeArrayFieldStart("pipes");
+      for (Tile tile : tiles) {
+        PipeTile pipe = (PipeTile) tile;
+        generator.writeStartObject();
+        generator.writePOJOField("id", pipe.GetId());
+        generator.writePOJOField("connections", pipe.GetConnections());
+        generator.writeEndObject();
+      }
+      generator.writeEndArray();
+      generator.writeEndObject();
+
+      generator.writeEndObject();
+
+      generator.writeEndObject();
+    } catch (Exception e) {
+      System.err.println("Issue serializing pipes: " + e.getMessage());
+    }
   }
 
 }
