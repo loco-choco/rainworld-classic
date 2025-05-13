@@ -1,0 +1,42 @@
+{
+  "name": "pipe_entrance",
+  "components": {
+    "com.locochoco.gameengine.Transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "com.locochoco.game.EntrancePipe":{},
+    "com.locochoco.gameengine.SpriteRenderer": {
+      "layer": "foreground",
+      "file_name": "assets/enviroment/pipe/entrance.png",
+      "horizontal_flip": true
+    }
+  },
+  "children": [
+    {
+      "name": "entrance",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": -5,
+            "y": 0
+          }
+        },
+        "com.locochoco.gameengine.BoxCollider": {
+          "corner_a": {
+            "x": 0,
+            "y": 0
+          },
+          "corner_b": {
+            "x": 2.5,
+            "y": 5
+          },
+          "center": null,
+          "layer": "interactable"
+        }
+      }
+    }
+  ]
+}

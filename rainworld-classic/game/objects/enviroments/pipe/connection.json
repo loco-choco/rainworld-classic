@@ -1,0 +1,41 @@
+{
+  "name": "pipe_connection",
+  "components": {
+    "com.locochoco.gameengine.Transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "com.locochoco.game.ConnectionPipe": {},
+    "com.locochoco.gameengine.SpriteRenderer": {
+      "layer": "foreground",
+      "file_name": "assets/enviroment/pipe/pipe.png"
+    }
+  },
+  "children": [
+    {
+      "name": "flash",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "com.locochoco.gameengine.BoxRenderer": {
+          "layer": "background",
+          "width": 5,
+          "height": 5,
+          "center": null,
+          "color": {
+            "red": 255,
+            "green": 255,
+            "blue": 255,
+            "alpha": 255
+          }
+        }
+      }
+    }
+  ]
+}
