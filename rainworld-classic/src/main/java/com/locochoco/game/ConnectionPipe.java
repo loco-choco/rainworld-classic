@@ -1,11 +1,14 @@
 package com.locochoco.game;
 
+import java.awt.Color;
+
 import com.locochoco.gameengine.*;
 
 public class ConnectionPipe extends Pipe {
-  private Renderer flash;
+  private BoxRenderer flash;
 
   public void OnCreated() {
+    super.OnCreated();
   }
 
   public void OnEnabled() {
@@ -15,15 +18,15 @@ public class ConnectionPipe extends Pipe {
   }
 
   public void Start() {
-    super.Start();
-    flash = getGameObject().findFirstChild("flash").getRenderer();
+    flash = (BoxRenderer) getGameObject().findFirstChild("flash").getRenderer();
+    flash.SetColor(Color.WHITE);
   }
 
   public void PhysicsUpdate(double delta_time) {
   }
 
   public void GraphicsUpdate(double delta_time) {
-    flash.enabled = this.GetObjectsBeingPiped().size() > 0;
+    flash.setEnabled(this.GetObjectsBeingPiped().size() > 0);
   }
 
   public void LateUpdate(double delta_time) {

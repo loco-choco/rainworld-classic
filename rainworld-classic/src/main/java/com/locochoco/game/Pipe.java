@@ -1,6 +1,5 @@
 package com.locochoco.game;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -14,8 +13,8 @@ class PipedObject {
   private Pipe origin_pipe;
   private Pipeable object;
 
-  public PipedObject(Pipeable object, double time_per_pipe) {
-    this.time_per_pipe = time_per_pipe;
+  public PipedObject(Pipeable object) {
+    this.time_per_pipe = object.time_per_pipe;
     this.object = object;
     this.origin_pipe = null;
     this.time_in_pipe = 0;
@@ -56,16 +55,16 @@ public abstract class Pipe extends Component {
   private HashSet<Pipe> connections;
   private ArrayList<PipedObject> piped_objects;
 
+  public void OnCreated() {
+    connections = new HashSet<>();
+    piped_objects = new ArrayList<>();
+  }
+
   public void OnDestroyed() {
     for (PipedObject object : piped_objects)
       object.Release(getGameObject().getTransform().getGlobalPosition());
     piped_objects.clear();
     ReciprocalDisconnectAll();
-  }
-
-  public void Start() {
-    connections = new HashSet<>();
-    piped_objects = new ArrayList<>();
   }
 
   public void Update(double delta_time) {
@@ -81,7 +80,7 @@ public abstract class Pipe extends Component {
     objects_to_pass.clear();
   }
 
-  public ArrayList<PipedObject> GetObjectsBeingPiped(){
+  public ArrayList<PipedObject> GetObjectsBeingPiped() {
     return piped_objects;
   }
 

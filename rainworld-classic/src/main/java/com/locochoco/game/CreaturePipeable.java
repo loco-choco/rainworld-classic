@@ -1,6 +1,7 @@
 package com.locochoco.game;
 
 import javax.vecmath.Point2d;
+import javax.vecmath.Vector2d;
 
 public class CreaturePipeable extends Pipeable {
 
@@ -38,6 +39,7 @@ public class CreaturePipeable extends Pipeable {
   public void ExitPipe(Point2d exit_position) {
     getGameObject().setEnabled(true);
     getGameObject().getTransform().setGlobalPosition(exit_position);
+    getGameObject().getRigidBody().SetVelocity(new Vector2d(0, 0));
   }
 
 }

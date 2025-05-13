@@ -7,6 +7,7 @@ public class EntrancePipe extends Pipe implements CollisionListener {
   Collider entrance;
 
   public void OnCreated() {
+    super.OnCreated();
   }
 
   public void OnEnabled() {
@@ -21,8 +22,6 @@ public class EntrancePipe extends Pipe implements CollisionListener {
   }
 
   public void Start() {
-    super.Start();
-
     entrance = getGameObject().findFirstChild("entrance").getCollider();
     entrance.addCollisionListener(this);
   }
@@ -45,8 +44,9 @@ public class EntrancePipe extends Pipe implements CollisionListener {
     Pipeable object = (Pipeable) creature.getComponent(Pipeable.class);
     if (object == null)
       return;
-    PipedObject pipedObject = new PipedObject(object, object.GetTimePerPipe());
+    PipedObject pipedObject = new PipedObject(object);
     pipedObject.SetOriginPipe(this);
+    pipedObject.Enter();
     PassToNextPipe(pipedObject);
   }
 
