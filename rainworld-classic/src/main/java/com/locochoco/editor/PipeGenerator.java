@@ -1,10 +1,8 @@
 package com.locochoco.editor;
 
-import java.nio.channels.Pipe;
 import java.util.HashMap;
 
-import javax.vecmath.Point2d;
-
+import com.locochoco.game.Pipe;
 import com.locochoco.gameengine.*;
 
 public class PipeGenerator extends Component {

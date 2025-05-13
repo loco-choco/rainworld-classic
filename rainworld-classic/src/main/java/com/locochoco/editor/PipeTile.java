@@ -12,16 +12,21 @@ import com.locochoco.gameengine.BoxRenderer;
 
 public abstract class PipeTile extends Tile {
   private int id;
+  private String file_name;
   private HashSet<PipeTile> connections;
 
-  public PipeTile(EditorController controller, Point2d position, int id) {
+  public PipeTile(EditorController controller, String file_name, Point2d position, int id) {
     super(controller.RoundClosestPointDown(position), controller.RoundClosestPointUp(position), Color.RED);
     this.id = id;
+    this.file_name = file_name;
     this.connections = new HashSet<>();
     BoxRenderer renderer = (BoxRenderer) (representation.getRenderer());
     renderer.layer = "foreground";
   }
 
+  public String GetFileName() {
+    return file_name;
+  }
   public int GetId() {
     return id;
   }

@@ -10,8 +10,8 @@ import com.locochoco.gameengine.BoxRenderer;
 
 public class PipeConnectorTile extends PipeTile {
 
-  public PipeConnectorTile(EditorController controller, Point2d position, int id) {
-    super(controller, position, id);
+  public PipeConnectorTile(EditorController controller, String file_name, Point2d position, int id) {
+    super(controller, file_name, position, id);
     BoxRenderer renderer = (BoxRenderer) (representation.getRenderer());
     renderer.layer = "foreground";
     renderer.SetWidth(5);

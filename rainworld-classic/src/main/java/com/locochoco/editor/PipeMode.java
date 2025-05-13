@@ -25,6 +25,9 @@ public class PipeMode extends EditorMode<PipeSubMode> {
 
   private HashMap<Integer, PipeTile> pipes;
 
+  private String pipe_entrance_file_name;
+  private String pipe_connector_file_name;
+
   public PipeMode(EditorController controller, InputAPI inputs) {
     super(controller, inputs, PipeSubMode.NONE);
     AddSubmode(PipeSubMode.SPAWNER, new PipeSpawnMode(controller, this, inputs));
@@ -33,6 +36,8 @@ public class PipeMode extends EditorMode<PipeSubMode> {
     AddSubmode(PipeSubMode.DELETE, new DeleteMode(this, inputs));
     last_id = 0;
     pipes = new HashMap<>();
+    pipe_entrance_file_name = "objects/enviroments/pipes/entrance.json";
+    pipe_connector_file_name = "objects/enviroments/pipes/connection.json";
   }
 
   public void OnEnterMode() {
@@ -82,7 +87,7 @@ public class PipeMode extends EditorMode<PipeSubMode> {
 
   public PipeEntranceTile AddEntrance(Point2d position) {
     last_id++;
-    PipeEntranceTile pipe = new PipeEntranceTile(controller, position, last_id);
+    PipeEntranceTile pipe = new PipeEntranceTile(controller, pipe_entrance_file_name, position, last_id);
     AddTile(pipe);
     pipes.put(last_id, pipe);
     System.out.printf("Added entrance %s\n", last_id);
@@ -91,7 +96,7 @@ public class PipeMode extends EditorMode<PipeSubMode> {
 
   public PipeConnectorTile AddConnector(Point2d position) {
     last_id++;
-    PipeConnectorTile pipe = new PipeConnectorTile(controller, position, last_id);
+    PipeConnectorTile pipe = new PipeConnectorTile(controller, pipe_connector_file_name, position, last_id);
     AddTile(pipe);
     pipes.put(last_id, pipe);
     System.out.printf("Added entrance %s\n", last_id);
@@ -119,6 +124,8 @@ public class PipeMode extends EditorMode<PipeSubMode> {
         generator.writeStartObject();
         generator.writePOJOField("id", pipe.GetId());
         generator.writePOJOField("connections", pipe.GetConnectionsIds());
+        generator.writePOJOField("position", pipe.GetGameObject().getTransform().getGlobalPosition());
+        generator.writePOJOField("file_name", pipe.GetFileName());
         generator.writeEndObject();
       }
       generator.writeEndArray();
