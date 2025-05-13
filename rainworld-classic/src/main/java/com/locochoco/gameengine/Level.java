@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -116,6 +118,8 @@ public class Level {
       awtModule.addSerializer(Color.class, new ColorJsonSerializer());
       awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
       mapper.registerModule(awtModule);
+      mapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
+      mapper.setVisibility(PropertyAccessor.FIELD, Visibility.PUBLIC_ONLY);
     }
     return mapper;
   }
