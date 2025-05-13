@@ -1,3 +1,4 @@
+/*
 package com.locochoco.game;
 
 import java.util.ArrayList;
@@ -199,4 +200,4 @@ class ObjectTravelingPipe {
       return true;
     return false;
   }
-}
+}*/

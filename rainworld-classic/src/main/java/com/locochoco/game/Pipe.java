@@ -1,42 +1,66 @@
 package com.locochoco.game;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import javax.vecmath.Vector2d;
+import javax.vecmath.Point2d;
 
 import com.locochoco.gameengine.*;
 
 class PipedObject {
-  public double time_entered_pipe;
-  public Pipe last_pipe;
-  public Pipeable object;
+  private double time_in_pipe;
+  private double time_per_pipe;
+  private Pipe origin_pipe;
+  private Pipeable object;
 
-  public void Release(Point2d release_position) {
-    object.Release(release_position);
+  public PipedObject(Pipeable object, double time_per_pipe) {
+    this.time_per_pipe = time_per_pipe;
+    this.object = object;
+    this.origin_pipe = null;
+    this.time_in_pipe = 0;
+  }
+
+  public Pipe GetOriginPipe() {
+    return origin_pipe;
+  }
+
+  public void SetOriginPipe(Pipe pipe) {
+    origin_pipe = pipe;
+  }
+
+  public void ResetTimeInPipe() {
+    time_in_pipe = 0;
+  }
+
+  public void UpdateTimeInPipe(double delta_time) {
+    time_in_pipe += delta_time;
+  }
+
+  public boolean WasTimeInPipeServed() {
+    return time_in_pipe >= time_per_pipe;
+  }
+
+  public Pipeable Release(Point2d release_position) {
+    object.ExitPipe(release_position);
+    return object;
   }
 
   public void Enter() {
-    object.Enter();
+    object.EnterPipe();
   }
 }
-// TODO IMPLEMENT Pipeable INTERFACE AND ADD THAT TO CREATURES AND ITEMS
 
-public class Pipe extends Component {
+public abstract class Pipe extends Component {
 
   private HashSet<Pipe> connections;
   private ArrayList<PipedObject> piped_objects;
 
-  public void OnCreated() {
-  }
-
-  public void OnEnabled() {
-  }
-
-  public void OnDisabled() {
-  }
-
   public void OnDestroyed() {
+    for (PipedObject object : piped_objects)
+      object.Release(getGameObject().getTransform().getGlobalPosition());
+    piped_objects.clear();
+    ReciprocalDisconnectAll();
   }
 
   public void Start() {
@@ -44,28 +68,35 @@ public class Pipe extends Component {
     piped_objects = new ArrayList<>();
   }
 
-  public void PhysicsUpdate(double delta_time) {
-  }
-
-  public void GraphicsUpdate(double delta_time) {
-  }
-
   public void Update(double delta_time) {
+    ArrayList<PipedObject> objects_to_pass = new ArrayList<>();
+    for (PipedObject object : piped_objects) {
+      object.UpdateTimeInPipe(delta_time);
+      if (object.WasTimeInPipeServed())
+        objects_to_pass.add(object);
+    }
+    for (PipedObject object : objects_to_pass)
+      PassToNextPipe(object);
+
+    objects_to_pass.clear();
   }
 
-  public void LateUpdate(double delta_time) {
+  public ArrayList<PipedObject> GetObjectsBeingPiped(){
+    return piped_objects;
   }
 
-  public void ReceiveFromPipe(Pipe passer, PipedObject object) {
+  public void ReceiveFromPipe(PipedObject object) {
     piped_objects.add(object);
-    piped_objects.last_pipe = passer;
+    object.ResetTimeInPipe();
   }
 
   public void PassToNextPipe(PipedObject object) {
-    Pipe last_pipe = object.last_pipe;
+    piped_objects.remove(object);
+    Pipe last_pipe = object.GetOriginPipe();
     for (Pipe pipe : connections) {
       if (pipe != last_pipe) {
-        pipe.ReceiveFromPipe(this, object);
+        object.SetOriginPipe(this);
+        pipe.ReceiveFromPipe(object);
         return;
       }
     }
