@@ -36,8 +36,8 @@ public class PipeMode extends EditorMode<PipeSubMode> {
     AddSubmode(PipeSubMode.DELETE, new DeleteMode(this, inputs));
     last_id = 0;
     pipes = new HashMap<>();
-    pipe_entrance_file_name = "objects/enviroments/pipes/entrance.json";
-    pipe_connector_file_name = "objects/enviroments/pipes/connection.json";
+    pipe_entrance_file_name = "objects/enviroments/pipe/entrance.json";
+    pipe_connector_file_name = "objects/enviroments/pipe/connection.json";
   }
 
   public void OnEnterMode() {

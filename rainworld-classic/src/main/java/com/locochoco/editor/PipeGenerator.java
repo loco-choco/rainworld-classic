@@ -1,12 +1,13 @@
 package com.locochoco.editor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.locochoco.game.Pipe;
 import com.locochoco.gameengine.*;
 
 public class PipeGenerator extends Component {
-  public PipeInfo pipes[];
+  public ArrayList<PipeInfo> pipes; // TODO FIX THIS NOT SERIALIZING CORRECTLY
   private HashMap<Integer, Pipe> pipes_objs;
 
   public void OnCreated() {
@@ -23,7 +24,6 @@ public class PipeGenerator extends Component {
 
   public void Start() {
     pipes_objs = new HashMap<>();
-    getGameObject().MarkToDestruction();
     for (PipeInfo info : pipes)
       GeneratePipe(info);
     for (PipeInfo info : pipes) {
@@ -31,6 +31,7 @@ public class PipeGenerator extends Component {
         pipes_objs.get(info.id).Connect(pipes_objs.get(id));
     }
 
+    getGameObject().MarkToDestruction();
   }
 
   private void GeneratePipe(PipeInfo info) {
