@@ -35,7 +35,7 @@
           }
         },
         "com.locochoco.game.RoomLoader": {
-          "file_name": "levels/level0/room0.json"
+          "file_name": "levels/regions/outskirts/room0.json"
         }
       }
     }

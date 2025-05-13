@@ -1,0 +1,95 @@
+{
+  "game_objects": [
+    {
+      "name": "camera",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 43,
+            "y": 27.2
+          }
+        }
+      },
+      "children": [
+        {
+          "name": "cam",
+          "components": {
+            "com.locochoco.gameengine.Transform": {
+              "position": {
+                "x": -43,
+                "y": -27.2
+              }
+            },
+            "com.locochoco.gameengine.Camera": {}
+          }
+        }
+      ]
+    },
+    {
+      "name": "button-to-game",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 43,
+            "y": 22.2
+          }
+        },
+        "com.locochoco.mainMenu.ChangeLevelButton": {
+          "level_file_path": "levels/editor/main.json"
+        }
+      },
+      "com.locochoco.gameengine.BoxCollider": {
+        "corner_a": {
+          "x": 0,
+          "y": 0
+        },
+        "corner_b": {
+          "x": 100,
+          "y": 10
+        },
+        "center": null,
+        "layer": "ui"
+      },
+      "com.locochoco.gameengine.BoxRenderer": {
+        "layer": "background",
+        "width": 100,
+        "height": 10,
+        "center": null,
+        "color": -16711681
+      }
+    },
+    {
+      "name": "button-to-editor",
+      "components": {
+        "com.locochoco.gameengine.Transform": {
+          "position": {
+            "x": 43,
+            "y": 32.2
+          }
+        },
+        "com.locochoco.mainMenu.ChangeLevelButton": {
+          "level_file_path": "levels/editor/main.json"
+        }
+      },
+      "com.locochoco.gameengine.BoxCollider": {
+        "corner_a": {
+          "x": 0,
+          "y": 0
+        },
+        "corner_b": {
+          "x": 100,
+          "y": 10
+        },
+        "center": null,
+        "layer": "ui"
+      },
+      "com.locochoco.gameengine.BoxRenderer": {
+        "layer": "background",
+        "width": 100,
+        "height": 10,
+        "center": null,
+        "color": -16711681
+      }
+    }
+  ]
+}
