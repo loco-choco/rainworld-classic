@@ -24,6 +24,9 @@
     "com.locochoco.game.CharacterInventory": {
       "throw_velocity": 160
     },
+    "com.locochoco.game.CreaturePipeable": {
+      "time_per_pipe": 0.1
+    },
     "com.locochoco.gameengine.BoxCollider": {
       "corner_a": {
         "x": 0,

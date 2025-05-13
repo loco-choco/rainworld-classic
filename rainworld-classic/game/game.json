@@ -1,5 +1,5 @@
 {
-  "first_level": "levels/levelEditor.json",
+  "first_level": "levels/level0.json",
   "physics": {
     "gravity": {
       "x": 0,
@@ -20,12 +20,16 @@
   "graphics": {
     "rendering_order": [
       "ui",
+      "foreground_front_detail",
       "foreground",
+      "foreground_back_detail",
       "item",
       "creature_front_detail",
       "creature",
       "creature_back_detail",
-      "background"
+      "background_front_detail",
+      "background",
+      "background_back_detail"
     ]
   }
 }
