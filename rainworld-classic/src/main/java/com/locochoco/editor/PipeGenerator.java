@@ -7,7 +7,7 @@ import com.locochoco.game.Pipe;
 import com.locochoco.gameengine.*;
 
 public class PipeGenerator extends Component {
-  public ArrayList<PipeInfo> pipes; // TODO FIX THIS NOT SERIALIZING CORRECTLY
+  public PipeInfo pipes[]; // TODO FIX THIS NOT SERIALIZING CORRECTLY
   private HashMap<Integer, Pipe> pipes_objs;
 
   public void OnCreated() {
