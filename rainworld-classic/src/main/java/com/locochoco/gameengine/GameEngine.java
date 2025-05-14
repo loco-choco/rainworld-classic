@@ -1,6 +1,7 @@
 package com.locochoco.gameengine;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.FileReader;
 
 import javax.vecmath.Point2d;
@@ -26,6 +27,7 @@ public class GameEngine {
   private Physics physics;
   private Graphics graphics;
   private InputAPI inputs;
+  private String level_to_be_loaded;
   private Level level;
 
   public GameEngine() {
@@ -43,7 +45,7 @@ public class GameEngine {
     inputs = swing_graphics;
 
     // Game Specific Settings
-    swing_graphics.SetWindowSize(960, 720);
+    swing_graphics.SetWindowSize(700, 700);
     swing_graphics.SetPixelToTransformScale(5);
 
     instance = this;
@@ -63,16 +65,28 @@ public class GameEngine {
   }
 
   public boolean LoadLevel(String name) {
+    if (!new File(name).isFile()) {
+      System.err.println(String.format("There is no file %s", name));
+      return false;
+    }
+    level_to_be_loaded = name;
+    return true;
+  }
+
+  private void LevelRequestedLevel(String name) {
     try {
       level = Level.ReadLevelFromJson(name);
-      return true;
     } catch (Exception e) {
       System.err.println(String.format("Error while reading %s level: %s", name, e.getMessage()));
     }
-    return false;
   }
 
   public void Run() {
+    if (!level_to_be_loaded.isEmpty()) {
+      LevelRequestedLevel(level_to_be_loaded);
+      level_to_be_loaded = "";
+    }
+
     long current_time = System.currentTimeMillis(); // ms
     double logic_delta_time = (current_time - last_logic_time) / 1000.0; // seconds
     double graphics_delta_time = (current_time - last_graphics_time) / 1000.0; // seconds

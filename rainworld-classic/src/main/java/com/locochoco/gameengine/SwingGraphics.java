@@ -1,6 +1,7 @@
 package com.locochoco.gameengine;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MouseInfo;
@@ -88,6 +89,13 @@ public class SwingGraphics
         (int) Math.round(image.getHeight(null) * pixel_to_transform_scale), Image.SCALE_FAST);
     current_frame.drawImage(scaled, (int) Math.round(position.getX() * pixel_to_transform_scale),
         (int) Math.round(position.getY() * pixel_to_transform_scale), null);
+  }
+
+  public void DrawText(String text, Point2d position, Color color, Font font) {
+    current_frame.setColor(color);
+    current_frame.setFont(font);
+    current_frame.drawString(text, (int) Math.round(position.getX() * pixel_to_transform_scale),
+        (int) Math.round(position.getY() * pixel_to_transform_scale));
   }
 
   public void FlushBuffer() {
