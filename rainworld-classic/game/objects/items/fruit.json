@@ -25,17 +25,9 @@
       "center": null,
       "layer": "creature"
     },
-    "com.locochoco.gameengine.BoxRenderer": {
+    "com.locochoco.gameengine.SpriteRenderer": {
       "layer": "item",
-      "width": 1,
-      "height": 1,
-      "center": null,
-      "color": {
-        "red": 255,
-        "green": 0,
-        "blue": 255,
-        "alpha": 255
-      }
+      "file_name": "assets/items/fruit.png"
     }
   }
 }
