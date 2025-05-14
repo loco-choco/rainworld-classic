@@ -1,0 +1,41 @@
+  {
+    "name": "pebble",
+    "components": {
+      "com.locochoco.gameengine.Transform": {
+        "position": {
+          "x": 40,
+          "y": 35
+        }
+      },
+      "com.locochoco.gameengine.RigidBody": {
+        "mass": 0.1,
+        "elasticity": 1,
+        "friction": 1
+      },
+      "com.locochoco.game.Pebble": {},
+      "com.locochoco.gameengine.BoxCollider": {
+        "corner_a": {
+          "x": 0,
+          "y": 0
+        },
+        "corner_b": {
+          "x": 1,
+          "y": 1
+        },
+        "center": null,
+        "layer": "creature"
+      },
+      "com.locochoco.gameengine.BoxRenderer": {
+        "layer": "item",
+        "width": 1,
+        "height": 1,
+        "center": null,
+        "color": {
+          "red": 100,
+          "green": 100,
+          "blue": 100,
+          "alpha": 255
+        }
+      }
+    }
+  }
