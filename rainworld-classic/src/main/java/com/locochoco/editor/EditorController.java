@@ -19,6 +19,8 @@ import com.locochoco.serialization.ColorJsonSerializer;
 
 public class EditorController extends Component {
 
+  private String currently_loaded_region;
+  private String currently_loaded_room;
   private double tile_size;
 
   private InputAPI inputs;
@@ -37,6 +39,8 @@ public class EditorController extends Component {
     current_mode = Mode.NONE;
     tile_size = 10;
     modes = new HashMap<>();
+    currently_loaded_region = "outskirts";
+    currently_loaded_room = "room0";
   }
 
   public void OnEnabled() {
@@ -90,22 +94,28 @@ public class EditorController extends Component {
     return new Point2d(x, y);
   }
 
-  private void SaveRoomToFile() {
-
-    System.out.println("Saving room to file...");
+  private void SaveRoomToFile(String room_name, String region_name) {
+    System.out.printf("Saving room %s to file...\n", room_name);
     ObjectMapper mapper = new ObjectMapper();
     SimpleModule awtModule = new SimpleModule("AWT Module");
     awtModule.addSerializer(Color.class, new ColorJsonSerializer());
     awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
     mapper.registerModule(awtModule);
     try {
-      JsonGenerator generator = mapper.createGenerator(new File("levels/level0/room0.json"), JsonEncoding.UTF8);
+      JsonGenerator generator = mapper.createGenerator(
+          new File(String.format("levels/regions/%s/%s.json", region_name, room_name)),
+          JsonEncoding.UTF8);
       generator.writeStartObject();
       generator.writeArrayFieldStart("game_objects");
+      generator.writeStartObject();
+      generator.writePOJOField("name", room_name);
+      generator.writeArrayFieldStart("children");
 
       for (EditorMode<?> mode : modes.values())
         mode.SerializeTiles(generator, mapper);
 
+      generator.writeEndArray();
+      generator.writeEndObject();
       generator.writeEndArray();
       generator.flush();
       generator.close();
@@ -135,7 +145,7 @@ public class EditorController extends Component {
           else if (pipe)
             new_mode = Mode.PIPE;
           if (save) {
-            SaveRoomToFile();
+            SaveRoomToFile(currently_loaded_room, currently_loaded_region);
           }
           break;
         default:

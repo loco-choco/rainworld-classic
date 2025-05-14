@@ -10,6 +10,11 @@ public class WallGenerator extends ObjectGenerator {
 
   protected void ConfigObject(GameObject obj) {
     super.ConfigObject(obj);
+    try {
+      obj.setParent(getGameObject().getParent());
+    } catch (Exception e) {
+      System.err.println("Failed to set wall parent to the generator parent");
+    }
     BoxCollider collider = (BoxCollider) obj.getCollider();
     collider.setCenter(null);
     try {

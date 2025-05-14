@@ -7,7 +7,7 @@ import com.locochoco.game.Pipe;
 import com.locochoco.gameengine.*;
 
 public class PipeGenerator extends Component {
-  public PipeInfo pipes[]; // TODO FIX THIS NOT SERIALIZING CORRECTLY
+  public PipeInfo pipes[];
   private HashMap<Integer, Pipe> pipes_objs;
 
   public void OnCreated() {
@@ -35,7 +35,8 @@ public class PipeGenerator extends Component {
   }
 
   private void GeneratePipe(PipeInfo info) {
-    GameObject obj = GameEngine.getGameEngine().getLevel().LoadGameObjectFromJson(info.file_name, null);
+    GameObject obj = GameEngine.getGameEngine().getLevel().LoadGameObjectFromJson(info.file_name,
+        getGameObject().getParent());
     obj.getTransform().setGlobalPosition(info.position);
     pipes_objs.put(info.id, (Pipe) obj.getComponent(Pipe.class));
   }
