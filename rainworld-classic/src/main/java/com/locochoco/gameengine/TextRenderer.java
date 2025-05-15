@@ -21,6 +21,10 @@ public class TextRenderer extends Renderer {
     super.OnCreated();
     transform = getGameObject().getTransform();
     color = Color.WHITE;
+    position = new Point2d(0, 0);
+    text = "SAMPLE TEXT";
+    text_size = 15;
+    font_name = "Arial";
   }
 
   public void Start() {
@@ -33,6 +37,7 @@ public class TextRenderer extends Renderer {
 
   public void RenderObject(GraphicsAPI graphics_api, Transform camera_transform) {
     Point2d position = new Point2d(camera_transform.transformToLocalSpace(transform.getGlobalPosition()));
+    position.add(this.position);
     graphics_api.DrawText(text, position, color, font);
   }
 }
