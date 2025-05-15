@@ -19,6 +19,7 @@ import com.locochoco.serialization.ColorJsonSerializer;
 
 public class EditorController extends Component {
 
+  private static EditorController instance;
   private String currently_loaded_region;
   private String currently_loaded_room;
   private double tile_size;
@@ -36,6 +37,8 @@ public class EditorController extends Component {
   private Mode current_mode;
 
   public void OnCreated() {
+    if (instance == null)
+      instance = this;
     current_mode = Mode.NONE;
     tile_size = 10;
     modes = new HashMap<>();
@@ -50,12 +53,18 @@ public class EditorController extends Component {
   }
 
   public void OnDestroyed() {
+    if (instance == this)
+      instance = null;
   }
 
   public void Start() {
     inputs = GameEngine.getGameEngine().getInputs();
     modes.put(Mode.OBJECT, new ObjectMode(this, inputs));
     modes.put(Mode.PIPE, new PipeMode(this, inputs));
+  }
+
+  public static EditorController GetInstance() {
+    return instance;
   }
 
   public void PhysicsUpdate(double delta_time) {
@@ -71,6 +80,22 @@ public class EditorController extends Component {
   }
 
   public void LateUpdate(double delta_time) {
+  }
+
+  public String GetCurrentMode() {
+    if (modes.containsKey(current_mode))
+      return current_mode.name();
+    return "";
+  }
+
+  public String GetModeStatus() {
+    if (!modes.containsKey(current_mode))
+      return "";
+    String status = modes.get(current_mode).GetSubmodeStatus();
+    String submode = modes.get(current_mode).GetSubmode();
+    if (status.isEmpty())
+      return submode;
+    return String.format("%s : %s", submode, status);
   }
 
   public Point2d RoundClosestPointDown(Point2d point) {

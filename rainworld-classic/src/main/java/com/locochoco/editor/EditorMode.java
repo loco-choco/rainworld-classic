@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locochoco.gameengine.CollisionMath;
 import com.locochoco.gameengine.InputAPI;
 
-public abstract class EditorMode<M> {
+public abstract class EditorMode<M extends Enum<M>> {
   protected EditorController controller;
   protected ArrayList<Tile> tiles;
   protected InputAPI inputs;
@@ -72,6 +72,18 @@ public abstract class EditorMode<M> {
   public abstract void OnEnterMode();
 
   public abstract void OnExitMode();
+
+  public String GetSubmode() {
+    if (submodes.containsKey(current_submode))
+      return current_submode.name();
+    return "";
+  }
+
+  public String GetSubmodeStatus() {
+    if (submodes.containsKey(current_submode))
+      return submodes.get(current_submode).GetStatus();
+    return "";
+  }
 
   public void OnLoopMode() {
     if (submodes.containsKey(current_submode))

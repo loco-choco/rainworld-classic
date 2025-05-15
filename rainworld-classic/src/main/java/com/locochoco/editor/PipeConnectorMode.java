@@ -31,6 +31,12 @@ public class PipeConnectorMode extends EditorSubmode {
     connection_pipes.clear();
   }
 
+  public String GetStatus() {
+    if (connection_pipes.size() == 0)
+      return "";
+    return "CONNECTING";
+  }
+
   public void OnLoopSubmode() {
     PipeMode mode = (PipeMode) this.mode;
     boolean mouse_clicked = inputs.GetMouseLeftClick();

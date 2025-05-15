@@ -12,4 +12,8 @@ public abstract class EditorSubmode {
   public abstract void OnExitSubmode();
 
   public abstract void OnLoopSubmode();
+
+  public String GetStatus() {
+    return "";
+  }
 }

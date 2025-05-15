@@ -47,6 +47,10 @@ public class ObjectSpawnMode extends EditorSubmode {
     types.add(new ObjectTypes("objects/items/fruit.json", Color.MAGENTA));
   }
 
+  public String GetStatus() {
+    return types.get(current_object_selected).file_path;
+  }
+
   public void OnEnterSubmode() {
     System.out.println("\tObject Spawn Mode");
     was_mouse_clicked = false;

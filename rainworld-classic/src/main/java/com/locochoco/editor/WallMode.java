@@ -31,6 +31,12 @@ public class WallMode extends EditorSubmode {
   public void OnExitSubmode() {
   }
 
+  public String GetStatus() {
+    if (wall_start_position == null)
+      return "";
+    return String.format("%s -> %s", wall_start_position, inputs.GetMousePos());
+  }
+
   public void OnLoopSubmode() {
     boolean mouse_clicked = inputs.GetMouseLeftClick();
     if (mouse_clicked && !was_mouse_clicked) {
