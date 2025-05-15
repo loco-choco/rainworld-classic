@@ -5,8 +5,8 @@
       "components": {
         "com.locochoco.gameengine.Transform": {
           "position": {
-            "x": 43,
-            "y": 27.2
+            "x": 70,
+            "y": 70
           }
         },
         "com.locochoco.game.PlayerUI": {}
@@ -17,8 +17,8 @@
           "components": {
             "com.locochoco.gameengine.Transform": {
               "position": {
-                "x": -43,
-                "y": -27.2
+                "x": -70,
+                "y": -70
               }
             },
             "com.locochoco.gameengine.Camera": {}
