@@ -99,8 +99,14 @@ public abstract class Pipe extends Component {
         return;
       }
     }
+    if (AtemptToPassBeforeReleasing(object))
+      return;
     System.err.println("No pipe to pass to! Releasing the object early");
     object.Release(getGameObject().getTransform().getGlobalPosition());
+  }
+
+  public boolean AtemptToPassBeforeReleasing(PipedObject object) {
+    return false;
   }
 
   public void ReciprocalConnection(Pipe pipe) {
