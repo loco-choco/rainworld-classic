@@ -18,11 +18,13 @@ public class CharacterController extends Component implements CollisionListener 
   public double wall_jump_height_contribution;
   public double wall_jump_horizontal_contribution;
   public double jump_coyote_time;
+  public double jump_antispam_timeout;
 
   private boolean jumped_was_pressed;
   private boolean is_grounded;
   private Vector2d ground_normal;
   private double time_ungrounded;
+  private double time_since_last_jump;
 
   public void OnCreated() {
     inputs = GameEngine.getGameEngine().getInputs();
@@ -30,6 +32,7 @@ public class CharacterController extends Component implements CollisionListener 
     is_grounded = false;
     ground_normal = new Vector2d();
     time_ungrounded = 0;
+    time_since_last_jump = 0;
   }
 
   public void OnEnabled() {
@@ -66,7 +69,7 @@ public class CharacterController extends Component implements CollisionListener 
   public void PhysicsUpdate(double delta_time) {
     // Input Gathering
     double horizontal_movement = 0;
-    boolean jump = (is_grounded || (time_ungrounded < jump_coyote_time))
+    boolean jump = (is_grounded || (time_ungrounded < jump_coyote_time) && (time_since_last_jump == 0))
         && !jumped_was_pressed && inputs.GetKeyPressed(KeyEvent.VK_Z);
     horizontal_movement += inputs.GetKeyPressed(KeyEvent.VK_LEFT) ? -1 : 0;
     horizontal_movement += inputs.GetKeyPressed(KeyEvent.VK_RIGHT) ? 1 : 0;
@@ -93,18 +96,22 @@ public class CharacterController extends Component implements CollisionListener 
     rigidbody.AddForce(movement_force);
     // Jump button debouncing
     jumped_was_pressed = inputs.GetKeyPressed(KeyEvent.VK_Z);
-    // Coyote Time time Passing
+    // Coyote and Jump Antispam Time time Passing
+    time_since_last_jump -= delta_time;
+    if (time_since_last_jump < 0)
+      time_since_last_jump = 0;
     if (!is_grounded)
       time_ungrounded += delta_time;
-    if (jump)
+    if (jump) {
       time_ungrounded = jump_coyote_time;
+      time_since_last_jump = jump_antispam_timeout;
+    }
   }
 
   public void OnCollision(CollisionData data) {
     Vector2d ground_normal = new Vector2d(data.getCollisionVector());
-    if (ground_normal.length() != 0) {
+    if (ground_normal.lengthSquared() != 0) {
       ground_normal.normalize();
-      ground_normal.scale(-1);
       this.ground_normal = ground_normal;
       is_grounded = true;
     }

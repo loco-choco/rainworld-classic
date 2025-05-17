@@ -18,6 +18,7 @@
       "air_acceleration": 100,
       "jump_velocity": 40,
       "jump_coyote_time": 0.15,
+      "jump_antispam_timeout": 0.3,
       "wall_jump_height_contribution": 1,
       "wall_jump_horizontal_contribution": 0.8
     },
