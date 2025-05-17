@@ -7,7 +7,9 @@ import java.util.HashMap;
 import javax.vecmath.Point2d;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.locochoco.game.EntrancePipe;
 import com.locochoco.gameengine.*;
 
 enum PipeSubMode {
@@ -116,17 +118,18 @@ public class PipeMode extends EditorMode<PipeSubMode> {
       generator.writeFieldName("components");
       generator.writeStartObject();
 
-      generator.writeFieldName("com.locochoco.editor.PipeGenerator");
+      generator.writeFieldName(PipeGenerator.class.getName());
       generator.writeStartObject();
       generator.writeArrayFieldStart("pipes");
       for (Tile tile : tiles) {
         PipeTile pipe = (PipeTile) tile;
-        generator.writeStartObject();
-        generator.writePOJOField("id", pipe.GetId());
-        generator.writePOJOField("connections", pipe.GetConnectionsIds());
-        generator.writePOJOField("position", pipe.GetGameObject().getTransform().getGlobalPosition());
-        generator.writePOJOField("file_name", pipe.GetFileName());
-        generator.writeEndObject();
+        PipeInfo info = new PipeInfo();
+        info.id = pipe.GetId();
+        ArrayList<Integer> connections = pipe.GetConnectionsIds();
+        info.connections = connections.toArray(new Integer[connections.size()]);
+        info.position = pipe.GetGameObject().getTransform().getGlobalPosition();
+        info.file_name = pipe.GetFileName();
+        generator.writePOJO(info);
       }
       generator.writeEndArray();
       generator.writeEndObject();
@@ -139,4 +142,54 @@ public class PipeMode extends EditorMode<PipeSubMode> {
     }
   }
 
+  public void DeserializeTiles(JsonNode room, ObjectMapper mapper) {
+    JsonNode rooms_children = room.get("children");
+    for (JsonNode child : rooms_children) {
+      if (!child.get("name").asText().equals("pipes"))
+        continue;
+      System.out.println("Found pipes gameobject, deserializing it...");
+      JsonNode pipes = child.get("components").get(PipeGenerator.class.getName()).get("pipes");
+      ArrayList<PipeInfo> infos = new ArrayList<>();
+      for (JsonNode info_json : pipes) {
+        try {
+          PipeInfo info = (PipeInfo) mapper.convertValue(info_json, PipeInfo.class);
+          infos.add(info);
+
+        } catch (Exception e) {
+          System.err.printf("Issue parsing PipeInfo %s\n", e.getMessage());
+        }
+      }
+      // Create the pipes
+      int max_id = 0;
+      for (PipeInfo info : infos) {
+        PipeTile pipe;
+        if (info.file_name.contains("entrance")) {
+          pipe = new PipeEntranceTile(controller, pipe_entrance_file_name, info.position, info.id);
+        } else if (info.file_name.contains("connection")) {
+          pipe = new PipeConnectorTile(controller, pipe_connector_file_name, info.position, info.id);
+        } else {
+          System.err.printf("Found not recognized pipe type %s\n", info.file_name);
+          continue;
+        }
+        AddTile(pipe);
+        this.pipes.put(info.id, pipe);
+        if (max_id < info.id)
+          max_id = info.id;
+      }
+      last_id = max_id;
+      // Connect them
+      for (PipeInfo info : infos) {
+        PipeTile pipe = GetPipeTile(info.id);
+        if (pipe == null)
+          continue;
+        for (int id : info.connections) {
+          PipeTile other = GetPipeTile(id);
+          if (other == null)
+            continue;
+          pipe.Connect(other);
+        }
+      }
+      return;
+    }
+  }
 }

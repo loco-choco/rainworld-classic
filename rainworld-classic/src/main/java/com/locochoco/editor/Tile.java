@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.vecmath.Point2d;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locochoco.gameengine.*;
 
@@ -56,4 +57,5 @@ public abstract class Tile {
 
   public abstract void SaveToJson(JsonGenerator generator, ObjectMapper mapper);
 
+  public abstract void ReadFromJson(JsonNode node, ObjectMapper mapper);
 }

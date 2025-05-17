@@ -6,6 +6,7 @@ import java.util.HashMap;
 import javax.vecmath.Point2d;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locochoco.gameengine.CollisionMath;
 import com.locochoco.gameengine.InputAPI;
@@ -68,6 +69,8 @@ public abstract class EditorMode<M extends Enum<M>> {
     for (Tile tile : tiles)
       tile.SaveToJson(generator, mapper);
   }
+
+  public abstract void DeserializeTiles(JsonNode component, ObjectMapper mapper);
 
   public abstract void OnEnterMode();
 

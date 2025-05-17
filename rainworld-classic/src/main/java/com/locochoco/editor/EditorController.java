@@ -3,6 +3,7 @@ package com.locochoco.editor;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,6 +12,7 @@ import javax.vecmath.Point2d;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.locochoco.gameengine.*;
@@ -61,6 +63,9 @@ public class EditorController extends Component {
     inputs = GameEngine.getGameEngine().getInputs();
     modes.put(Mode.OBJECT, new ObjectMode(this, inputs));
     modes.put(Mode.PIPE, new PipeMode(this, inputs));
+
+    // Load room file
+    OpenRoomFromFile(currently_loaded_room, currently_loaded_region);
   }
 
   public static EditorController GetInstance() {
@@ -148,7 +153,31 @@ public class EditorController extends Component {
     } catch (Exception e) {
       System.err.println("Issue writing room to file " + e.getMessage());
     }
+  }
 
+  private void OpenRoomFromFile(String room_name, String region_name) {
+    System.out.printf("Opening room from file %s...\n", room_name);
+    ObjectMapper mapper = new ObjectMapper();
+    SimpleModule awtModule = new SimpleModule("AWT Module");
+    awtModule.addSerializer(Color.class, new ColorJsonSerializer());
+    awtModule.addDeserializer(Color.class, new ColorJsonDeserializer());
+    mapper.registerModule(awtModule);
+    FileReader json_file;
+    JsonNode root;
+    try {
+      json_file = new FileReader(String.format("levels/regions/%s/%s.json", region_name, room_name));
+      root = mapper.readTree(json_file);
+    } catch (Exception e) {
+      System.err.printf("Issues reading room json: %s\n", e.getMessage());
+      return;
+    }
+    JsonNode game_objects = root.get("game_objects");
+    for (JsonNode go : game_objects) {
+      if (!go.get("name").asText().equals(room_name))
+        continue;
+      for (EditorMode<?> mode : modes.values())
+        mode.DeserializeTiles(go, mapper);
+    }
   }
 
   boolean was_any_pressed = false;

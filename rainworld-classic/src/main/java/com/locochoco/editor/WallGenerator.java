@@ -16,12 +16,12 @@ public class WallGenerator extends ObjectGenerator {
       System.err.println("Failed to set wall parent to the generator parent");
     }
     BoxCollider collider = (BoxCollider) obj.getCollider();
-    collider.setCenter(null);
     try {
-      collider.setShape(new Point2d(0, 0), new Point2d(width, height));
+      collider.setShape(width, height);
     } catch (Exception e) {
       System.err.println("Wrong shape format to wall collider: " + e.getMessage());
     }
+    collider.setCenter(null);
     BoxRenderer renderer = (BoxRenderer) obj.getRenderer();
     renderer.SetWidth(width).SetHeight(height);
     renderer.SetCenter(null);

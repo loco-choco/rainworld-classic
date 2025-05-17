@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.vecmath.Point2d;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locochoco.gameengine.BoxRenderer;
 
@@ -15,6 +16,12 @@ public class ObjectTile extends Tile {
   public ObjectTile(Point2d start, Point2d end, Color tile_color, String object_file_path) {
     super(start, end, tile_color);
     this.object_file_path = object_file_path;
+    this.generator_name = ObjectGenerator.class.getName();
+  }
+
+  public ObjectTile() {
+    super(new Point2d(0, 0), new Point2d(10, 10), Color.RED);
+    this.object_file_path = "";
     this.generator_name = ObjectGenerator.class.getName();
   }
 
@@ -44,4 +51,11 @@ public class ObjectTile extends Tile {
       System.err.println("Issue serializing wall: " + e.getMessage());
     }
   }
+
+  public void ReadFromJson(JsonNode node, ObjectMapper mapper) {
+    Point2d pos = (Point2d) mapper.convertValue(node.get("position"), Point2d.class);
+    representation.getTransform().setGlobalPosition(pos);
+    object_file_path = node.get("file_name").asText();
+  }
+
 }

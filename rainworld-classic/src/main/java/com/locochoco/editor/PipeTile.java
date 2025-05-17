@@ -7,6 +7,7 @@ import java.util.HashSet;
 import javax.vecmath.Point2d;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locochoco.gameengine.BoxRenderer;
 
@@ -76,4 +77,5 @@ public abstract class PipeTile extends Tile {
 
   public void SaveToJson(JsonGenerator generator, ObjectMapper mapper) {
   }
+  public  void ReadFromJson(JsonNode node, ObjectMapper mapper){}
 }

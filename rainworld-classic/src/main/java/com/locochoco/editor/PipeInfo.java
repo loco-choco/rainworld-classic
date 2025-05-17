@@ -7,7 +7,7 @@ import com.locochoco.gameengine.*;
 public class PipeInfo {
 
   public int id;
-  public int connections[];
+  public Integer connections[];
   public Point2d position;
   public String file_name;
 }
