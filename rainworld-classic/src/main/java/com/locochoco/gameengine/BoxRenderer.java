@@ -24,13 +24,15 @@ public class BoxRenderer extends Renderer {
   }
 
   public void Start() {
-    if (center == null) {
-      center = new Point2d(width / 2.0, height / 2.0);
-    }
+    SetCenter(center);
   }
 
   public BoxRenderer SetCenter(Point2d center) {
     this.center = center;
+    if (center == null) {
+      this.center = new Point2d(width / 2.0, height / 2.0);
+    }
+
     return this;
   }
 

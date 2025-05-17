@@ -24,15 +24,26 @@ public class BoxCollider extends Collider {
 
   public void Start() {
     super.Start();
-    if (center == null) { // Null is a way to show we want the collider to be centered
-      center = new Point2d(corner_a);
-      center.add(corner_b);
-      center.scale(0.5);
-    }
+    setCenter(center);
   }
 
   public BoxCollider setCenter(Point2d center) {
     this.center = center;
+    if (center == null) {
+      this.center = new Point2d(corner_a);
+      this.center.add(corner_b);
+      this.center.scale(0.5);
+    }
+    return this;
+  }
+
+  public BoxCollider setShape(double width, double height) {
+    if (width < 0 || height < 0) {
+      System.err.println("Width and Height need to be positive!");
+      return this;
+    }
+    this.corner_a = new Point2d(0, 0);
+    this.corner_b = new Point2d(width, height);
     return this;
   }
 
