@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.vecmath.Point2d;
 
@@ -126,6 +127,7 @@ public class SwingGraphics
   // InputAPI
   public Point2d GetMousePos() {
     Point pos = MouseInfo.getPointerInfo().getLocation();
+    SwingUtilities.convertPointFromScreen(pos, this);
     return new Point2d(pos.getX() / pixel_to_transform_scale, pos.getY() / pixel_to_transform_scale);
   }
 
