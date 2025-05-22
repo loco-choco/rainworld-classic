@@ -35,7 +35,7 @@
           }
         },
         "com.locochoco.mainMenu.ChangeLevelButton": {
-          "level_file_path": "levels/regions/base.json"
+          "level_file_path": "levels/rooms/room0.json"
         },
         "com.locochoco.gameengine.BoxCollider": {
           "corner_a": {

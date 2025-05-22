@@ -20,12 +20,18 @@ class PipedObject {
     this.time_in_pipe = 0;
   }
 
+  public Pipeable GetPipeableObject() {
+    return object;
+  }
+
   public Pipe GetOriginPipe() {
     return origin_pipe;
   }
 
   public void SetOriginPipe(Pipe pipe) {
     origin_pipe = pipe;
+    object.getGameObject().getTransform().setGlobalPosition(
+        pipe.getGameObject().getTransform().getGlobalPosition());
   }
 
   public void ResetTimeInPipe() {

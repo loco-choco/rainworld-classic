@@ -34,16 +34,16 @@ public class WallMode extends EditorSubmode {
   public String GetStatus() {
     if (wall_start_position == null)
       return "";
-    return String.format("%s -> %s", wall_start_position, inputs.GetMousePos());
+    return String.format("%s -> %s", wall_start_position, EditorUI.MousePosition());
   }
 
   public void OnLoopSubmode() {
     boolean mouse_clicked = inputs.GetMouseLeftClick();
     if (mouse_clicked && !was_mouse_clicked) {
       if (wall_start_position == null)
-        wall_start_position = inputs.GetMousePos();
+        wall_start_position = EditorUI.MousePosition();
       else if (wall_end_position == null) {
-        wall_end_position = inputs.GetMousePos();
+        wall_end_position = EditorUI.MousePosition();
         if (wall_start_position.getX() > wall_end_position.getX()) {
           double tmp = wall_end_position.getX();
           wall_end_position.setX(wall_start_position.getX());

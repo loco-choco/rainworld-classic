@@ -4,10 +4,8 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.vecmath.Vector2d;
 import javax.vecmath.Point2d;
 
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -15,6 +13,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.locochoco.game.Room;
+import com.locochoco.game.RoomLoader;
 import com.locochoco.gameengine.*;
 import com.locochoco.serialization.ColorJsonDeserializer;
 import com.locochoco.serialization.ColorJsonSerializer;
@@ -22,8 +22,8 @@ import com.locochoco.serialization.ColorJsonSerializer;
 public class EditorController extends Component {
 
   private static EditorController instance;
-  private String currently_loaded_region;
-  private String currently_loaded_room;
+  private String room_prefix = "room";
+  private int currently_loaded_room;
   private double tile_size;
 
   private InputAPI inputs;
@@ -44,8 +44,7 @@ public class EditorController extends Component {
     current_mode = Mode.NONE;
     tile_size = 10;
     modes = new HashMap<>();
-    currently_loaded_region = "outskirts";
-    currently_loaded_room = "room0";
+    currently_loaded_room = 0;
   }
 
   public void OnEnabled() {
@@ -65,7 +64,35 @@ public class EditorController extends Component {
     modes.put(Mode.PIPE, new PipeMode(this, inputs));
 
     // Load room file
-    OpenRoomFromFile(currently_loaded_room, currently_loaded_region);
+    LoadRoom(currently_loaded_room);
+  }
+
+  public void LoadNextRoom() {
+    currently_loaded_room++;
+    UnloadRoom();
+    LoadRoom(currently_loaded_room);
+  }
+
+  public void LoadPrevRoom() {
+    currently_loaded_room = currently_loaded_room == 0 ? 0 : currently_loaded_room - 1;
+    UnloadRoom();
+    LoadRoom(currently_loaded_room);
+  }
+
+  public void LoadRoom(int id) {
+    System.out.println("Loading room" + id);
+    OpenRoomFromFile(id);
+  }
+
+  public void UnloadRoom() {
+    System.out.println("Unloading current room");
+    for (EditorMode<?> mode : modes.values())
+      mode.ClearAllTiles();
+  }
+
+  public void ReloadRoom() {
+    UnloadRoom();
+    LoadRoom(currently_loaded_room);
   }
 
   public static EditorController GetInstance() {
@@ -85,6 +112,10 @@ public class EditorController extends Component {
   }
 
   public void LateUpdate(double delta_time) {
+  }
+
+  public int GetCurrentRoom() {
+    return currently_loaded_room;
   }
 
   public String GetCurrentMode() {
@@ -124,7 +155,8 @@ public class EditorController extends Component {
     return new Point2d(x, y);
   }
 
-  private void SaveRoomToFile(String room_name, String region_name) {
+  private void SaveRoomToFile(int room_id) {
+    String room_name = room_prefix + room_id;
     System.out.printf("Saving room %s to file...\n", room_name);
     ObjectMapper mapper = new ObjectMapper();
     SimpleModule awtModule = new SimpleModule("AWT Module");
@@ -133,12 +165,27 @@ public class EditorController extends Component {
     mapper.registerModule(awtModule);
     try {
       JsonGenerator generator = mapper.createGenerator(
-          new File(String.format("levels/regions/%s/%s.json", region_name, room_name)),
+          new File(String.format("levels/rooms/%s.json", room_name)),
           JsonEncoding.UTF8);
       generator.writeStartObject();
       generator.writeArrayFieldStart("game_objects");
       generator.writeStartObject();
       generator.writePOJOField("name", room_name);
+      // Room Component at root to have room info (which room is next)
+      generator.writeFieldName("components");
+      generator.writeStartObject(); // Components Start
+      generator.writeFieldName(Room.class.getName());
+      generator.writeStartObject();
+      String next_room = String.format("levels/rooms/%s%d.json", room_prefix, room_id + 1);
+      generator.writePOJOField("next_room", next_room);
+      generator.writeEndObject(); // Room end
+      // Load Base Room Stuff
+      generator.writeFieldName(RoomLoader.class.getName());
+      generator.writeStartObject();
+      generator.writePOJOField("file_name", "levels/rooms/base.json");
+      generator.writeEndObject(); // Room loader end
+      generator.writeEndObject(); // Component End
+      // Store editor stuff
       generator.writeArrayFieldStart("children");
 
       for (EditorMode<?> mode : modes.values())
@@ -155,8 +202,14 @@ public class EditorController extends Component {
     }
   }
 
-  private void OpenRoomFromFile(String room_name, String region_name) {
-    System.out.printf("Opening room from file %s...\n", room_name);
+  private void OpenRoomFromFile(int room_id) {
+    String room_name = room_prefix + room_id;
+    File room_file = new File(String.format("levels/rooms/%s.json", room_name));
+    if (!room_file.exists() || room_file.isDirectory()) {
+      System.out.printf("No %s, opening clean project...", room_name);
+      return;
+    }
+    System.out.printf("Opening %s...\n", room_name);
     ObjectMapper mapper = new ObjectMapper();
     SimpleModule awtModule = new SimpleModule("AWT Module");
     awtModule.addSerializer(Color.class, new ColorJsonSerializer());
@@ -165,7 +218,7 @@ public class EditorController extends Component {
     FileReader json_file;
     JsonNode root;
     try {
-      json_file = new FileReader(String.format("levels/regions/%s/%s.json", region_name, room_name));
+      json_file = new FileReader(room_file);
       root = mapper.readTree(json_file);
     } catch (Exception e) {
       System.err.printf("Issues reading room json: %s\n", e.getMessage());
@@ -187,7 +240,9 @@ public class EditorController extends Component {
     boolean pipe = inputs.GetKeyPressed(KeyEvent.VK_P);
     boolean exit = inputs.GetKeyPressed(KeyEvent.VK_ESCAPE);
     boolean save = inputs.GetKeyPressed(KeyEvent.VK_S);
-    boolean new_room = inputs.GetKeyPressed(KeyEvent.VK_N);
+    boolean next_room = inputs.GetKeyPressed(KeyEvent.VK_N);
+    boolean prev_room = inputs.GetKeyPressed(KeyEvent.VK_B);
+    boolean reload_room = inputs.GetKeyPressed(KeyEvent.VK_R);
 
     Mode new_mode = current_mode;
     if (!was_any_pressed &&
@@ -198,8 +253,14 @@ public class EditorController extends Component {
             new_mode = Mode.OBJECT;
           else if (pipe)
             new_mode = Mode.PIPE;
-          if (save) {
-            SaveRoomToFile(currently_loaded_room, currently_loaded_region);
+          else if (save) {
+            SaveRoomToFile(currently_loaded_room);
+          } else if (next_room) {
+            LoadNextRoom();
+          } else if (prev_room) {
+            LoadPrevRoom();
+          } else if (reload_room) {
+            ReloadRoom();
           }
           break;
         default:
@@ -210,7 +271,7 @@ public class EditorController extends Component {
           break;
       }
     }
-    was_any_pressed = object || pipe || exit || save || new_room;
+    was_any_pressed = object || pipe || exit || save || next_room || prev_room || reload_room;
     if (new_mode != current_mode) {
       if (modes.containsKey(current_mode))
         modes.get(current_mode).OnExitMode();

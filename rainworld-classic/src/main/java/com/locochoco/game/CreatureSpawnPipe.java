@@ -2,8 +2,9 @@ package com.locochoco.game;
 
 import com.locochoco.gameengine.*;
 
-public class RoomExitPipe extends Pipe {
-  private String next_room;
+public class CreatureSpawnPipe extends Pipe {
+
+  public String creature_file_name;
 
   public void OnCreated() {
     super.OnCreated();
@@ -20,20 +21,18 @@ public class RoomExitPipe extends Pipe {
   }
 
   public void Start() {
-  }
-
-  public void ReceiveFromPipe(PipedObject object) {
-    CharacterController char_control = (CharacterController) object.GetPipeableObject().getGameObject()
-        .getComponent(CharacterController.class);
-    // If player entered this pipe, go to next level
-    if (char_control != null) {
-      System.out.println("################ GOING TO NEXT ROOM ################");
-      Room.GetRoom().GoToNextRoom();
+    GameObject creature = GameEngine.getGameEngine().getLevel()
+        .LoadGameObjectFromJson(creature_file_name, null);
+    Pipeable object = (Pipeable) creature.getComponent(Pipeable.class);
+    if (object == null) {
+      System.out.printf("Spawned Creature %s should be pipeable! What did you DO?!?!\n", creature_file_name);
       return;
     }
-    super.ReceiveFromPipe(object);
+    PipedObject pipedObject = new PipedObject(object);
+    pipedObject.SetOriginPipe(this);
+    pipedObject.Enter();
+    PassToNextPipe(pipedObject);
   }
-
   public boolean AtemptToPassBeforeReleasing(PipedObject object) {
     Pipe og = object.GetOriginPipe();
     object.SetOriginPipe(this);

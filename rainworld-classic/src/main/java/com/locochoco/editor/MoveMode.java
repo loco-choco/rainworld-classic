@@ -32,14 +32,14 @@ public class MoveMode extends EditorSubmode {
         moving_tile = mode.GetTileUnderCursor();
         if (moving_tile != null) {
           moving_tile_og_pos = moving_tile.GetGameObject().getTransform().getGlobalPosition();
-          initial_mouse_pos = inputs.GetMousePos();
+          initial_mouse_pos = EditorUI.MousePosition();
         }
       } else
         moving_tile = null;
     }
     was_mouse_clicked = mouse_clicked;
     if (moving_tile != null) {
-      Point2d movement = new Point2d(inputs.GetMousePos());
+      Point2d movement = new Point2d(EditorUI.MousePosition());
       movement.sub(initial_mouse_pos);
       Point2d new_pos = new Point2d(moving_tile_og_pos);
       new_pos.add(controller.RoundClosestPoint(movement));

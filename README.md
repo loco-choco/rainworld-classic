@@ -12,21 +12,19 @@ cd rainworld-classic
 mvn clean compile assembly:single
 # Runs the project
 java -jar target/rainworld-classic-1.0-SNAPSHOT-jar-with-dependencies.jar
-# Convert the levels from yaml to json
-(yj -yt < level0.yaml) > level0.json
 ```
 ## Current TO-DOs
 
-- [ ] Make a Camera Object 
-    - [ ] Follow the player into rooms
-- [ ] Make Rooms / levels
-    - [ ] Shelter to save and load next
+- [x] Make a Camera Object 
+    - [x] Follow the player into rooms
+- [x] Make Rooms / levels
+    ~~- [ ] Shelter to save and load next~~
 - [ ] Add UI 
     - [ ] Amount of food the player ate
     - [ ] Amount of time left before the rain
-- [ ] Add Other Creatures
+~~- [ ] Add Other Creatures
     - [ ] Simple follow PID based AI ([creature-control](https://github.com/loco-choco/creature-control) is back?!)
-    - [ ] Green Lizard :3
+    - [ ] Green Lizard :3~~
 - [ ] Make UML Diagram 
 - [ ] Make Final Report
 

@@ -150,7 +150,7 @@ public class Level {
       System.out.printf("Finished loading gameobject in %s\n", filename);
       return go;
     } catch (Exception e) {
-      System.err.printf("Issues loading gameobject from %s\n", filename);
+      System.err.printf("Issues loading gameobject from %s: %s\n", filename, e.getMessage());
     }
     return null;
   }

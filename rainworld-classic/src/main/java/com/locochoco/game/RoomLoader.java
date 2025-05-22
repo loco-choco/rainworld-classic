@@ -2,12 +2,10 @@ package com.locochoco.game;
 
 import com.locochoco.gameengine.*;
 
-public class Room extends Component {
-  private static Room instance;
-  public String next_room;
+public class RoomLoader extends Component {
+  public String file_name;
 
   public void OnCreated() {
-    next_room = "";
   }
 
   public void OnEnabled() {
@@ -17,19 +15,10 @@ public class Room extends Component {
   }
 
   public void OnDestroyed() {
-    instance = null;
-  }
-
-  public static Room GetRoom() {
-    return instance;
   }
 
   public void Start() {
-    instance = this;
-  }
-
-  public void GoToNextRoom() {
-    GameEngine.getGameEngine().LoadLevel(next_room);
+    GameEngine.getGameEngine().getLevel().AdditiveLevelLoad(file_name, getGameObject());
   }
 
   public void PhysicsUpdate(double delta_time) {
@@ -43,5 +32,4 @@ public class Room extends Component {
 
   public void LateUpdate(double delta_time) {
   }
-
 }

@@ -28,6 +28,8 @@ public class PipeMode extends EditorMode<PipeSubMode> {
   private HashMap<Integer, PipeTile> pipes;
 
   private String pipe_entrance_file_name;
+  private String pipe_next_room_file_name;
+  private String pipe_spawner_file_name;
   private String pipe_connector_file_name;
 
   public PipeMode(EditorController controller, InputAPI inputs) {
@@ -40,6 +42,8 @@ public class PipeMode extends EditorMode<PipeSubMode> {
     pipes = new HashMap<>();
     pipe_entrance_file_name = "objects/enviroments/pipe/entrance.json";
     pipe_connector_file_name = "objects/enviroments/pipe/connection.json";
+    pipe_next_room_file_name = "objects/enviroments/pipe/next_room.json";
+    pipe_spawner_file_name = "objects/enviroments/pipe/spawner.json";
   }
 
   public void OnEnterMode() {
@@ -93,6 +97,24 @@ public class PipeMode extends EditorMode<PipeSubMode> {
     AddTile(pipe);
     pipes.put(last_id, pipe);
     System.out.printf("Added entrance %s\n", last_id);
+    return pipe;
+  }
+
+  public PipeSpawnerTile AddSpawner(Point2d position) {
+    last_id++;
+    PipeSpawnerTile pipe = new PipeSpawnerTile(controller, pipe_spawner_file_name, position, last_id);
+    AddTile(pipe);
+    pipes.put(last_id, pipe);
+    System.out.printf("Added spawner %s\n", last_id);
+    return pipe;
+  }
+
+  public PipeNextRoomTile AddNextRoom(Point2d position) {
+    last_id++;
+    PipeNextRoomTile pipe = new PipeNextRoomTile(controller, pipe_next_room_file_name, position, last_id);
+    AddTile(pipe);
+    pipes.put(last_id, pipe);
+    System.out.printf("Added next room %s\n", last_id);
     return pipe;
   }
 
@@ -167,6 +189,10 @@ public class PipeMode extends EditorMode<PipeSubMode> {
           pipe = new PipeEntranceTile(controller, pipe_entrance_file_name, info.position, info.id);
         } else if (info.file_name.contains("connection")) {
           pipe = new PipeConnectorTile(controller, pipe_connector_file_name, info.position, info.id);
+        } else if (info.file_name.contains("spawner")) {
+          pipe = new PipeSpawnerTile(controller, pipe_spawner_file_name, info.position, info.id);
+        } else if (info.file_name.contains("next_room")) {
+          pipe = new PipeNextRoomTile(controller, pipe_next_room_file_name, info.position, info.id);
         } else {
           System.err.printf("Found not recognized pipe type %s\n", info.file_name);
           continue;

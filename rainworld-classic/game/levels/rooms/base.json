@@ -9,7 +9,11 @@
             "y": 70
           }
         },
-        "com.locochoco.game.PlayerUI": {}
+        "com.locochoco.game.PlayerUI": {},
+        "com.locochoco.game.CameraFollower": {
+          "width_step": 140,
+          "height_step": 140
+        }
       },
       "children": [
         {
@@ -25,20 +29,6 @@
           }
         }
       ]
-    },
-    {
-      "name": "room0",
-      "components": {
-        "com.locochoco.gameengine.Transform": {
-          "position": {
-            "x": 0,
-            "y": 0
-          }
-        },
-        "com.locochoco.game.RoomLoader": {
-          "file_name": "levels/regions/outskirts/room0.json"
-        }
-      }
     }
   ]
 }

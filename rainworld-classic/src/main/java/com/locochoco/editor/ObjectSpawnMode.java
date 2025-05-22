@@ -73,7 +73,7 @@ public class ObjectSpawnMode extends EditorSubmode {
     boolean mouse_clicked = inputs.GetMouseLeftClick();
     if (mouse_clicked && !was_mouse_clicked && mode.GetTileUnderCursor() == null) {
       ObjectTypes type = types.get(current_object_selected);
-      Point2d mouse_pos = inputs.GetMousePos();
+      Point2d mouse_pos = EditorUI.MousePosition();
       ObjectTile object = new ObjectTile(controller.RoundClosestPointDown(mouse_pos),
           controller.RoundClosestPointUp(mouse_pos), type.GetColor(), type.GetFilePath());
       mode.AddTile(object);

@@ -57,7 +57,7 @@ public abstract class EditorMode<M extends Enum<M>> {
   }
 
   public Tile GetTileUnderCursor() {
-    Point2d cursor = inputs.GetMousePos();
+    Point2d cursor = EditorUI.MousePosition();
     for (Tile tile : tiles) {
       if (CollisionMath.CheckPointCollision(tile.GetGameObject().getCollider(), cursor))
         return tile;

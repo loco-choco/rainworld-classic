@@ -44,17 +44,17 @@ public class PipeConnectorMode extends EditorSubmode {
 
     if (mouse_clicked && !was_mouse_clicked) {
       pressed_pipe = (PipeTile) mode.GetTileUnderCursor();
-      if (last_pipe == null && pressed_pipe != null && pressed_pipe instanceof PipeEntranceTile) {
+      if (last_pipe == null && pressed_pipe != null && !(pressed_pipe instanceof PipeConnectorTile)) {
         last_pipe = pressed_pipe;
         System.out.printf("Starting Connection at %s\n", last_pipe.GetId());
       } else if (last_pipe != null && pressed_pipe == null) {
-        PipeTile connector = mode.AddConnector(inputs.GetMousePos());
+        PipeTile connector = mode.AddConnector(EditorUI.MousePosition());
         last_pipe.ReciprocalConnection(connector);
         System.out.printf("Attaching Connector %s -> %s\n", last_pipe.GetId(),
             connector.GetId());
         connection_pipes.add(connector);
         last_pipe = connector;
-      } else if (last_pipe != null && pressed_pipe != null && pressed_pipe instanceof PipeEntranceTile) {
+      } else if (last_pipe != null && pressed_pipe != null && !(pressed_pipe instanceof PipeConnectorTile)) {
         last_pipe.ReciprocalConnection(pressed_pipe);
         System.out.printf("Ending Connection with %s -> %s\n", last_pipe.GetId(), pressed_pipe.GetId());
         last_pipe = null;
