@@ -1,5 +1,7 @@
 package com.locochoco.gameengine;
 
+import java.io.File;
+
 import javax.vecmath.Point2d;
 
 /**
@@ -14,4 +16,12 @@ public interface InputAPI {
   public boolean GetMouseLeftClick();
 
   public boolean GetKeyPressed(int key_code);
+
+  public void SubscribeToDND(DNDSubscriber subscriber);
+
+  public void UnsubscribeToDND(DNDSubscriber subscriber);
+}
+
+interface DNDSubscriber {
+  public void ReceiveDNDFile(File file);
 }

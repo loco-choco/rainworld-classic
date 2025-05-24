@@ -7,16 +7,27 @@ import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.vecmath.Point2d;
@@ -25,7 +36,7 @@ import javax.vecmath.Point2d;
  * Handles all the graphic logic and calculations
  */
 public class SwingGraphics
-    extends JFrame implements MouseListener, KeyListener, GraphicsAPI, InputAPI {
+    extends JFrame implements MouseListener, KeyListener, DropTargetListener, GraphicsAPI, InputAPI {
 
   // GraphicsAPI
   private double pixel_to_transform_scale;
@@ -38,6 +49,8 @@ public class SwingGraphics
   private Map<Integer, Boolean> keyboard_map;
   private boolean mouse_left_click;
   private boolean mouse_right_click;
+  private DropTarget drop_target;
+  private ArrayList<DNDSubscriber> dnd_subscribers;
 
   // GraphicsAPI
   public SwingGraphics(String window_name) {
@@ -47,6 +60,7 @@ public class SwingGraphics
     keyboard_map = new HashMap<>();
     mouse_left_click = false;
     mouse_right_click = false;
+    dnd_subscribers = new ArrayList<>();
   }
 
   public void SetWindowSize(int width, int height) {
@@ -122,6 +136,8 @@ public class SwingGraphics
 
     createBufferStrategy(2);
     buffer = getBufferStrategy();
+
+    drop_target = new DropTarget(this, DnDConstants.ACTION_MOVE, this);
   }
 
   // InputAPI
@@ -143,6 +159,14 @@ public class SwingGraphics
     if (!keyboard_map.containsKey(key_code))
       return false;
     return keyboard_map.get(key_code);
+  }
+
+  public void SubscribeToDND(DNDSubscriber subscriber) {
+    dnd_subscribers.add(subscriber);
+  }
+
+  public void UnsubscribeToDND(DNDSubscriber subscriber) {
+    dnd_subscribers.remove(subscriber);
   }
 
   public void mouseClicked(MouseEvent e) {
@@ -189,5 +213,47 @@ public class SwingGraphics
 
   public void keyReleased(KeyEvent e) {
     keyboard_map.put(e.getKeyCode(), false);
+  }
+
+  @Override
+  public synchronized void dragEnter(DropTargetDragEvent dtde) {
+    if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor))
+      dtde.acceptDrag(DnDConstants.ACTION_MOVE);
+    else
+      dtde.rejectDrag();
+  }
+
+  @Override
+  public synchronized void dragOver(DropTargetDragEvent dtde) {
+    dragEnter(dtde);
+  }
+
+  @Override
+  public synchronized void dropActionChanged(DropTargetDragEvent dtde) {
+  }
+
+  @Override
+  public synchronized void dragExit(DropTargetEvent dte) {
+  }
+
+  @Override
+  public synchronized void drop(DropTargetDropEvent dtde) {
+    Transferable t = dtde.getTransferable();
+    if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+      dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+      try {
+        ArrayList<File> data = (ArrayList<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
+        for (File file : data) {
+          for (DNDSubscriber sub : dnd_subscribers)
+            sub.ReceiveDNDFile(file);
+        }
+        dtde.dropComplete(true);
+      } catch (UnsupportedFlavorException ufe) {
+        System.err.printf("Issue with flavor type %s\n", ufe.getMessage());
+      } catch (IOException ioe) {
+        System.err.println("Issue with IO: " + ioe.getMessage());
+      }
+    }
+    dtde.dropComplete(false);
   }
 }
