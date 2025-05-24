@@ -85,7 +85,7 @@ public class CharacterController extends Component implements CollisionListener 
     // Horizontal Force
     double horizontal_velocity = rigidbody.GetVelocity().getX();
     double acceleration = is_grounded ? this.acceleration : this.air_acceleration;
-    double target_acceleration = Math.clamp(acceleration, 0.0,
+    double target_acceleration = Math.min(Math.max(acceleration, 0.0),
         Math.abs(Math.min(Math.abs(horizontal_velocity), max_speed) * Math.signum(horizontal_velocity)
             - max_speed * horizontal_movement) / delta_time);
     movement_force.setX(target_acceleration * horizontal_movement);

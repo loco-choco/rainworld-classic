@@ -46,7 +46,7 @@ public class ObjectMode extends EditorMode<SubMode> {
     SubMode new_mode = GetCurrentSubmode();
     if (!was_any_pressed) {
       switch (GetCurrentSubmode()) {
-        case SubMode.NONE:
+        case NONE:
           if (wall)
             new_mode = SubMode.WALL;
           else if (spawner)

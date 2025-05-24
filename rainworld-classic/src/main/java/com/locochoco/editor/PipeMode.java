@@ -63,7 +63,7 @@ public class PipeMode extends EditorMode<PipeSubMode> {
     PipeSubMode new_mode = GetCurrentSubmode();
     if (!was_any_pressed) {
       switch (GetCurrentSubmode()) {
-        case PipeSubMode.NONE:
+        case NONE:
           if (connector)
             new_mode = PipeSubMode.CONNECTOR;
           else if (spawner)

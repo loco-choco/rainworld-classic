@@ -248,7 +248,7 @@ public class EditorController extends Component {
     if (!was_any_pressed &&
         (!modes.containsKey(current_mode) || modes.get(current_mode).IsAtDefaultSubmode())) {
       switch (current_mode) {
-        case Mode.NONE:
+        case NONE:
           if (object)
             new_mode = Mode.OBJECT;
           else if (pipe)
