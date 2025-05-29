@@ -18,13 +18,17 @@ java -jar target/rainworld-classic-1.0-SNAPSHOT-jar-with-dependencies.jar
 - [x] Make a Camera Object 
     - [x] Follow the player into rooms
 - [x] Make Rooms / levels
+
     ~~- [ ] Shelter to save and load next~~
+
 - [x] Add UI 
-    - [ ] Amount of food the player ate
+    - [x] Amount of food the player ate
+
     ~~- [ ] Amount of time left before the rain~~
-~~- [ ] Add Other Creatures
-    - [ ] Simple follow PID based AI ([creature-control](https://github.com/loco-choco/creature-control) is back?!)
-    - [ ] Green Lizard :3~~
+~~- [ ] Add Other Creatures~~
+    ~~- [ ] Simple follow PID based AI ([creature-control](https://github.com/loco-choco/creature-control) is back?!)~~
+    ~~- [ ] Green Lizard :3~~
+
 - [x] Make UML Diagram 
 - [ ] Make Final Report
 
