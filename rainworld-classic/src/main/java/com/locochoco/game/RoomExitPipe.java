@@ -3,10 +3,11 @@ package com.locochoco.game;
 import com.locochoco.gameengine.*;
 
 public class RoomExitPipe extends Pipe {
-  private String next_room;
+  public int pips_to_next_room;
 
   public void OnCreated() {
     super.OnCreated();
+    pips_to_next_room = 0;
   }
 
   public void OnEnabled() {
@@ -26,7 +27,7 @@ public class RoomExitPipe extends Pipe {
     CharacterController char_control = (CharacterController) object.GetPipeableObject().getGameObject()
         .getComponent(CharacterController.class);
     // If player entered this pipe, go to next level
-    if (char_control != null) {
+    if (char_control != null && PlayerData.GetFoodAte() >= pips_to_next_room) {
       System.out.println("################ GOING TO NEXT ROOM ################");
       Room.GetRoom().GoToNextRoom();
       return;

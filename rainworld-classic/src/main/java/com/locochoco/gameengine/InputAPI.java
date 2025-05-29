@@ -21,7 +21,3 @@ public interface InputAPI {
 
   public void UnsubscribeToDND(DNDSubscriber subscriber);
 }
-
-interface DNDSubscriber {
-  public void ReceiveDNDFile(File file);
-}

@@ -3,7 +3,6 @@ package com.locochoco.game;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
 import com.locochoco.gameengine.*;
@@ -122,10 +121,10 @@ public class CharacterInventory extends Component implements CollisionListener {
 
   private void InteractWithItem(CarryingLimb limb) {
     Item item = limb.GetHeldItem();
-    // TODO ADD ITEM INTERACION BUT BETTER
     if (item instanceof Food food) {
       int food_pips = food.AmountOfFoodPips();
       System.out.printf("Ate %s pips\n", food_pips);
+      PlayerData.AteFood(food_pips);
       ConsumeItem(limb);
     } else {
       Vector2d vel = new Vector2d(last_looked_direction);

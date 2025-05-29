@@ -20,7 +20,7 @@ public class BoxRenderer extends Renderer {
     center = new Point2d(0, 0);
     width = 0;
     height = 0;
-    color = Color.BLACK;
+    color = new Color(119, 117, 117);
   }
 
   public void Start() {

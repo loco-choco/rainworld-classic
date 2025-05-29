@@ -1,17 +1,14 @@
 package com.locochoco.game;
 
-import java.awt.event.KeyEvent;
-
-import javax.vecmath.Vector2d;
+import java.util.ArrayList;
 
 import com.locochoco.gameengine.*;
 
 public class PlayerUI extends Component {
-
-  private InputAPI inputs;
+  private ArrayList<Renderer> pips;
 
   public void OnCreated() {
-    inputs = GameEngine.getGameEngine().getInputs();
+    pips = new ArrayList<>();
   }
 
   public void OnEnabled() {
@@ -21,6 +18,8 @@ public class PlayerUI extends Component {
   }
 
   public void Start() {
+    for (GameObject c : getGameObject().getChildren())
+      pips.add(c.getRenderer());
   }
 
   public void OnDestroyed() {
@@ -30,12 +29,14 @@ public class PlayerUI extends Component {
   }
 
   public void GraphicsUpdate(double delta_time) {
+    // Makes UI that shows the amount of pips ate
+    for (Renderer renderer : pips)
+      renderer.setEnabled(false);
+    for (int i = 0; (i < PlayerData.GetFoodAte()) && i < pips.size(); i++)
+      pips.get(i).setEnabled(true);
   }
 
   public void Update(double delta_time) {
-    // Return to main menu
-    if (inputs.GetKeyPressed(KeyEvent.VK_HOME))
-      GameEngine.getGameEngine().LoadLevel("levels/mainMenu/main.json");
   }
 
   public void LateUpdate(double delta_time) {

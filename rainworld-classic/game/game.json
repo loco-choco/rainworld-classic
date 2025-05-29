@@ -19,7 +19,9 @@
   },
   "graphics": {
     "rendering_order": [
+      "foreground_ui_detail",
       "ui",
+      "background_ui_detail",
       "foreground_front_detail",
       "foreground",
       "foreground_back_detail",

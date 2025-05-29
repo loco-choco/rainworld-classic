@@ -9,7 +9,7 @@
             "y": 70
           }
         },
-        "com.locochoco.game.PlayerUI": {},
+        "com.locochoco.game.GoBackToMainMenu": {},
         "com.locochoco.game.CameraFollower": {
           "width_step": 140,
           "height_step": 140
@@ -27,6 +27,212 @@
             },
             "com.locochoco.gameengine.Camera": {}
           }
+        },
+        {
+          "name": "player_ui",
+          "components": {
+            "com.locochoco.gameengine.Transform": {
+              "position": {
+                "x": -65,
+                "y": 65
+              }
+            },
+            "com.locochoco.game.ThingsDNDSpawner": {},
+            "com.locochoco.game.PlayerData": {},
+            "com.locochoco.game.PlayerUI": {}
+          },
+          "children": [
+            {
+              "name": "pip",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 0,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "ui",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": -4672589
+                }
+              },
+              "children": [
+                {
+                  "name": "background",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background_ui_detail",
+                      "width": 2.5,
+                      "height": 2.5,
+                      "center": null,
+                      "color": -4672589
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "pip",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 7.5,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "ui",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": -4672589
+                }
+              },
+              "children": [
+                {
+                  "name": "background",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background_ui_detail",
+                      "width": 2.5,
+                      "height": 2.5,
+                      "center": null,
+                      "color": -4672589
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "pip",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 15,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "ui",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": -4672589
+                }
+              },
+              "children": [
+                {
+                  "name": "background",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background_ui_detail",
+                      "width": 2.5,
+                      "height": 2.5,
+                      "center": null,
+                      "color": -4672589
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "pip",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 22.5,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "ui",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": -4672589
+                }
+              },
+              "children": [
+                {
+                  "name": "background",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background_ui_detail",
+                      "width": 2.5,
+                      "height": 2.5,
+                      "center": null,
+                      "color": -4672589
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "pip",
+              "components": {
+                "com.locochoco.gameengine.Transform": {
+                  "position": {
+                    "x": 30,
+                    "y": 0
+                  }
+                },
+                "com.locochoco.gameengine.BoxRenderer": {
+                  "layer": "ui",
+                  "width": 5,
+                  "height": 5,
+                  "center": null,
+                  "color": -4672589
+                }
+              },
+              "children": [
+                {
+                  "name": "background",
+                  "components": {
+                    "com.locochoco.gameengine.Transform": {
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    "com.locochoco.gameengine.BoxRenderer": {
+                      "layer": "background_ui_detail",
+                      "width": 2.5,
+                      "height": 2.5,
+                      "center": null,
+                      "color": -4672589
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     }
