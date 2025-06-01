@@ -32,6 +32,7 @@ public class PipeGenerator extends Component {
     }
 
     getGameObject().MarkToDestruction();
+    this.setEnabled(false);
   }
 
   private void GeneratePipe(PipeInfo info) {

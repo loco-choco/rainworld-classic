@@ -128,13 +128,12 @@ public class Level {
   }
 
   public void SaveLevelToJson(String filename) throws FileNotFoundException, IOException {
-    System.out.printf("Loading level to %s\n", filename);
+    System.out.printf("Saving level to %s\n", filename);
     ObjectMapper mapper = GetMapper();
     JsonGenerator generator = mapper.createGenerator(
-        new File(String.format("levels/%s.json", filename)),
+        new File(filename),
         JsonEncoding.UTF8);
     generator.writeStartObject();
-    generator.writeArrayFieldStart("game_objects");
 
     ArrayList<GameObject> root_objects = new ArrayList<>();
     for (GameObject go : game_objects) {
@@ -142,10 +141,14 @@ public class Level {
         root_objects.add(go);
     }
 
+    generator.writeArrayFieldStart("game_objects");
     for (GameObject game_object : root_objects) { // Starts deserialization from root
       game_object.Serialize(generator, mapper);
     }
     generator.writeEndArray();
+    generator.writeEndObject();
+    generator.flush();
+    generator.close();
     System.out.printf("Finished saving level to %s\n", filename);
   }
 

@@ -21,6 +21,6 @@ public class PipeSpawnerTile extends PipeTile {
   }
 
   public void SaveToJson(JsonGenerator generator, ObjectMapper mapper) {
-    representation.Deserialize(generator, mapper);
+    representation.Serialize(generator, mapper);
   }
 }

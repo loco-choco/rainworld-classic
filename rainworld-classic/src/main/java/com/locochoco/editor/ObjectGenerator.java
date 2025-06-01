@@ -24,6 +24,7 @@ public class ObjectGenerator extends Component {
     GameObject obj = GameEngine.getGameEngine().getLevel().LoadGameObjectFromJson(file_name, null);
     ConfigObject(obj);
     getGameObject().MarkToDestruction();
+    this.setEnabled(false);
   }
 
   protected void ConfigObject(GameObject obj) {

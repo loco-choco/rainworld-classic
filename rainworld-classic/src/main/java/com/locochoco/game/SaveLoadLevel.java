@@ -34,12 +34,12 @@ public class SaveLoadLevel extends Component {
   public void Update(double delta_time) {
     if (input.GetKeyPressed(KeyEvent.VK_S)) {
       try {
-        GameEngine.getGameEngine().getLevel().SaveLevelToJson("save.json");
+        GameEngine.getGameEngine().getLevel().SaveLevelToJson("levels/save.json");
       } catch (IOException ioe) {
         System.err.printf("Issues saving the level!: %s\n", ioe.getMessage());
       }
     } else if (input.GetKeyPressed(KeyEvent.VK_L)) {
-      GameEngine.getGameEngine().LoadLevel("save.json");
+      GameEngine.getGameEngine().LoadLevel("levels/save.json");
     }
   }
 

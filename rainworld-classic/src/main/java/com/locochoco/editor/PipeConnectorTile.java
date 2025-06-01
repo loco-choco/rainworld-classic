@@ -22,7 +22,7 @@ public class PipeConnectorTile extends PipeTile {
 
   public void SaveToJson(JsonGenerator generator, ObjectMapper mapper) {
     // spawner.setEnabled(true);
-    representation.Deserialize(generator, mapper);
+    representation.Serialize(generator, mapper);
     // spawner.setEnabled(false);
   }
 }

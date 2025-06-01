@@ -227,6 +227,7 @@ public class GameObject {
     try {
       generator.writeStartObject();
 
+      generator.writePOJOField("enable", enabled);
       generator.writePOJOField("name", name);
 
       generator.writeFieldName("components");
@@ -241,6 +242,7 @@ public class GameObject {
       generator.writeEndArray();
 
       generator.writeEndObject();
+      generator.flush();
     } catch (Exception e) {
       System.err.printf("Issues deserializing gameobject %s: %s\n", name, e.getMessage());
     }

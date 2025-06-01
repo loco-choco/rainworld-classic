@@ -10,7 +10,7 @@ import com.locochoco.gameengine.BoxRenderer;
 
 public class PipeEntranceTile extends PipeTile {
 
-  public PipeEntranceTile(EditorController controller,String file_name, Point2d position, int id) {
+  public PipeEntranceTile(EditorController controller, String file_name, Point2d position, int id) {
     super(controller, file_name, position, id);
     BoxRenderer renderer = (BoxRenderer) (representation.getRenderer());
     renderer.layer = "foreground";
@@ -22,7 +22,7 @@ public class PipeEntranceTile extends PipeTile {
 
   public void SaveToJson(JsonGenerator generator, ObjectMapper mapper) {
     // spawner.setEnabled(true);
-    representation.Deserialize(generator, mapper);
+    representation.Serialize(generator, mapper);
     // spawner.setEnabled(false);
   }
 }
