@@ -30,7 +30,7 @@ java -jar target/rainworld-classic-1.0-SNAPSHOT-jar-with-dependencies.jar
     ~~- [ ] Green Lizard :3~~
 
 - [x] Make UML Diagram 
-- [ ] Make Final Report
+- [x] Make Final Report
 
 
 ## References

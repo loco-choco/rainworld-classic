@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -242,10 +243,10 @@ public class SwingGraphics
     if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
       dtde.acceptDrop(DnDConstants.ACTION_MOVE);
       try {
-        ArrayList<File> data = (ArrayList<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
-        for (File file : data) {
+        List data = (List) t.getTransferData(DataFlavor.javaFileListFlavor);
+        for (Object file : data) {
           for (DNDSubscriber sub : dnd_subscribers)
-            sub.ReceiveDNDFile(file);
+            sub.ReceiveDNDFile((File) file);
         }
         dtde.dropComplete(true);
       } catch (UnsupportedFlavorException ufe) {

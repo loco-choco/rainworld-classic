@@ -7,7 +7,9 @@
         "y": 0
       }
     },
-    "com.locochoco.game.RoomExitPipe": {},
+    "com.locochoco.game.RoomExitPipe": {
+      "pips_to_next_room": 5
+    },
     "com.locochoco.gameengine.SpriteRenderer": {
       "layer": "foreground",
       "file_name": "assets/enviroment/pipe/pipe.png"
