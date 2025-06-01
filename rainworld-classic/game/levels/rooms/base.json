@@ -10,6 +10,7 @@
           }
         },
         "com.locochoco.game.GoBackToMainMenu": {},
+        "com.locochoco.game.SaveLoadLevel": {},
         "com.locochoco.game.CameraFollower": {
           "width_step": 140,
           "height_step": 140

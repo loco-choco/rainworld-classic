@@ -1,6 +1,7 @@
 package com.locochoco.gameengine;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -122,6 +125,28 @@ public class Level {
       mapper.setVisibility(PropertyAccessor.FIELD, Visibility.PUBLIC_ONLY);
     }
     return mapper;
+  }
+
+  public void SaveLevelToJson(String filename) throws FileNotFoundException, IOException {
+    System.out.printf("Loading level to %s\n", filename);
+    ObjectMapper mapper = GetMapper();
+    JsonGenerator generator = mapper.createGenerator(
+        new File(String.format("levels/%s.json", filename)),
+        JsonEncoding.UTF8);
+    generator.writeStartObject();
+    generator.writeArrayFieldStart("game_objects");
+
+    ArrayList<GameObject> root_objects = new ArrayList<>();
+    for (GameObject go : game_objects) {
+      if (go.getParent() == null)
+        root_objects.add(go);
+    }
+
+    for (GameObject game_object : root_objects) { // Starts deserialization from root
+      game_object.Serialize(generator, mapper);
+    }
+    generator.writeEndArray();
+    System.out.printf("Finished saving level to %s\n", filename);
   }
 
   public static Level ReadLevelFromJson(String filename) throws FileNotFoundException, IOException {

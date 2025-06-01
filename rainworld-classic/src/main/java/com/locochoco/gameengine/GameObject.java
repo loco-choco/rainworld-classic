@@ -1,5 +1,6 @@
 package com.locochoco.gameengine;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -222,7 +223,7 @@ public class GameObject {
     return children.remove(child);
   }
 
-  public void Deserialize(JsonGenerator generator, ObjectMapper mapper) {
+  public void Serialize(JsonGenerator generator, ObjectMapper mapper) {
     try {
       generator.writeStartObject();
 
@@ -236,7 +237,7 @@ public class GameObject {
 
       generator.writeArrayFieldStart("children");
       for (GameObject child : children)
-        child.Deserialize(generator, mapper);
+        child.Serialize(generator, mapper);
       generator.writeEndArray();
 
       generator.writeEndObject();
